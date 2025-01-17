@@ -33,15 +33,6 @@ function App() {
                                   <Route path='/signup' element={<SignUp/>}></Route>
                                   <Route path='/all-doctors' element={<Doctors/>}></Route>
                                   <Route path='/admin/*' element={<Admin/>}></Route>
-<<<<<<< HEAD
-
-=======
-                                  <Route path='/merge' element={
-                                    <>
-                                    <h1>Hello World</h1>
-                                    </>
-                                  }></Route>
->>>>>>> 79d022956abe64a3320fa7b42df0e1d81f38042e
                              </Routes>
                              </div>
                        </div>
