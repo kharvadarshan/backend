@@ -6,7 +6,7 @@ const SignUp=()=> {
   const [signUpType, setSignUpType] = useState('patient'); // Default to 'patient' login
 
   return (
-    <div className='container-fluid border border-1 mx-5 my-5 p-3 '>
+    <div className='container-fluid border border-1  my-5 p-3 '>
       <div className=' btn-group mx-3 my-5  d-flex flex-row justify-content-between'  role="group" 
             aria-label="Basic outlined example">
         {/* Buttons to switch login type */}

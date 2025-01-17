@@ -1,0 +1,34 @@
+.homepage {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    padding: 20px 0;
+}
+
+.hero-section {
+    background: #007bff;
+    color: white;
+    padding: 50px 0;
+    border-radius: 10px;
+}
+
+.hero-section h1 {
+    font-weight: bold;
+}
+
+.features-section i {
+    font-size: 2.5rem;
+}
+
+.testimonials-section {
+    border-top: 2px solid #007bff;
+}
+
+.testimonials-section h2 {
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.testimonials-section p {
+    font-style: italic;
+    color: #555;
+}
