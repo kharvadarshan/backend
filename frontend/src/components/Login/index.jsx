@@ -2,14 +2,14 @@
 import  { useState } from 'react';
 import { FcGoogle  } from "react-icons/fc";
 import { FaFacebook  } from "react-icons/fa";
+import './style.scss';
 function LoginPage() {
   const [loginType, setLoginType] = useState('patient'); // Default to 'patient' login
 
   return (
-    <div className='container-fluid d-flex flex-column justify-content-center border border-1 mx-5 my-5 p-3 '>
-      
+    <div className='container-fluid d-flex flex-column justify-content-center border border-1 my-5 p-3 ' >
        <div 
-            className='btn-group mx-3 my-5 d-flex flex-row justify-content-between' 
+            className='btn-group mx-3 my-5 d-flex flex-row justify-content-between bg-light' 
             role="group" 
             aria-label="Basic outlined example"
           >
@@ -118,11 +118,14 @@ function LoginPage() {
                </>
             )
         }
-        <div className='d-flex justify-content-center my-5'>
+        <div className='d-flex justify-content-center mt-5 mb-3'>
         <button type='submit' className='btn btn-primary  w-50'>
           Login
         </button>
         </div>
+        <div className='d-flex justify-content-center'>
+          <p>Don&apos;t have an account? <a href='/signup'>Sign Up</a></p>
+       </div>
         <div className='px-3 mt-5 d-flex flex-column justify-content-between'>
              <button className='fs-3  btn btn-outline-dark mb-2 d-flex flex-row justify-content-center align-items-center'> <FcGoogle  /><span className='fs-3 p-2 px-4'>Continue with Google</span></button>
              <button className='fs-3   btn btn-outline-dark mt-2 d-flex flex-row justify-content-center align-items-center'> <FaFacebook /><span className='fs-3 p-2 px-4'>Continue with Facebook</span></button>
