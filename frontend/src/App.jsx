@@ -33,15 +33,11 @@ function App() {
                                   <Route path='/signup' element={<SignUp/>}></Route>
                                   <Route path='/all-doctors' element={<Doctors/>}></Route>
                                   <Route path='/admin/*' element={<Admin/>}></Route>
-<<<<<<<<< Temporary merge branch 1
-
-=========
                                   <Route path='/merge' element={
                                     <>
                                     <h1>Hello World</h1>
                                     </>
                                   }></Route>
->>>>>>>>> Temporary merge branch 2
                              </Routes>
                              </div>
                        </div>
