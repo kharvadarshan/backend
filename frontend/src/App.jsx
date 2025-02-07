@@ -37,7 +37,7 @@ import Contact from './components/Contact';
 >>>>>>> ef3e23e549a9632ceb7a3fb5e0ffdb81ea4b6d52
 // import ContactApp from './components/Contact/contactApp';
 
-import Doctor_List from "./components/Doctors/Doctor_List";
+import Doctor from "./components/Doctor";
 
 function App() {
     return(
@@ -64,11 +64,6 @@ function App() {
                                   }></Route>
                                   <Route path='/login' element={<Login/>}></Route>
                                   <Route path='/signup' element={<SignUp/>}></Route>
-<<<<<<< HEAD
-                                  <Route path='/all-doctors' element={<Doctor_List/>}></Route>
-                                  <Route path='/admin/*' element={<Admin/>}></Route>
-                                  <Route path='/learn' element={<Admin/>}></Route>
-=======
                                   <Route path='/all-doctors' element={ <Doctor_List/>}></Route>
                                   <Route path='/admin/*' element={<Admin/>}></Route>
                                   <Route path='/contact' element={<Contact/>}></Route>
