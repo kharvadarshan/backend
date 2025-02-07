@@ -193,7 +193,7 @@
 
 // export default DoctorList;
 
-import React, { useState } from "react";
+import  { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const doctors = [
@@ -206,7 +206,7 @@ const doctors = [
   },
   {
     id: 2,
-    name: "Dr. Raj Mehta",
+    name: "Dr. Ayesh Khan",
     specialty: "Dermatologist",
     contact: "raj.mehta@example.com",
     image: "../../../public/assets/doctor.png",
