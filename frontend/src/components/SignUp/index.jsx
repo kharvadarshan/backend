@@ -1,135 +1,283 @@
+import { useState } from 'react';
+import { FcGoogle } from 'react-icons/fc';
+import { FaFacebook } from 'react-icons/fa';
 
-import  { useState } from 'react';
-import { FcGoogle  } from "react-icons/fc";
-import { FaFacebook  } from "react-icons/fa";
-const SignUp=()=> {
-  const [signUpType, setSignUpType] = useState('patient'); // Default to 'patient' login
+const SignUp = () => {
+  const [signUpType, setSignUpType] = useState('patient'); // Default to 'patient' sign up
 
   return (
-    <div className='container-fluid border border-1  my-5 p-3 '>
-      <div className=' btn-group mx-3 my-5  d-flex flex-row justify-content-between'  role="group" 
-            aria-label="Basic outlined example">
-        {/* Buttons to switch login type */}
-        <button
-          type="button"
-          className={`btn btn-outline-primary  ${signUpType === 'patient' ? 'active' : ''}`}
-          onClick={() => setSignUpType('patient')}
-        >
-          Patient Sign Up
-        </button>
-        <button
-          type="button"
-          className={`btn btn-outline-primary   ${signUpType  === 'doctor' ? 'active' : ''}`}
-          onClick={() => setSignUpType('doctor')}
-        >
-          Doctor Sign Up
-        </button>
-        <button  
-           type="button"
-           className={`btn btn-outline-primary   ${signUpType  === 'admin' ? 'active' : ''}`}
-           onClick={() => setSignUpType('admin')}>
-         Admin Sign Up
-        </button>
-      </div>
-
-      {/* Dynamic Form */}
-      <form className='mb-2 mx-3'>
-      {signUpType  === 'patient' && (
-        <>
-        <h3 className='my-2'>Patient Sign Up</h3>
-        <div className='mb-3'>
-          <label className='form-label'>Email address</label>
-          <input
-            type='email'
-            className='form-control'
-            id='exampleInputEmail1'
-            aria-describedby='emailHelp'
-          />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md">
+        <div className="flex justify-evenly mb-6">
+          {/* Buttons to switch sign-up type */}
+          <button
+            className={`px-6 py-2 text-sm font-medium border ${
+              signUpType === 'patient' ? 'bg-blue-500 text-white' : 'text-gray-700'
+            } rounded-md`}
+            onClick={() => setSignUpType('patient')}
+          >
+            Patient Sign Up
+          </button>
+          <button
+            className={`px-6 py-2 text-sm font-medium border ${
+              signUpType === 'doctor' ? 'bg-blue-500 text-white' : 'text-gray-700'
+            } rounded-md`}
+            onClick={() => setSignUpType('doctor')}
+          >
+            Doctor Sign Up
+          </button>
+          <button
+            className={`px-6 py-2 text-sm font-medium border ${
+              signUpType === 'admin' ? 'bg-blue-500 text-white' : 'text-gray-700'
+            } rounded-md`}
+            onClick={() => setSignUpType('admin')}
+          >
+            Admin Sign Up
+          </button>
         </div>
-        <div className='mb-3'>
-          <label className='form-label'>Password</label>
-          <input
-            type='password'
-            className='form-control'
-            id='exampleInputPassword1'
-          />
-        </div>
-        </>
-      )}
-        
 
-        {/* Extra field for Doctor Login */}
-        {signUpType  === 'doctor' && (
+        {/* Dynamic Form */}
+        <form className="space-y-4">
+          {signUpType === 'patient' && (
             <>
-            <h3 className='my-2'>Doctor Sign Up</h3>
-        <div className='mb-3'>
-          <label className='form-label'>Email address</label>
-          <input
-            type='email'
-            className='form-control'
-            id='exampleInputEmail1'
-            aria-describedby='emailHelp'
-          />
-        </div>
-        <div className='mb-3'>
-          <label className='form-label'>Password</label>
-          <input
-            type='password'
-            className='form-control'
-            id='exampleInputPassword1'
-          />
-        </div>
-          <div className='mb-3'>
-            <label className='form-label'>Doctor ID</label>
-            <input
-              type='text'
-              className='form-control'
-              id='exampleDoctorID'
-            />
+              <h3 className="text-xl font-bold mb-4">Patient Sign Up</h3>
+              <div>
+                <label className="block text-gray-700">Email address</label>
+                <input
+                  type="email"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700">Password</label>
+                <input
+                  type="password"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+            </>
+          )}
+
+          {signUpType === 'doctor' && (
+            <>
+              <h3 className="text-xl font-bold mb-4">Doctor Sign Up</h3>
+              <div>
+                <label className="block text-gray-700">Email address</label>
+                <input
+                  type="email"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700">Password</label>
+                <input
+                  type="password"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700">Doctor ID</label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your Doctor ID"
+                  required
+                />
+              </div>
+            </>
+          )}
+
+          {signUpType === 'admin' && (
+            <>
+              <h3 className="text-xl font-bold mb-4">Admin Sign Up</h3>
+              <div>
+                <label className="block text-gray-700">Email address</label>
+                <input
+                  type="email"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700">Password</label>
+                <input
+                  type="password"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+            </>
+          )}
+
+          <div className="flex justify-center mt-5">
+            <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+              Sign Up
+            </button>
           </div>
-          </>
-        )}
 
-        {
-            signUpType ==='admin' && (
-               <>
-               <h3 className='my-2'>Admin Sign Up</h3>
-                  <div className='mb-3'>
-                    <label className='form-label'>Email address</label>
-                    <input
-                      type='email'
-                      className='form-control'
-                      id='exampleInputEmail1'
-                      aria-describedby='emailHelp'
-                    />
-                  </div>
-                  <div className='mb-3'>
-                    <label className='form-label'>Password</label>
-                    <input
-                      type='password'
-                      className='form-control'
-                      id='exampleInputPassword1'
-                    />
-                  </div>
-               </>
-            )
-        }
-
-        <div className='d-flex justify-content-center my-5'>
-        <button type='submit' className='btn btn-primary  w-50'>
-          Sign Up
-        </button>
-        </div>
-        <div className='px-3 mt-5 d-flex flex-column justify-content-between'>
-                     <button className='fs-3  btn btn-outline-dark mb-2 d-flex flex-row justify-content-center align-items-center'> <FcGoogle  /><span className='fs-3 p-2 px-4'>Continue with Google</span></button>
-                     <button className='fs-3   btn btn-outline-dark mt-2 d-flex flex-row justify-content-center align-items-center'> <FaFacebook /><span className='fs-3 p-2 px-4'>Continue with Facebook</span></button>
-        </div>
-      </form>
+          <div className="flex flex-col space-y-3 mt-6">
+            <button className="flex items-center justify-center text-lg border py-2 rounded-md">
+              <FcGoogle className="mr-2" />
+              Continue with Google
+            </button>
+            <button className="flex items-center justify-center text-lg border py-2 rounded-md">
+              <FaFacebook className="text-blue-700 mr-2" />
+              Continue with Facebook
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
-}
+};
 
 export default SignUp;
+
+
+
+
+
+//import  { useState } from 'react';
+//import { FcGoogle  } from "react-icons/fc";
+// import { FaFacebook  } from "react-icons/fa";
+// const SignUp=()=> {
+//   const [signUpType, setSignUpType] = useState('patient'); // Default to 'patient' login
+
+//   return (
+//     <div className='container-fluid border border-1  my-5 p-3 '>
+//       <div className=' btn-group mx-3 my-5  d-flex flex-row justify-content-between'  role="group" 
+//             aria-label="Basic outlined example">
+//         {/* Buttons to switch login type */}
+//         <button
+//           type="button"
+//           className={`btn btn-outline-primary  ${signUpType === 'patient' ? 'active' : ''}`}
+//           onClick={() => setSignUpType('patient')}
+//         >
+//           Patient Sign Up
+//         </button>
+//         <button
+//           type="button"
+//           className={`btn btn-outline-primary   ${signUpType  === 'doctor' ? 'active' : ''}`}
+//           onClick={() => setSignUpType('doctor')}
+//         >
+//           Doctor Sign Up
+//         </button>
+//         <button  
+//            type="button"
+//            className={`btn btn-outline-primary   ${signUpType  === 'admin' ? 'active' : ''}`}
+//            onClick={() => setSignUpType('admin')}>
+//          Admin Sign Up
+//         </button>
+//       </div>
+
+//       {/* Dynamic Form */}
+//       <form className='mb-2 mx-3'>
+//       {signUpType  === 'patient' && (
+//         <>
+//         <h3 className='my-2'>Patient Sign Up</h3>
+//         <div className='mb-3'>
+//           <label className='form-label'>Email address</label>
+//           <input
+//             type='email'
+//             className='form-control'
+//             id='exampleInputEmail1'
+//             aria-describedby='emailHelp'
+//           />
+//         </div>
+//         <div className='mb-3'>
+//           <label className='form-label'>Password</label>
+//           <input
+//             type='password'
+//             className='form-control'
+//             id='exampleInputPassword1'
+//           />
+//         </div>
+//         </>
+//       )}
+        
+
+//         {/* Extra field for Doctor Login */}
+//         {signUpType  === 'doctor' && (
+//             <>
+//             <h3 className='my-2'>Doctor Sign Up</h3>
+//         <div className='mb-3'>
+//           <label className='form-label'>Email address</label>
+//           <input
+//             type='email'
+//             className='form-control'
+//             id='exampleInputEmail1'
+//             aria-describedby='emailHelp'
+//           />
+//         </div>
+//         <div className='mb-3'>
+//           <label className='form-label'>Password</label>
+//           <input
+//             type='password'
+//             className='form-control'
+//             id='exampleInputPassword1'
+//           />
+//         </div>
+//           <div className='mb-3'>
+//             <label className='form-label'>Doctor ID</label>
+//             <input
+//               type='text'
+//               className='form-control'
+//               id='exampleDoctorID'
+//             />
+//           </div>
+//           </>
+//         )}
+
+//         {
+//             signUpType ==='admin' && (
+//                <>
+//                <h3 className='my-2'>Admin Sign Up</h3>
+//                   <div className='mb-3'>
+//                     <label className='form-label'>Email address</label>
+//                     <input
+//                       type='email'
+//                       className='form-control'
+//                       id='exampleInputEmail1'
+//                       aria-describedby='emailHelp'
+//                     />
+//                   </div>
+//                   <div className='mb-3'>
+//                     <label className='form-label'>Password</label>
+//                     <input
+//                       type='password'
+//                       className='form-control'
+//                       id='exampleInputPassword1'
+//                     />
+//                   </div>
+//                </>
+//             )
+//         }
+
+//         <div className='d-flex justify-content-center my-5'>
+//         <button type='submit' className='btn btn-primary  w-50'>
+//           Sign Up
+//         </button>
+//         </div>
+//         <div className='px-3 mt-5 d-flex flex-column justify-content-between'>
+//                      <button className='fs-3  btn btn-outline-dark mb-2 d-flex flex-row justify-content-center align-items-center'> <FcGoogle  /><span className='fs-3 p-2 px-4'>Continue with Google</span></button>
+//                      <button className='fs-3   btn btn-outline-dark mt-2 d-flex flex-row justify-content-center align-items-center'> <FaFacebook /><span className='fs-3 p-2 px-4'>Continue with Facebook</span></button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+// export default SignUp;
 
 
 

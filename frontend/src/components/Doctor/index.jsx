@@ -103,7 +103,7 @@ const DoctorList = () => {
     <div>
       <h1 className="text-3xl font-bold text-center  mb-3">Doctor Details</h1>
     </div>
-    <div className="min-h-screen bg-gray-100  p-4 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-gray-100  p-4 flex flex-col md:flex-row w-full">
       <div className="w-full md:w-1/4 p-3 bg-white shadow-lg mr-4 h-64 rounded-2xl mb-4 md:mb-0">
         <h3 className="text-xl font-bold mb-4">Specialties</h3>
         <ul>
