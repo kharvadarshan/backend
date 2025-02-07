@@ -10,6 +10,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Home from './components/Home';
 import Footer from './components/Footer';
 import Admin from './components/Admin';
+// import ContactApp from './components/Contact/contactApp';
 
 function App() {
     return(
