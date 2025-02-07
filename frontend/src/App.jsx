@@ -1,5 +1,5 @@
 
-<<<<<<< HEAD
+
 import NavBar from './components/NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -12,7 +12,6 @@ import Home from './components/Home';
 import Footer from './components/Footer';
 import Admin from './components/Admin';
 import Contact from './components/Contact';
-=======
 // import NavBar from './components/NavBar';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -24,7 +23,7 @@ import Contact from './components/Contact';
 // import Home from './components/Home';
 // import Footer from './components/Footer';
 // import Admin from './components/Admin';
->>>>>>> 35a7058b8b34b8aa6c5c4089c79732a0d37c9b01
+
 // import ContactApp from './components/Contact/contactApp';
 
 import Doctor_List from "./components/Doctors/Doctor_List";
