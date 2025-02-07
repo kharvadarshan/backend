@@ -26,7 +26,7 @@ import Contact from './components/Contact';
 
 // import ContactApp from './components/Contact/contactApp';
 
-import Doctor_List from "./components/Doctors/Doctor_List";
+import Doctor from "./components/Doctor";
 
 function App() {
     return(
@@ -50,7 +50,7 @@ function App() {
                                   }></Route>
                                   <Route path='/login' element={<Login/>}></Route>
                                   <Route path='/signup' element={<SignUp/>}></Route>
-                                  <Route path='/all-doctors' element={ <Doctor_List/>}></Route>
+                                  <Route path='/all-doctors' element={ <Doctor/>}></Route>
                                   <Route path='/admin/*' element={<Admin/>}></Route>
                                   <Route path='/contact' element={<Contact/>}></Route>
                                   

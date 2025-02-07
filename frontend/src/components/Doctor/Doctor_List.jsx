@@ -193,7 +193,7 @@
 
 // export default DoctorList;
 
-import React, { useState } from "react";
+import  { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const doctors = [
