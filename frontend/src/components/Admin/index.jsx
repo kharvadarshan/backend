@@ -1,3 +1,5 @@
+import AddDoctor from "../AddDoctor";
+import Appointment from "../Appointment";
 import SideBar from "../SideBar";
 import { Route,Routes,Outlet } from "react-router-dom";
 
@@ -18,17 +20,9 @@ const Admin=()=>{
                             </>
                           }> </Route>
                           <Route path='appointments' 
-                          element={
-                            <>
-                                <h1>Appointments</h1>
-                            </>
-                          }> </Route>
+                          element={<Appointment/>}> </Route>
                           <Route path='add-doctor' 
-                          element={
-                            <>
-                                <h1>Add Doctor</h1>
-                            </>
-                          }> </Route>
+                          element={<AddDoctor/>}> </Route>
                           <Route path='doctors-list' 
                           element={
                             <>

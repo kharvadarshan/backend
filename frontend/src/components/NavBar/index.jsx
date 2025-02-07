@@ -27,6 +27,9 @@ const NavBar=()=>{
                       <li className="nav-item">
                         <a className="nav-link nav-link:hover text-light  fs-4 py-2" href="/admin">Admin</a>
                       </li>
+                      <li className="nav-item">
+                        <a className="nav-link nav-link:hover text-light  fs-4 py-2" href="/contact">Contact</a>
+                      </li>
                       </ul>
                       <form className="d-flex flex-row align-items-center">
                               <a className="btn btn-outline-primary mx-2" type="submit" href='/login'>Login</a>

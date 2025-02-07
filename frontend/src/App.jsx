@@ -5,11 +5,12 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Route,Routes } from 'react-router-dom';
 import Login from "../src/components/Login";
 import SignUp from "../src/components/SignUp";
-import Doctors from "../src/components/Doctors";
+import Doctors from "./components/Doctor";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Home from './components/Home';
 import Footer from './components/Footer';
 import Admin from './components/Admin';
+import Contact from './components/Contact';
 // import ContactApp from './components/Contact/contactApp';
 
 function App() {
@@ -34,7 +35,7 @@ function App() {
                                   <Route path='/signup' element={<SignUp/>}></Route>
                                   <Route path='/all-doctors' element={<Doctors/>}></Route>
                                   <Route path='/admin/*' element={<Admin/>}></Route>
-                                  <Route path='/learn' element={<Admin/>}></Route>
+                                  <Route path='/contact' element={<Contact/>}></Route>
                                   
                              </Routes>
                              </div>
