@@ -36,7 +36,7 @@ const NavBar = () => {
 
             {/* Links */}
             <div className="hidden lg:flex space-x-6 items-center">
-              <a href="/home" className="text-white hover:text-gray-400 text-lg">
+              <a href="/" className="text-white hover:text-gray-400 text-lg">
                 Home
               </a>
               <a href="/all-doctors" className="text-white hover:text-gray-400 text-lg">
