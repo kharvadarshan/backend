@@ -1,16 +1,11 @@
 import NavBar from '../components/NavBar';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Route,Routes } from 'react-router-dom';
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
-//import Doctors from "./components/Doctor";
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import Home from '../components/Home';
 import Footer from '../components/Footer';
 import Admin from '../components/Admin';
 import Contact from '../components/Contact';
-
 import Doctor from '../components/Doctor';
 
 const AllRoute=()=>{
@@ -18,7 +13,6 @@ const AllRoute=()=>{
            <>
             <div className='container min-vw-100 min-vh-100'>
            <div className='row g-0 custom-row'>
-               {/* <div className='col-2 bg-dark custom-col '><SideBar/></div> */}
                <div className='col-12 bg-light'> 
                     <div className='d-flex flex-column  w-auto h-auto'>
                           <NavBar/>

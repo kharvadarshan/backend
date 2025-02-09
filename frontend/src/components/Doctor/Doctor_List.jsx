@@ -206,7 +206,7 @@ const doctors = [
   },
   {
     id: 2,
-    name: "Dr. Raj Mehta",
+    name: "Dr. Ayesh Khan",
     specialty: "Dermatologist",
     contact: "raj.mehta@example.com",
     image: "../../../public/assets/doctor.png",
