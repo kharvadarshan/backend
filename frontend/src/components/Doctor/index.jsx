@@ -39,6 +39,7 @@ const DoctorList = () => {
     try {
       const response = await axios.get('http://localhost:5001/api/doctors');
       setDoctors(response.data);
+      console.log(doctors);
     } catch (error) {
       console.log(error);
     }

@@ -7,6 +7,7 @@ const Doctor = require('../../model/doctor'); // Adjust the path as needed
 exports.getAllDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find({});
+    console.log(doctors);
     res.status(200).json(doctors);
   } catch (error) {
     res.status(500).json({ error: error.message });
