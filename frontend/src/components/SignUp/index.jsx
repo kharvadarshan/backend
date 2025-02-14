@@ -1,12 +1,30 @@
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-
 const SignUp = () => {
-  const [signUpType, setSignUpType] = useState('patient'); // Default to 'patient' sign up
- 
+  const [signUpRole, setSignUpRole] = useState('user'); // Default to 'patient' sign up
+
+  const [formData,setFormData ]  = useState({
+    firstName:'',
+    lastName:'',
+    email:'',
+    password:'',
+    confirmPassword:''
+  }) ;
+
+  const register=()=>{
+    try{
+       const response = axios.post("")
+       console.log(response.data);
+    }catch(error)
+    {
+      console.error(error)
+    }
+  }
+
   return (
     <div className="min-h-screen  bg-gray-50 flex items-center justify-center">
       <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md my-10 mx-7">
@@ -179,6 +197,7 @@ const SignUp = () => {
           <div className='md:text-lg text-sm text-center'>
             <p>Already Sign Up? <Link to="/login" className='text-blue-500 ' >Login</Link></p>
           </div>
+
           <div className="flex flex-col space-y-3 mt-6">
             <button className="flex items-center justify-center md:text-lg text-sm border py-2 rounded-md">
               <FcGoogle className="mr-2" />
@@ -214,21 +233,21 @@ export default SignUp;
 //         {/* Buttons to switch login type */}
 //         <button
 //           type="button"
-//           className={`btn btn-outline-primary  ${signUpType === 'patient' ? 'active' : ''}`}
+//           className={btn btn-outline-primary  ${signUpType === 'patient' ? 'active' : ''}}
 //           onClick={() => setSignUpType('patient')}
 //         >
 //           Patient Sign Up
 //         </button>
 //         <button
 //           type="button"
-//           className={`btn btn-outline-primary   ${signUpType  === 'doctor' ? 'active' : ''}`}
+//           className={btn btn-outline-primary   ${signUpType  === 'doctor' ? 'active' : ''}}
 //           onClick={() => setSignUpType('doctor')}
 //         >
 //           Doctor Sign Up
 //         </button>
 //         <button  
 //            type="button"
-//            className={`btn btn-outline-primary   ${signUpType  === 'admin' ? 'active' : ''}`}
+//            className={btn btn-outline-primary   ${signUpType  === 'admin' ? 'active' : ''}}
 //            onClick={() => setSignUpType('admin')}>
 //          Admin Sign Up
 //         </button>
