@@ -1,11 +1,21 @@
 import './index.css';
+import { useNavigate } from 'react-router-dom';
 const NavBar = () => {
+  const navigate = useNavigate();
+
+  const handleLoginPage = () => {
+    navigate('/login');
+  }
+
+  const handleSignUpPage = () => {
+    navigate('/signup');
+  }
   return (
     <>
       <nav className="bg-gray-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
+            {/* Logo */}  
             <div className="flex-shrink-0">
               <h1 className="text-2xl font-bold">Logo</h1>
             </div>
@@ -55,12 +65,13 @@ const NavBar = () => {
 
             {/* Actions */}
             <div className="hidden lg:flex space-x-4 items-center">
-              <a href="/login" className="btn btn-outline bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+              <button onClick={handleLoginPage} className=" bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Login
-              </a>
-              <a href="/signup" className="btn btn-outline bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+              </button>
+              <button  onClick={handleSignUpPage}  className=" bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
                 Sign Up
-              </a>
+              </button>
+            
 
               {/* Dropdown */}
               <div className="relative group">

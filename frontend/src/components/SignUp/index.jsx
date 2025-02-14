@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+
 
 const SignUp = () => {
   const [signUpType, setSignUpType] = useState('patient'); // Default to 'patient' sign up
-
+ 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md my-10 mx-7">
@@ -124,7 +126,9 @@ const SignUp = () => {
               Sign Up
             </button>
           </div>
-
+          <div className='md:text-lg text-sm text-center'>
+            <p>Already Sign Up? <Link to="/login" className='text-blue-500 ' >Login</Link></p>
+          </div>
           <div className="flex flex-col space-y-3 mt-6">
             <button className="flex items-center justify-center md:text-lg text-sm border py-2 rounded-md">
               <FcGoogle className="mr-2" />
