@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const SignUp = () => {
   const [signUpRole, setSignUpRole] = useState('user'); // Default to 'patient' sign up
@@ -13,8 +15,18 @@ const SignUp = () => {
     confirmPassword:''
   }) ;
 
+  const register=()=>{
+    try{
+       const response = axios.post("")
+       console.log(response.data);
+    }catch(error)
+    {
+      console.error(error)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen  bg-gray-50 flex items-center justify-center">
       <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md my-10 mx-7">
         <div className="flex justify-evenly mb-6 gap-2 md:gap-4">
           {/* Buttons to switch sign-up type */}
@@ -45,7 +57,7 @@ const SignUp = () => {
         </div>
 
         {/* Dynamic Form */}
-        <form className="space-y-4" onSubmit={''} action='post'>
+        <form className="space-y-4" onSubmit={register} action='post'>
           {signUpRole === 'user' && (
             <>
               <h3 className="md:text-xl text-center text-sm font-bold mb-4">Patient Sign Up</h3>
@@ -181,6 +193,9 @@ const SignUp = () => {
             <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
               Sign Up
             </button>
+          </div>
+          <div className='md:text-lg text-sm text-center'>
+            <p>Already Sign Up? <Link to="/login" className='text-blue-500 ' >Login</Link></p>
           </div>
 
           <div className="flex flex-col space-y-3 mt-6">

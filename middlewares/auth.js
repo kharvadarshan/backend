@@ -11,7 +11,6 @@ exports.auth = (req,res,next)=>{
     }else{
     try {
        const decodedToken = JWT.verify(token,tokenSignature);
-       
     }catch(error)
     {  
             res.redirect('/user/login');

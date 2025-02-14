@@ -1,5 +1,15 @@
 import './index.css';
+import { useNavigate } from 'react-router-dom';
 const NavBar = () => {
+  const navigate = useNavigate();
+
+  const handleLoginPage = () => {
+    navigate('/login');
+  }
+
+  const handleSignUpPage = () => {
+    navigate('/signup');
+  }
   return (
     <>
       <nav className="bg-gray-800 text-white">
@@ -36,31 +46,33 @@ const NavBar = () => {
 
             {/* Links */}
             <div className="hidden lg:flex space-x-6 items-center">
-              <a href="/" className="text-white hover:text-gray-400 text-lg">
+              <a href="/" className="text-white no-underline hover:text-gray-400 text-lg">
                 Home
               </a>
-              <a href="/all-doctors" className="text-white hover:text-gray-400 text-lg">
+              <a href="/all-doctors" className="text-white no-underline hover:text-gray-400 text-lg text-underline ">
                 All Doctors
               </a>
-              <a href="/about" className="text-white hover:text-gray-400 text-lg">
+              <a href="/about" className="text-white no-underline hover:text-gray-400 text-lg">
                 About
               </a>
-              <a href="/admin" className="text-white hover:text-gray-400 text-lg">
+              <a href="/admin" className="text-white no-underline hover:text-gray-400 text-lg">
                 Admin
               </a>
-              <a href="/contact" className="text-white hover:text-gray-400 text-lg">
+              <a href="/contact" className="text-white no-underline hover:text-gray-400 text-lg">
                 Contact
               </a>
             </div>
-
+             
+              
+             
             {/* Actions */}
             <div className="hidden lg:flex space-x-4 items-center">
-              <a href="/login" className="btn btn-outline bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+            <button onClick={handleLoginPage} className=" bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Login
-              </a>
-              <a href="/signup" className="btn btn-outline bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+              </button>
+              <button  onClick={handleSignUpPage}  className=" bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
                 Sign Up
-              </a>
+              </button>
 
               {/* Dropdown */}
               <div className="relative group">

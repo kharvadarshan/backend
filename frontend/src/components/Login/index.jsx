@@ -7,7 +7,7 @@ function LoginPage() {
   const [loginType, setLoginType] = useState('patient'); // Default to 'patient' login
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center ">
+    <div className="min-h-screen  flex items-center justify-center ">
       <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md my-10 mx-7">
         <div className="flex justify-evenly md:gap-4 gap-2  mb-6">
           {/* Buttons to switch login type */}
