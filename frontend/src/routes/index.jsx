@@ -14,10 +14,10 @@ const Layout = ({ children }) => {
     const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup";
 
     return (
-        <div className='container min-vw-100 min-vh-100'>
+        <>
             <div className='row g-0 custom-row'>
                 <div className='col-12 bg-light'>
-                    <div className='d-flex flex-column w-auto h-auto'>
+                    <div className='d-flex flex-column w-auto  h-auto'>
                         {!hideNavFooter && <NavBar />}
                         <div className="d-flex justify-content-center">
                             <div className='h-auto w-auto'>
@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
