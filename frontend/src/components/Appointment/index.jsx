@@ -1,7 +1,7 @@
 const Appointment = () => {
   return (
     <>
-      <div className="container mx-auto p-4">
+      <div className="mx-auto p-4">
         <h2 className="text-red-600 text-2xl font-bold mb-6">Latest Appointments</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 rounded-lg shadow-lg">

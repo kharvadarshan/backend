@@ -14,7 +14,7 @@ const ReasonInput = ({ reason, setReason, onSubmit, onPrev }) => {
             Back
           </button>
           <button
-            onClick={onSubmit}
+            onClick={() => onSubmit()}
             disabled={!reason}
             className="bg-indigo-600 text-white py-2 px-4 rounded-md disabled:bg-indigo-300"
           >

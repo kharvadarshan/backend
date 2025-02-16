@@ -1,6 +1,5 @@
 
 
-
 import AddDoctor from "../AddDoctor";
 import Appointment from "../Appointment";
 import SideBar from "../SideBar";
@@ -10,7 +9,7 @@ const Admin=()=>{
     return (
          <>
             <div className="container w-100 min-vw-100 ">
-            <div className=" d-flex flex-row justify-content-start">
+            <div className="flex flex-row justify-start ">
                     <div className="">
                         <SideBar/>
                     </div>
@@ -37,7 +36,7 @@ const Admin=()=>{
                         <Outlet/>
                    </div>
             </div>
-
+              
             </div>
          </>
     )

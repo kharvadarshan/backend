@@ -8,7 +8,8 @@ import Contact from '../components/Contact';
 import Doctor from '../components/Doctor';
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
-
+import DoctorDetails from '../components/Doctor/IndividualDoctor'
+import BookAppointment from '../components/BookAppointment'
 const Layout = ({ children }) => {
     const location = useLocation();
     const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup";
@@ -46,6 +47,8 @@ const AllRoute = () => {
                         <Route path="/all-doctors" element={<Doctor />} />
                         <Route path="/admin/*" element={<Admin />} />
                         <Route path="/contact" element={<Contact />} />
+                        <Route path="/all-doctors/:id" element={<DoctorDetails />} />
+                        <Route path="/appointment/:id" element={<BookAppointment/>}/>
                     </Routes>
                 </Layout>} />
             </Routes>
