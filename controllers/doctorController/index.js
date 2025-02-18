@@ -15,14 +15,33 @@ exports.getAllDoctors = async (req, res) => {
 };
 
 // Get a single doctor by ID
+// exports.getDoctorById = async (req, res) => {
+//   try {
+//     const doctor = await Doctor.findById(req.params.id);
+
+//     console.log(doctor);
+//     if (!doctor) {
+//       return res.status(404).json({ message: 'Doctor not found' });
+//     }
+//     res.status(200).json(doctor);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 exports.getDoctorById = async (req, res) => {
   try {
-    const doctor = await Doctor.findById(req.params.id);
+    const { id } = req.params;
+    console.log(id);
+    const doctor = await Doctor.findById(id);
+    
     if (!doctor) {
-      return res.status(404).json({ message: 'Doctor not found' });
+      return res.status(404).json({ message: "Doctor not found" });
     }
+
     res.status(200).json(doctor);
   } catch (error) {
+    console.error("Error fetching doctor details:", error);
     res.status(500).json({ error: error.message });
   }
 };

@@ -36,10 +36,7 @@ const doctorsData = [
 
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://localhost:27017/onlineAppointmentBooking', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect('mongodb://127.0.0.1:27017/onlineAppointmentBooking')
   .then(() => {
     console.log('Connected to MongoDB');
     // Insert data into the database

@@ -4,6 +4,7 @@ import { FaFacebook } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './style.scss';
+import { NavLink } from 'react-router-dom';
 
 function LoginPage({ setIsLogin }) {
   const [loginType, setLoginType] = useState('patient'); // Default to 'patient' login
@@ -42,8 +43,8 @@ function LoginPage({ setIsLogin }) {
   }
 
   return (
-    <div className="min-h-screen  flex items-center justify-center ">
-      <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md my-10 mx-7">
+    <div className="min-h-screen bg-gray-200 flex items-center justify-center ">
+      <div className="w-full max-w-lg  p-6 bg-white rounded-lg shadow-md my-10 mx-7">
         <div className="flex justify-evenly md:gap-4 gap-2  mb-6">
           {/* Buttons to switch login type */}
           <button
@@ -166,7 +167,9 @@ function LoginPage({ setIsLogin }) {
 
           <div className="flex justify-center mt-4">
             <p className='md:text-lg text-sm'>
-              Dont have an account? <a className="text-blue-500 md:text-lg text-sm hover:underline" href="/signup">Sign Up</a>
+              Don&apos;t have an account? <NavLink to="/signup" className="text-blue-500 md:text-lg text-sm ">
+               SignUp
+              </NavLink>
             </p>
           </div>
 

@@ -243,21 +243,21 @@ export default SignUp;
 //         {/* Buttons to switch login type */}
 //         <button
 //           type="button"
-//           className={`btn btn-outline-primary  ${signUpType === 'patient' ? 'active' : ''}`}
+//           className={btn btn-outline-primary  ${signUpType === 'patient' ? 'active' : ''}}
 //           onClick={() => setSignUpType('patient')}
 //         >
 //           Patient Sign Up
 //         </button>
 //         <button
 //           type="button"
-//           className={`btn btn-outline-primary   ${signUpType  === 'doctor' ? 'active' : ''}`}
+//           className={btn btn-outline-primary   ${signUpType  === 'doctor' ? 'active' : ''}}
 //           onClick={() => setSignUpType('doctor')}
 //         >
 //           Doctor Sign Up
 //         </button>
 //         <button  
 //            type="button"
-//            className={`btn btn-outline-primary   ${signUpType  === 'admin' ? 'active' : ''}`}
+//            className={btn btn-outline-primary   ${signUpType  === 'admin' ? 'active' : ''}}
 //            onClick={() => setSignUpType('admin')}>
 //          Admin Sign Up
 //         </button>

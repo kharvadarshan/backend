@@ -4,9 +4,9 @@ import './style.css';
 const Home = () => {
   return (
     <>
-      <div className="homepage container mx-auto px-4">
+      <div className="homepage  mx-auto px-4">
         {/* Hero Section */}
-        <div className="hero-section grid grid-cols-1 md:grid-cols-2 items-center text-center md:text-left bg-blue-600 text-white py-12 px-6 rounded-2xl">
+        <div className="hero-section grid grid-cols-1 md:grid-cols-2 items-center text-center md:text-left bg-blue-600 text-white py-12 px-6  rounded-2xl">
           <div>
             <h1 className="text-4xl font-bold">Book Your Appointment Today</h1>
             <p className="text-lg mt-4">
