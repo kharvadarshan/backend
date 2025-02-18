@@ -1,6 +1,5 @@
 const express = require('express');
 const doctorController = require('../../controllers/doctorController/index.js'); // Adjust the path as needed
-
 const router = express.Router();
 
 // Doctor routes

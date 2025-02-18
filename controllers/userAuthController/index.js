@@ -8,46 +8,55 @@ exports.renderData = (req,res)=>{
    res.send('Login successful');
 };
 
+
 exports.registerUser = async (req,res)=>{
    try{
        const {firstName,lastName,email,password,confirmPassword,role}=req.body;
-       console.log(req.body);
        const hashedPassword = await bcrypt.hash(password,10);
        if(password == confirmPassword){
-            await User.insertOne({firstName,lastName,email,password:hashedPassword,role});
+         const user = new User({firstName,lastName,email,password:hashedPassword,role});
+         await user.save();
             res.status(201).json({
-               message: 'User registered successfully' });
+               message: 'User registered successfully',ok:true });
        }else
        {
-            return res.status(400).json({ message: 'Passwords do not match' });
+             res.status(400).json({ message: 'Passwords do not match' });
        }
    }catch(error)
    {
       console.error(error);
       if (error.code === 11000) {
-         return res.status(400).json({ message: 'Email already exists' });
+          res.status(400).json({ message: 'Email already exists' });
+     }else
+     {
+    res.status(500).json({ message: 'Internal server error' });
      }
-     res.status(500).json({ message: 'Internal server error' });
+         
    }
 }
 
 
 exports.logout = (req,res)=>{
-   req.session.destroy((err) => {
-      if (err) {
-          console.error(err);
-          return res.status(500).json({ message: 'Error logging out' });
-      }
+   console.log(req.session);
+   if (req.session.user) {
+      req.session.destroy((err) => {
+         if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Error logging out' });
+         }
+         res.clearCookie('connect.sid'); // Clear session cookie
+         res.status(200).json({ message: 'Logged out successfully', ok: true });
+      });
+   } else {
 
-      // Redirect to the login page or home page
-      res.redirect('/user/login');
-  });
+      res.status(400).json({ message: 'No active session found' });
+   }
 }
 
 
 
 exports.validateLogin = async (req,res)=>{
-   const {email,password,role}=req.body;
+   const {email,password}=req.body;
    console.log(req.body);
 
    try{
@@ -60,25 +69,31 @@ exports.validateLogin = async (req,res)=>{
             if(isMatch)
             {
                const token = JWT.sign(
-                  {email},
-                  tokenSignature
-              )
+                  { id: userCredential._id, email: userCredential.email, role: userCredential.role },
+                  tokenSignature,
+                  { expiresIn: '1d' }
+              );
               console.log(token);
-              req.session.token = token,
-              req.session.user = userCredential
-               res.redirect("/");
+              req.session.user = {
+               id: userCredential._id,
+               email: userCredential.email,
+               role: userCredential.role
+            };
+              res.status(201).json({message:'Login successfully.',ok:true,token:token})
+            
             }
             else{
-               res.redirect("/user/login");
+               res.status(500).json({message:'Password is wrong.'})
+              
             }
       }
       else{
-         return res.status(400).json({ message: 'User Not Found.' });
+          res.status(400).json({ message: 'User Not Found.' }).redirect('/login');
      }
    }catch(error)
    {
       console.error(error);
-      res.redirect("/user/login")
+      res.status(500).json({message:'Internal server error.'})
    }
    
 }

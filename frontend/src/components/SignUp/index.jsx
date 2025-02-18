@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+  const navigate=useNavigate();
   const [signUpRole, setSignUpRole] = useState('user'); // Default to 'patient' sign up
 
   const [formData,setFormData ]  = useState({
@@ -12,13 +13,22 @@ const SignUp = () => {
     lastName:'',
     email:'',
     password:'',
-    confirmPassword:''
+    confirmPassword:'',
+    role:signUpRole
   }) ;
 
-  const register=()=>{
+  const register=async (e)=>{
+    e.preventDefault();
     try{
-       const response = axios.post("")
+       const response = await axios.post("http://localhost:5001/user/signup",formData)
        console.log(response.data);
+      if(response.data.ok)
+      {
+           navigate('/login');
+      }
+      else{
+           navigate('/signup');
+      }
     }catch(error)
     {
       console.error(error)
@@ -57,7 +67,7 @@ const SignUp = () => {
         </div>
 
         {/* Dynamic Form */}
-        <form className="space-y-4" onSubmit={register} action='post'>
+        <form className="space-y-4" onSubmit={register} action="/" >
           {signUpRole === 'user' && (
             <>
               <h3 className="md:text-xl text-center text-sm font-bold mb-4">Patient Sign Up</h3>

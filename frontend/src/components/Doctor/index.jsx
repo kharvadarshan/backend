@@ -2,29 +2,6 @@ import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from 'axios';
 
-// const DoctorCard = ({ doctor,selectedDoctor,setSelectedDoctor,onNext }) => {
-//   return (
-//     <div  key={doctor.id}  onclick={()=>setSelectedDoctor(doctor)} className={`card text-center shadow-sm p-3 mb-4 ${selectedDoctor?.id === doctor.id ? "bg-indigo-50 border-indigo-500" : "bg-white border-gray-200"}`} >
-//       <img
-//         src={doctor.image}
-//         alt={doctor.name}
-//         className="card-img-top rounded-circle mx-auto mt-3"
-//         style={{ width: "80px", height: "80px", objectFit: "cover" }}
-//       />
-//       <div className="card-body">
-//         <h5 className="card-title">{doctor.name}</h5>
-//         <p className="card-text">{doctor.specialty}</p>
-//         <p className="card-text">{doctor.specialization}</p>
-//         <p className="card-text">{doctor.experience} of experience</p>
-//         <p className="card-text">{doctor.degree}</p>
-//         <p className="card-text">Fees: ₹{doctor.fees}</p>
-//         <p className="card-text">{doctor.address}</p>
-//         <p className="card-text">{doctor.about}</p>
-//         <p className="text-primary">{doctor.contact}</p>
-//       </div>
-//     </div>
-//   );
-// };
 
 const DoctorList = ({ selectedDoctor, setSelectedDoctor, onNext }) => {
   const [doctors, setDoctors] = useState([]);
@@ -37,8 +14,10 @@ const DoctorList = ({ selectedDoctor, setSelectedDoctor, onNext }) => {
 
   const fetchDoctors = async () => {
     try {
+      
       const response = await axios.get('http://localhost:5001/api/doctors');
       setDoctors(response.data);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -52,6 +31,7 @@ const DoctorList = ({ selectedDoctor, setSelectedDoctor, onNext }) => {
     const matchesSpecialization = selectedSpecialization === "All" || doctor.specialization === selectedSpecialization;
     return matchesSpecialty && matchesSpecialization;
   });
+
 
   return (
     <div className="container py-4 w-full">

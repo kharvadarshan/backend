@@ -1,12 +1,38 @@
 import './index.css';
+//import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-const NavBar = () => {
+import axios from 'axios';
+const NavBar = ({isLogin,setIsLogin}) => {
   const navigate = useNavigate();
-
+  
   const handleLoginPage = () => {
     navigate('/login');
   }
+  const logout = async (e)=>
+  {   
+    e.preventDefault();
+        console.log("logout event triggred.");
+       try{
+        const token = localStorage.getItem('token');
+       
+           console.log(token);
+            const result = await  axios.post("http://localhost:5001/user/logout",null,{ headers: {
+              Authorization: `Bearer ${token}`,
+            }, withCredentials:true});
+            if(result.data.ok)
+            {
+              localStorage.setItem('isLogin',false);
+              localStorage.removeItem('token');
+              setIsLogin(false);
+              //console.log(isLogin);
+              navigate('/');
+            }
 
+       }catch(err)
+       {
+        console.log(err);
+       }
+  }
   const handleSignUpPage = () => {
     navigate('/signup');
   }
@@ -67,12 +93,25 @@ const NavBar = () => {
              
             {/* Actions */}
             <div className="hidden lg:flex space-x-4 items-center">
+            {
+             !isLogin ? 
+            <>
             <button onClick={handleLoginPage} className=" bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Login
               </button>
               <button  onClick={handleSignUpPage}  className=" bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
                 Sign Up
               </button>
+            </>
+            :
+            <>
+            <button onClick={logout} className=" bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                Logout
+               </button>
+            </>
+               
+           
+            }
 
               {/* Dropdown */}
               <div className="relative group">

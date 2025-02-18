@@ -1,4 +1,5 @@
 import NavBar from '../components/NavBar';
+import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import SignUp from "../components/SignUp";
 import Home from '../components/Home';
@@ -12,14 +13,14 @@ import BookAppointment from '../components/BookAppointment';
 const AllRoute = () => {
     const location = useLocation();
     const isLoginPage = location.pathname === '/login' || location.pathname === '/signup';
-
+    const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin') === 'true');
     return (
         <>
             <div className=" min-vw-100 min-vh-100">
                 <div className="flex flex-col">
                     <div className="bg-light">
                         <div className="flex flex-col w-auto h-auto ">
-                            {!isLoginPage && <NavBar />}
+                            {!isLoginPage && <NavBar isLogin={isLogin} setIsLogin={setIsLogin} />}
                             <div className="flex justify-center">
                                 <div className="h-auto w-auto">
                                     <Routes>
@@ -36,7 +37,7 @@ const AllRoute = () => {
                                         <Route path="/all-doctors" element={<BookAppointment />}></Route>
                                         <Route path="/admin/*" element={<Admin />}></Route>
                                         <Route path="/contact" element={<Contact />}></Route>
-                                        <Route path="/login" element={<Login />} />
+                                        <Route  path="/login" element={<Login  setIsLogin={setIsLogin} />} />
                                     </Routes>
                                 </div>
                             </div>
