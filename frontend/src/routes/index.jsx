@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Home from '../components/Home';
@@ -13,11 +9,8 @@ import Login from "../components/Login";
 import SignUp from "../components/SignUp";
 import DoctorDetails from '../components/Doctor/IndividualDoctor'
 import BookAppointment from '../components/BookAppointment'
-<<<<<<< HEAD
-=======
 import Profile from '../components/Profile'
 import DoctorProfile from '../components/DoctorProfile';
->>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
 const Layout = ({ children }) => {
     const location = useLocation();
     const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup";
@@ -51,10 +44,7 @@ const AllRoute = () => {
                 <Layout>
                     
                     <Routes>
-<<<<<<< HEAD
-=======
                         <Route path="/doctorprofile/*" element={<DoctorProfile/>}></Route>
->>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
                         <Route path="/" element={<Home />} />
                         <Route path="/about" element={<h1 className='mt-4 p-4 min-vh-100'>Welcome to About Page</h1>} />
                         <Route path="/all-doctors" element={<Doctor />} />
@@ -62,10 +52,7 @@ const AllRoute = () => {
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/all-doctors/:id" element={<DoctorDetails />} />
                         <Route path="/appointment/:id" element={<BookAppointment/>}/>
-<<<<<<< HEAD
-=======
                         <Route path="/profile/*" element={<Profile/>}></Route>
->>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
                     </Routes>
                     
                 </Layout> } />
@@ -81,11 +68,8 @@ export default AllRoute;
 
 
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
 // import {   Route, Routes, useLocation } from 'react-router-dom';
 // import { useState } from 'react';
 // import NavBar from '../components/NavBar';
@@ -112,11 +96,7 @@ export default AllRoute;
 //                     <div className="bg-light">
 //                         <div className="flex flex-col w-auto h-auto ">
 //                             {!isLoginPage && <NavBar isLogin={isLogin} setIsLogin={setIsLogin} />}
-<<<<<<< HEAD
-//                             <div className="flex ">
-=======
 //                             <div className="flex justify-center">
->>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
 //                                 <div className="h-auto w-auto">
                                
 //                                     <Routes>

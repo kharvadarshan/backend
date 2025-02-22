@@ -18,11 +18,9 @@ const Sidebar = () => {
   const btnStyle = `${isOpen ? style1 : style2}`
 
   return (
-    <div>
-      <div className="flex">
-    <div className=''>
-      <div className="flex justify-start">
-
+    
+      <div>
+        
       {/* Hamburger Button for Mobile */}
       <button
         onClick={toggleSidebar}
@@ -34,7 +32,7 @@ const Sidebar = () => {
       <div
         className={`min-h-screen inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-blue-800 text-white transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 transition-transform duration-200 ease-in-out z-50`}
+        } lg:translate-x-0 transition-transform duration-200 ease-in-out z-40`}
       >
         <div className="p-4">
           <h2 className="text-2xl font-bold">Hospital</h2>
@@ -68,9 +66,6 @@ const Sidebar = () => {
 
         
     </div>
-    </div>
-    </div>
-  </div>
   );
 };
 
@@ -134,21 +129,4 @@ export default Sidebar;
 //   );
 // };
 
-<<<<<<< HEAD
 // export default SideBar;
-=======
-// export default SideBar;
-
-
-// import {useState} from "react";
-
-// const SideBar=()=>{
-
-//   const [submenuOpen, setSubmenuOpen] = useState(false);
-//   const toggleSubmenu = () => {
-//     setSubmenuOpen(!submenuOpen);
-//   };
-//     return(
-//         <>
-
->>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8

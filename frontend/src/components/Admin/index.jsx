@@ -14,11 +14,10 @@ const Admin=()=>{
             <div className=" flex flex-col  w-screen h-screen ">
             <div className=" flex flex-row justify-start items-start w-screen">
           
-                    <div className="basis-1/5 mx-auto">
-
+                    <div className="w-0 lg:w-64">
                         <SideBar/>
                     </div>
-                   <div className="basis-4/5 m-3">
+                    <div className="w-screen h-screen">
                        <Routes>
                           <Route path='/dashboard'
                           element={
