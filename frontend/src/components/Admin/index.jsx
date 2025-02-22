@@ -2,16 +2,17 @@ import AddDoctor from "../AddDoctor";
 import Appointment from "../Appointment";
 import SideBar from "../SideBar";
 import { Route,Routes,Outlet } from "react-router-dom";
+import ContactList from "./AllContact/AllContact";
 
 const Admin=()=>{
     return (
          <>
-            <div className="container w-full">
+            <div className="">
             <div className="flex flex-row justify-start ">
-                    <div className="">
+                    <div className="w-0 lg:w-64">
                         <SideBar/>
                     </div>
-                   <div className="m-3">
+                   <div className="w-screen h-screen">
                        <Routes>
                           <Route path='/dashboard'
                           element={
@@ -21,7 +22,8 @@ const Admin=()=>{
                           element={<Appointment/>}/>
 
                           <Route path='/allcontacts' 
-                          element={<h1> All Contacts</h1>}/>
+                          element={<ContactList/>}
+                          />
 
                           <Route path='/adddoctor' 
                           element={<AddDoctor/>}/>

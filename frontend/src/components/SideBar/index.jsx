@@ -13,18 +13,18 @@ const Sidebar = () => {
     setIsOpen(false);
   };
 
-  const style1 = "top-16 left-[150px] bg-transparent text-2xl ";
-  const style2 = "top-20 left-4  bg-blue-500 text-2xl p-[6px]";
+  const style1 = " left-[150px] bg-transparent text-2xl md:top-[94px] md:left-[200px]";
+  const style2 = " left-8  bg-blue-500 text-2xl p-[6px]";
   const btnStyle = `${isOpen ? style1 : style2}`
 
   return (
-    <div>
-      <div className="flex">
-
+    
+      <div>
+        
       {/* Hamburger Button for Mobile */}
       <button
         onClick={toggleSidebar}
-        className={`md:hidden absolute  top-20 left-4 z-50   text-white rounded ${btnStyle}`}>
+        className={`lg:hidden  absolute top-20   z-50  text-white rounded ${btnStyle}`}>
         ☰
       </button>
 
@@ -32,7 +32,7 @@ const Sidebar = () => {
       <div
         className={`min-h-screen inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-blue-800 text-white transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 transition-transform duration-200 ease-in-out z-40`}
+        } lg:translate-x-0 transition-transform duration-200 ease-in-out z-40`}
       >
         <div className="p-4">
           <h2 className="text-2xl font-bold">Hospital</h2>
@@ -56,14 +56,15 @@ const Sidebar = () => {
         </div>
       </div>
 
-       {/* Improved Mobile Overlay */}
-       {isOpen && (
+      {/* Improved Mobile Overlay */}
+       {/* {isOpen && (
           <div
             onClick={toggleSidebar}
-            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-200"
+            className="md:hidden fixed inset-0  bg-opacity-50 z-30 transition-opacity duration-200"
           ></div>
-        )}
-    </div>
+        )} */}
+
+        
     </div>
   );
 };
