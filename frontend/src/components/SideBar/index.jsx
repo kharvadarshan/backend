@@ -14,7 +14,7 @@ const Sidebar = () => {
   };
 
   const style1 = " left-[150px] bg-transparent text-2xl md:top-[94px] md:left-[200px]";
-  const style2 = " left-8  bg-blue-500 text-2xl p-[6px]";
+  const style2 = " left-4  bg-blue-500 text-2xl p-[6px]";
   const btnStyle = `${isOpen ? style1 : style2}`
 
   return (
@@ -24,7 +24,7 @@ const Sidebar = () => {
       {/* Hamburger Button for Mobile */}
       <button
         onClick={toggleSidebar}
-        className={`lg:hidden  absolute top-20   z-50  text-white rounded ${btnStyle}`}>
+        className={`lg:hidden  absolute md:top-[86px] top-20 z-50  text-white rounded ${btnStyle}`}>
         ☰
       </button>
 
@@ -130,6 +130,3 @@ export default Sidebar;
 // };
 
 // export default SideBar;
-
-
-

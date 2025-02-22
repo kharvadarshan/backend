@@ -1,11 +1,46 @@
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './style.scss';
 import { NavLink } from 'react-router-dom';
 
-function LoginPage() {
+function LoginPage({ setIsLogin }) {
   const [loginType, setLoginType] = useState('patient'); // Default to 'patient' login
+  const navigate=useNavigate();
+
+  const [formData,setFormData]=useState({
+    email:'',
+    password:'',
+    role:'user'
+  })
+
+
+  const login= async (e)=>{
+    e.preventDefault();
+    console.log("login function triggered");
+    try{
+      const result = await axios.post("http://localhost:5001/user/login",formData,{ withCredentials: true,});
+      console.log(result);
+      if(result.data.ok)
+      { 
+        console.log(result.data.token);
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('isLogin',true);
+        setIsLogin(true);
+         navigate('/');
+      }
+      else{
+        navigate('/login');
+      }
+      
+    }catch(err)
+    {
+      console.error(err);
+    }
+    
+  }
 
   return (
     <div className="min-h-screen bg-gray-200 flex items-center justify-center ">
@@ -38,7 +73,7 @@ function LoginPage() {
           </button>
         </div>
 
-        <form>
+        <form onSubmit={login} >
           {loginType === 'patient' && (
             <>
               <h3 className="md:text-xl font-bold mb-4 text-center  text-sm">Patient Login</h3>
@@ -46,6 +81,8 @@ function LoginPage() {
                 <label className="block ml-1 text-gray-700 md:text-lg text-sm">Email address</label>
                 <input
                   type="email" 
+                  value={formData.email}
+                  onChange={(e)=> setFormData({...formData,email:e.target.value})}
                   className="w-full mt-2 px-3 py-2 border rounded-md md:text-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your email"
                   required
@@ -55,6 +92,8 @@ function LoginPage() {
                 <label className="block ml-1 text-gray-700 md:text-lg  text-sm">Password</label>
                 <input
                   type="password"
+                  value={formData.password}
+                  onChange={(e)=> setFormData({...formData,password:e.target.value})}
                   className="w-full mt-2 px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
                   required

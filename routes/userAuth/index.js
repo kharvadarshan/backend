@@ -8,6 +8,6 @@ router.use(express.urlencoded({ extended: true }));
 router.use(bodyParser.urlencoded());
 router.post('/login',validateLogin);
 router.post('/signup',registerUser);
-router.get('/logout',auth,logout);
+router.post('/logout',logout);
 
 module.exports = router;
