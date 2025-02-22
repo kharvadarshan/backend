@@ -24,7 +24,7 @@ const Sidebar = () => {
       {/* Hamburger Button for Mobile */}
       <button
         onClick={toggleSidebar}
-        className={`lg:hidden  absolute md:top-[86px] top-20 z-50  text-white rounded ${btnStyle}`}>
+        className={`lg:hidden  absolute md:top-[86px] top-20 z-50  text-white rounded-full ${btnStyle}`}>
         ☰
       </button>
 

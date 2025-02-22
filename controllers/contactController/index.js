@@ -33,3 +33,25 @@ exports.gettingContact = async (req, res) => {
   }
 };
 
+
+exports.delettingContact = async (req, res) => {
+    try {
+        const id  = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid Contact ID" });
+        }
+
+        const contact = await contactModel.findById(id);
+        if (!contact) {
+            return res.status(404).json({ message: "Contact Not Found" });
+        }
+
+        await contactModel.findByIdAndDelete(id);
+        return res.status(200).json({ message: "Contact Deleted Successfully" });
+
+    } catch (error) {
+        console.error("Error in delete contact: Backend", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
