@@ -8,17 +8,32 @@ import ContactList from "./AllContact/AllContact";
 const Admin=()=>{
     return (
          <>
+<<<<<<< HEAD
             <div className="">
             <div className="flex flex-row justify-start ">
                     <div className="w-0 lg:w-64">
                         <SideBar/>
                     </div>
                    <div className="w-screen h-screen">
+=======
+            <div className="container w-full">
+            <div className="flex flex-row justify-start ">
+                    <div className="">
+            <div className=" flex flex-col  w-screen h-screen ">
+            <div className=" flex flex-row justify-start items-start w-screen">
+          
+                    <div className="basis-1/5 mx-auto">
+
+                        <SideBar/>
+                    </div>
+                   <div className="basis-4/5 m-3">
+>>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
                        <Routes>
                           <Route path='/dashboard'
                           element={
                                 <h1>Dashboard</h1>
                           }> </Route>
+<<<<<<< HEAD
                           <Route path='/appointments' 
                           element={<Appointment/>}/>
 
@@ -30,6 +45,13 @@ const Admin=()=>{
                           element={<AddDoctor/>}/>
                           
                           <Route path='/doctorslist' 
+=======
+                          <Route path='appointments' 
+                          element={<Appointment/>}> </Route>
+                          <Route path='adddoctor' 
+                          element={<AddDoctor/>}> </Route>
+                          <Route path='doctors-list' 
+>>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
                           element={
                                 <h1>Doctors List</h1>
                           }/>
@@ -40,9 +62,16 @@ const Admin=()=>{
             </div>
               
             </div>
+            </div>
+            </div>
+            </div>
          </>
-    )
+         )
 }
 
 export default Admin;
+<<<<<<< HEAD
     
+=======
+  
+>>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8

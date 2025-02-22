@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,9 +23,17 @@ const Sidebar = () => {
   const btnStyle = `${isOpen ? style1 : style2}`
 
   return (
+<<<<<<< HEAD
     
       <div>
         
+=======
+    <div>
+      <div className="flex">
+    <div className=''>
+      <div className="flex justify-start">
+
+>>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
       {/* Hamburger Button for Mobile */}
       <button
         onClick={toggleSidebar}
@@ -52,6 +65,10 @@ const Sidebar = () => {
                 )
               )
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
           </ul>
         </div>
       </div>
@@ -66,6 +83,8 @@ const Sidebar = () => {
 
         
     </div>
+    </div>
+    </div>
   );
 };
 
@@ -77,6 +96,16 @@ export default Sidebar;
 
 
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+
+>>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
 // const SideBar = () => {
 //   return (
 //     <div className="flex min-h-screen flex-col bg-gray-900 text-white p-3 w-64">
@@ -129,4 +158,21 @@ export default Sidebar;
 //   );
 // };
 
+<<<<<<< HEAD
 // export default SideBar;
+=======
+// export default SideBar;
+
+
+// import {useState} from "react";
+
+// const SideBar=()=>{
+
+//   const [submenuOpen, setSubmenuOpen] = useState(false);
+//   const toggleSubmenu = () => {
+//     setSubmenuOpen(!submenuOpen);
+//   };
+//     return(
+//         <>
+
+>>>>>>> 12a40bb40651788042d3d115ef10c2f87fa0c8b8
