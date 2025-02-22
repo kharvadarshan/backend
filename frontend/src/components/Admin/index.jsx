@@ -3,14 +3,17 @@
 import AddDoctor from "../AddDoctor";
 import Appointment from "../Appointment";
 import SideBar from "../SideBar";
+
+
 import { Route,Routes,Outlet } from "react-router-dom";
 
 const Admin=()=>{
     return (
          <>
-            <div className="container w-100 min-vw-100 ">
-            <div className="flex flex-row justify-start ">
-                    <div className="">
+         
+            <div className="flex flex-row items-start w-full">
+          
+                    <div className="mx-auto">
                         <SideBar/>
                     </div>
                    <div className="m-3">
@@ -35,7 +38,7 @@ const Admin=()=>{
                         </Routes>
                         <Outlet/>
                    </div>
-            </div>
+            
               
             </div>
          </>

@@ -1,13 +1,15 @@
 import './index.css';
 //import { useState } from 'react';
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const NavBar = ({isLogin,setIsLogin}) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  //const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const logout = async (e)=>
   {   
@@ -42,23 +44,23 @@ const NavBar = ({isLogin,setIsLogin}) => {
   
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  //       setIsDropdownOpen(false);
+  //     }
+  //   };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
 
    
 
   return (
-    <nav className="bg-gray-800 text-white relative z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="bg-gray-800 text-white relative z-50 shadow-lg ">
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full   w-screen"> */}
+        <div className="flex justify-between items-center h-16  px-3 ">
           {/* Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-2xl font-bold">Logo</h1>
@@ -128,27 +130,22 @@ const NavBar = ({isLogin,setIsLogin}) => {
                
             <div className="relative" ref={dropdownRef}>
               <button
-                className="flex items-center text-white hover:text-gray-400 focus:outline-none"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex flex-row items-center text-white  px-4 py-2 rounded-md hover:text-gray-400 focus:outline-none"
+                onClick={() => navigate('/profile')}
               >
-                <i className="bi bi-person-circle text-xl"></i>
-                <span className="ml-2 hidden lg:inline">Darshan</span>
+                 {/* <FontAwesomeIcon icon="fa-solid fa-user" /> */}
+                <span className="ml-2 hidden lg:inline"> <FontAwesomeIcon icon={faUser} className="text-blue-500 text-lg pr-2" />Darshan</span>
               </button>
+              
            
 
-              {isDropdownOpen && (
+              {/* {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-lg">
-                  <NavLink to="#" className="block px-4 py-2 hover:bg-gray-600 text-white no-underline">
+                  <NavLink to="/profile" className="block px-4 py-2 hover:bg-gray-600 text-white no-underline">
                     Profile
                   </NavLink>
-                  <NavLink to="#" className="block px-4 py-2 hover:bg-gray-600 text-white no-underline">
-                    My Appointment
-                  </NavLink>
-                  <NavLink to="#" className="block px-4 py-2 hover:bg-gray-600 text-white no-underline">
-                    Settings
-                  </NavLink>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -179,7 +176,7 @@ const NavBar = ({isLogin,setIsLogin}) => {
             </button>
           </div>
         )}
-      </div>
+      {/* </div> */}
     </nav>
   );
 };

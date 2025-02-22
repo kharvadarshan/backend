@@ -1,16 +1,18 @@
 
-import {  Route, Routes, useLocation } from 'react-router-dom';
+import {   Route, Routes, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import NavBar from '../components/NavBar';
 import Home from '../components/Home';
 import Footer from '../components/Footer';
 import Admin from '../components/Admin';
 import Contact from '../components/Contact';
-//import Doctor from '../components/Doctor';
+import Doctor from '../components/Doctor';
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
 import DoctorDetails from '../components/Doctor/IndividualDoctor'
 import BookAppointment from '../components/BookAppointment';
+import Profile from '../components/Profile';
+import DoctorProfile from '../components/DoctorProfile';
 
 const AllRoute = () => {
     const location = useLocation();
@@ -23,9 +25,11 @@ const AllRoute = () => {
                     <div className="bg-light">
                         <div className="flex flex-col w-auto h-auto ">
                             {!isLoginPage && <NavBar isLogin={isLogin} setIsLogin={setIsLogin} />}
-                            <div className="flex justify-center">
+                            <div className="flex ">
                                 <div className="h-auto w-auto">
+                               
                                     <Routes>
+                                        <Route path="/doctorprofile/*" element={<DoctorProfile/>}></Route>
                                         <Route path="/" element={<Home />}></Route>
                                         <Route
                                             path="/about"
@@ -36,13 +40,15 @@ const AllRoute = () => {
                                             }
                                         ></Route>
                                         <Route path="/signup" element={<SignUp />}></Route>
-                                        <Route path="/all-doctors" element={<BookAppointment />}></Route>
+                                        <Route path="/all-doctors" element={<Doctor />}></Route>
                                         <Route path="/admin/*" element={<Admin />}></Route>
                                         <Route path="/contact" element={<Contact />}></Route>
                                         <Route  path="/login" element={<Login  setIsLogin={setIsLogin} />} />
                                         <Route path="/all-doctors/:id" element={<DoctorDetails />} />
                                         <Route path="/appointment/:id" element={<BookAppointment/>}/>
+                                        <Route path="/profile/*" element={<Profile/>}></Route>
                                     </Routes>
+                                
                                 </div>
                             </div>
                             {!isLoginPage && <Footer/>}
@@ -57,21 +63,3 @@ const AllRoute = () => {
 }; 
 
 export default AllRoute;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
