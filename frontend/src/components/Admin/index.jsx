@@ -8,34 +8,27 @@ import { Route,Routes,Outlet } from "react-router-dom";
 const Admin=()=>{
     return (
          <>
-<<<<<<< HEAD
-         
-            <div className="flex flex-row items-start w-full">
-          
-                    <div className="mx-auto">
-=======
             <div className="container w-full">
             <div className="flex flex-row justify-start ">
                     <div className="">
->>>>>>> a9143deea5ca2c38619067fe313c8b49b97140fc
+            <div className=" flex flex-col  w-screen h-screen ">
+            <div className=" flex flex-row justify-start items-start w-screen">
+          
+                    <div className="basis-1/5 mx-auto">
+
                         <SideBar/>
                     </div>
-                   <div className="m-3">
+                   <div className="basis-4/5 m-3">
                        <Routes>
                           <Route path='/dashboard'
                           element={
                                 <h1>Dashboard</h1>
                           }> </Route>
-                          <Route path='/appointments' 
-                          element={<Appointment/>}/>
-
-                          <Route path='/allcontacts' 
-                          element={<h1> All Contacts</h1>}/>
-
-                          <Route path='/adddoctor' 
-                          element={<AddDoctor/>}/>
-                          
-                          <Route path='/doctorslist' 
+                          <Route path='appointments' 
+                          element={<Appointment/>}> </Route>
+                          <Route path='adddoctor' 
+                          element={<AddDoctor/>}> </Route>
+                          <Route path='doctors-list' 
                           element={
                                 <h1>Doctors List</h1>
                           }/>
@@ -46,8 +39,12 @@ const Admin=()=>{
             
               
             </div>
+            </div>
+            </div>
+            </div>
          </>
-    )
+         )
 }
 
 export default Admin;
+  
