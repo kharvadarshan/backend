@@ -8,21 +8,27 @@ import ContactList from "./AllContact/AllContact";
 const Admin=()=>{
     return (
          <>
-            <div className="container w-full">
+            <div className="w-full">
             <div className="flex flex-row justify-start ">
-                    <div className="">
             <div className=" flex flex-col  w-screen h-screen ">
             <div className=" flex flex-row justify-start items-start w-screen">
           
-                    <div className="w-0 lg:w-64">
+                    <div className="w-0 lg:w-64 z-50">
                         <SideBar/>
                     </div>
-                    <div className="w-screen h-screen">
+                    <div className="w-screen lg:max-w-7xl h-screen  overflow-y-auto">
                        <Routes>
+                        
+                       <Route path='/'
+                          element={
+                                <h1>Dashboard</h1>
+                          }> </Route>
+
                           <Route path='/dashboard'
                           element={
                                 <h1>Dashboard</h1>
                           }> </Route>
+
                           <Route path='/appointments' 
                           element={<Appointment/>}/>
 
@@ -43,7 +49,6 @@ const Admin=()=>{
                    </div>
             </div>
               
-            </div>
             </div>
             </div>
             </div>

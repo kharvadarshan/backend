@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { motion } from "framer-motion";
 
@@ -40,9 +41,9 @@ const ContactList = () => {
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="relative p-5 flex w-full md:w-0 items-center justify-center z-10">
-              <div className="absolute w-12 h-12 bg-red-400 rounded-full"></div>
-                <span className="text-2xl font-semibold relative z-0">
+            <div className="relative p-5 flex w-full md:w-0 items-center justify-center z-0">
+              <div className="absolute w-12 h-12 bg-gradient-to-r from-[#00c6ff] to-[#0072ff]  rounded-full"></div>
+                <span className="text-2xl font-semibold relative ">
                   {index + 1}
                 </span>
             </div>
