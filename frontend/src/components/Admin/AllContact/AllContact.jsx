@@ -40,12 +40,13 @@ const ContactList = () => {
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="relative p-5 flex w-full md:w-0  items-center justify-center">
-                    <div className="absolute  w-12 h-12 bg-red-400 rounded-full"></div>
-                    <span className="text-2xl font-semibold relative z-10">
-                        {index + 1}
-                    </span>
+            <div className="relative p-5 flex w-full md:w-0 items-center justify-center z-10">
+              <div className="absolute w-12 h-12 bg-red-400 rounded-full"></div>
+                <span className="text-2xl font-semibold relative z-0">
+                  {index + 1}
+                </span>
             </div>
+
             <div className="w-full">
               <p className="text-xl md:text-2xl font-semibold text-center">
                  {contact.name}

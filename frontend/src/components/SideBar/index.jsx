@@ -32,7 +32,7 @@ const Sidebar = () => {
       <div
         className={`min-h-screen inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-blue-800 text-white transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 transition-transform duration-200 ease-in-out z-40`}
+        } lg:translate-x-0 transition-transform duration-200 ease-in-out z-50`}
       >
         <div className="p-4">
           <h2 className="text-2xl font-bold">Hospital</h2>
