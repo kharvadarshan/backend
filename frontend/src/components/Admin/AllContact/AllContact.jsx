@@ -1,19 +1,25 @@
-/* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import axios from 'axios'
 
 const ContactList = () => {
-  const [contacts, setContacts] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", reason: "General Inquiry" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", reason: "Support Issue" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", reason: "Feedback" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", reason: "Feedback" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", reason: "Feedback" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", reason: "Feedback" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", reason: "Feedback" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", reason: "Feedback" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", reason: "Feedback" },
-  ]);
+
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  const fetchContacts = async () => {
+    try {
+      const response = await axios.get("http://localhost:5001/api/allcontacts");
+      setContacts(response.data);
+    } catch (error) {
+      console.error("Error Fetching All Contacts:", error);
+    }
+  };
+
+  
 
 //   const handleDelete = (id) => {
 //     setContacts(contacts.filter((contact) => contact.id !== id));
@@ -32,9 +38,10 @@ const ContactList = () => {
       </motion.h1>
 
       <div className="w-full   lg:max-w-6xl sm:max-w-2xl md:max-w-3xl  sm:h-[1500px] overflow-y-auto bg-white shadow-lg rounded-lg p-2 sm:p-4">
-        {contacts.map((contact, index) => (
+        {
+        contacts.map((contact, index) => (
           <motion.div
-            key={contact.id}
+            key={contact.id || index}
             className="bg-gray-300 shadow rounded-lg p-3 sm:p-4 gap-1 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 mt-2"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}

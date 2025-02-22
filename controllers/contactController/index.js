@@ -22,3 +22,14 @@ exports.createContact = async (req, res) => {
   }
 
 };
+
+exports.gettingContact = async (req, res) => {
+  try {
+    const data = await contactModel.find({});
+    console.log(data);
+    return res.status(200).json(Array.isArray(data) ? data : []); // Ensure array
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+

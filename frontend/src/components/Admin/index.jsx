@@ -28,6 +28,7 @@ const Admin=()=>{
                           element={
                                 <h1>Dashboard</h1>
                           }> </Route>
+
                           <Route path='/appointments' 
                           element={<Appointment/>}/>
 
@@ -52,7 +53,7 @@ const Admin=()=>{
             </div>
             </div>
          </>
-    )
+         )
 }
 
 export default Admin;
