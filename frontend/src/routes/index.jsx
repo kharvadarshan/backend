@@ -68,6 +68,8 @@ export default AllRoute;
 
 
 
+
+
 // import {   Route, Routes, useLocation } from 'react-router-dom';
 // import { useState } from 'react';
 // import NavBar from '../components/NavBar';
