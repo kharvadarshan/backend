@@ -10,13 +10,13 @@ import { Route,Routes,Outlet } from "react-router-dom";
 const Admin=()=>{
     return (
          <>
-         
-            <div className="flex flex-row items-start w-full">
+            <div className=" flex flex-col  w-screen h-screen ">
+            <div className=" flex flex-row justify-start items-start w-screen">
           
-                    <div className="mx-auto">
+                    <div className="basis-1/5 mx-auto">
                         <SideBar/>
                     </div>
-                   <div className="m-3">
+                   <div className="basis-4/5 m-3">
                        <Routes>
                           <Route path='' 
                           element={
@@ -26,7 +26,7 @@ const Admin=()=>{
                           }> </Route>
                           <Route path='appointments' 
                           element={<Appointment/>}> </Route>
-                          <Route path='add-doctor' 
+                          <Route path='adddoctor' 
                           element={<AddDoctor/>}> </Route>
                           <Route path='doctors-list' 
                           element={
@@ -40,6 +40,7 @@ const Admin=()=>{
                    </div>
             
               
+            </div>
             </div>
          </>
     )

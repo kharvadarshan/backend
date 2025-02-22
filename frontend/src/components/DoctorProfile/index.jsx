@@ -1,7 +1,8 @@
 import { NavLink,Route,Routes } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBell} from "@fortawesome/free-solid-svg-icons";
+import {faBell,faCalendarWeek,faPenToSquare,faFileMedical, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
+import EditProfile from "./EditProfile";
 const DoctorProfile = ()=>{
     return(
            <>
@@ -13,30 +14,26 @@ const DoctorProfile = ()=>{
                       <div></div>   
                       <div className="flex flex-col justify-between ">
                        <NavLink to="/doctorprofile/editprofile"  className="text-dark space-x-3 p-2 rounded-lg hover:bg-gray-800 hover:text-white   ">
-                          Edit Profile
+                          <span><FontAwesomeIcon icon={faPenToSquare}  className="text-blue-500 text-lg pr-2" />Edit Profile</span>
                        </NavLink>
                        <NavLink to="/doctorprofile/bookings"  className="text-dark space-x-3 p-2 rounded-lg hover:bg-gray-800 hover:text-white">
-                         Bookings
+                         <span><FontAwesomeIcon icon={faCalendarWeek} className="text-blue-500 text-lg pr-2" />Bookings</span>
                        </NavLink>
                        <NavLink to="/doctorprofile/notifications"  className="text-dark space-x-3 p-2 rounded-lg hover:bg-gray-800 hover:text-white">
                         <span className=""><FontAwesomeIcon icon={faBell} className="text-blue-500 text-lg pr-2" />Notifications</span>
                        </NavLink> 
                        <NavLink to="/doctorprofile/reports"  className="text-dark space-x-3 p-2 rounded-lg hover:bg-gray-800 hover:text-white">
-                         Reports
+                       <span className=""><FontAwesomeIcon icon={faFileMedical} className="text-blue-500 text-lg pr-2" />Reports</span>
                        </NavLink>
                        <NavLink to="/logout"  className="text-dark space-x-3 p-2 rounded-lg hover:bg-gray-800 hover:text-white">
-                          Logout
+                       <span className=""><FontAwesomeIcon icon={faRightFromBracket} className="text-blue-500 text-lg pr-2" />Logout</span>
                        </NavLink>
                        </div>
                   </div>
                   <div className="basis-4/5 bg-blue-500 m-4 p-2">
                    <Routes>
                           <Route path='editprofile' 
-                          element={
-                            <>
-                                <h1>Dashboard</h1>
-                            </>
-                          }> </Route>
+                          element={<EditProfile/>}> </Route>
                           <Route path='bookings' 
                           element={
                             <>
