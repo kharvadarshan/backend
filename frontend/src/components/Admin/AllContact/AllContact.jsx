@@ -73,7 +73,7 @@ const ContactList = () => {
             <motion.button
               onClick={() => setSelectedContact(contact)}
               whileHover={{ scale: 0.9 }}
-              whileTap={{ scale: 0.9 }}
+              whileTap={{ scale: 1.4 }}
               className="mt-2 mr-2 sm:mt-0 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-yellow-600 transition w-full sm:w-auto"
             >
               Reason
@@ -81,7 +81,7 @@ const ContactList = () => {
 
             <motion.button
               whileHover={{ scale: 0.9 }}
-              whileTap={{ scale: 0.9 }}
+              whileTap={{ scale: 1.4 }}
               className="mt-2 mr-2 sm:mt-0 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition w-full sm:w-auto"
               onClick={() => {
                 const email = contact.email;
@@ -98,7 +98,7 @@ const ContactList = () => {
             <motion.button
               onClick={() => handleDeleteContact(contact._id)}
               whileHover={{ scale: 0.9 }}
-              whileTap={{ scale: 0.9 }}
+              whileTap={{ scale: 1.4 }}
               className="mt-2 sm:mt-0 bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition w-full sm:w-auto"
             >
               Delete
