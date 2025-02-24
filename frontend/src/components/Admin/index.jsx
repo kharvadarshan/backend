@@ -1,47 +1,57 @@
+
 import AddDoctor from "../AddDoctor";
 import Appointment from "../Appointment";
 import SideBar from "../SideBar";
-
-
 import { Route,Routes,Outlet } from "react-router-dom";
+import ContactList from "./AllContact/AllContact";
+import DashBoard from "../Admin/Dashboard/Dashboard";
 
 const Admin=()=>{
     return (
          <>
-            <div className=" flex flex-col  w-screen h-screen ">
-            <div className=" flex flex-row justify-start items-start w-screen">
-          
-                    <div className="basis-1/5 mx-auto">
+            <div className="">
+            <div className="flex flex-row justify-start ">
+
+                    <div className="w-0 lg:w-64 z-50">
                         <SideBar/>
                     </div>
-                   <div className="basis-4/5 m-3">
+                    
+                    <div className="w-screen lg:max-w-7xl h-screen  overflow-y-auto">
                        <Routes>
-                          <Route path='' 
+                        
+                       <Route path='/'
                           element={
-                            <>
-                                <h1>Dashboard</h1>
-                            </>
+                              <h1>Dashboard</h1>
                           }> </Route>
-                          <Route path='appointments' 
-                          element={<Appointment/>}> </Route>
-                          <Route path='adddoctor' 
-                          element={<AddDoctor/>}> </Route>
-                          <Route path='doctors-list' 
+
+                          <Route path='/dashboard'
                           element={
-                            <>
+                                <DashBoard/>
+                          }> </Route>
+
+                          <Route path='/appointments' 
+                          element={<Appointment/>}/>
+
+                          <Route path='/allcontacts' 
+                          element={<ContactList/>}
+                          />
+
+                          <Route path='/adddoctor' 
+                          element={<AddDoctor/>}/>
+                          
+                          <Route path='/doctorslist' 
+                          element={
                                 <h1>Doctors List</h1>
-                            </>
-                          }> </Route>
+                          }/>
                           
                         </Routes>
                         <Outlet/>
                    </div>
-            
-              
             </div>
             </div>
          </>
-    )
+         )
 }
 
 export default Admin;
+    

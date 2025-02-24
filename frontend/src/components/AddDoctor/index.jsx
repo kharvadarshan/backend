@@ -3,17 +3,17 @@
 const AddDoctor=()=>{
     return(
 
-      <div className="container flex justify-center items-center mt-3 mb-5 px-4 lg:px-20">
-      <div className="bg-gray-900 text-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
+    <div className="container  flex justify-center items-center mt-[80px] lg:mt-[40px] mb-5 px-4 lg:px-20">
+      <div className="bg-gray-900 text-white shadow-lg rounded-lg p-6 w-full max-w-7xl">
         <h2 className="text-center text-red-500 font-bold text-2xl mb-4">Add Doctor</h2>
         <form>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:m-5 gap-4">
             <div>
               <label htmlFor="name" className="block mb-1">Your Name</label>
               <input
                 type="text"
                 id="name"
-                className="w-full p-2 border border-gray-300 rounded-lg text-black"
+                className="w-full lg:max-w-6xl  p-2 border border-gray-300 rounded-lg text-black"
                 placeholder="Enter Your Name"
                 required
               />
@@ -23,14 +23,14 @@ const AddDoctor=()=>{
               <input
                 type="text"
                 id="specialization"
-                className="w-full p-2 border border-gray-300 rounded-lg text-black"
+                className="w-full p-2  border border-gray-300 rounded-lg text-black"
                 placeholder="Enter Your Specialization"
                 required
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-1 lg:m-5  gap-4 mt-4">
             <div>
               <label htmlFor="experience" className="block mb-1">Experience</label>
               <input
@@ -53,7 +53,7 @@ const AddDoctor=()=>{
             </div>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 lg:m-5 ">
             <label htmlFor="fees" className="block mb-1">Fees</label>
             <input
               type="text"
@@ -64,7 +64,7 @@ const AddDoctor=()=>{
             />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 lg:m-5 ">
             <label htmlFor="address" className="block mb-1">Address</label>
             <input
               type="text"
@@ -75,7 +75,7 @@ const AddDoctor=()=>{
             />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 lg:m-5 ">
             <label htmlFor="about" className="block mb-1">About</label>
             <textarea
               id="about"
@@ -91,6 +91,7 @@ const AddDoctor=()=>{
         </form>
       </div>
     </div>
+
         // <div className="conatiner d-flex justify-content-center align-items-center mt-3 mb-5 mx-lg-5">
         //   <div className="card p-4 bg-dark text-white shadow-lg rounded-4 w-auto">
         //        <h2 className="text-center text-danger fw-bold mb-4">Add Doctor</h2>

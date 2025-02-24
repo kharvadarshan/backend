@@ -13,5 +13,7 @@ router.delete('/doctors/:id', doctorController.deleteDoctor);
 
 router.post('/appointments', appointmentController.createAppointment);
 router.post('/contact', contactController.createContact);
+router.get('/allcontacts', contactController.gettingContact);
+router.delete('/allcontacts/:id', contactController.delettingContact);
 
 module.exports = router;
