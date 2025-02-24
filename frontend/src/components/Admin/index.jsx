@@ -1,5 +1,3 @@
-
-
 import AddDoctor from "../AddDoctor";
 import Appointment from "../Appointment";
 import SideBar from "../SideBar";
