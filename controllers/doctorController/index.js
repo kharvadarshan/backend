@@ -7,7 +7,6 @@ const Doctor = require('../../model/doctor'); // Adjust the path as needed
 exports.getAllDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find({});
-    console.log(doctors);
     res.status(200).json(doctors);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -34,11 +33,9 @@ exports.getDoctorById = async (req, res) => {
     const { id } = req.params;
     console.log(id);
     const doctor = await Doctor.findById(id);
-    
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
-
     res.status(200).json(doctor);
   } catch (error) {
     console.error("Error fetching doctor details:", error);

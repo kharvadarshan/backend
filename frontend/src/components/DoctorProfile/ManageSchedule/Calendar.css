@@ -1,0 +1,71 @@
+.doctor-profile-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .profile-section, .availability-section, .booked-appointments-section, .reports-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .approval-message {
+    background-color: #ffebee;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+  
+  .available-slot {
+    color: green;
+    margin: 5px 0;
+  }
+  
+  .booked-slot {
+    color: red;
+    margin: 5px 0;
+  }
+  
+  input, textarea, button {
+    margin: 5px 0;
+    padding: 5px;
+  }
+  
+  button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+
+/* .calendar-container {
+    margin: 20px;
+  }
+  
+  .view-buttons {
+    margin-bottom: 10px;
+  }
+  
+  .view-buttons button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .fc-event.fc-booked {
+    background-color: red !important;
+    border-color: red !important;
+  }
+  
+  .fc-event.fc-available {
+    background-color: green !important;
+    border-color: green !important;
+  } */

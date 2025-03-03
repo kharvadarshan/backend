@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
-// mongoose.connect('mongodb://localhost:27017/onlineAppointmentBooking')
-// .then(() => console.log('Connected to MongoDB'))
-// .catch(err => console.error('Failed to connect to MongoDB', err));
-
-
 const userSchema = new mongoose.Schema({
     userId:  { type: Number, unique:true},
     firstName: { type: String, required: true, allowNull: false },

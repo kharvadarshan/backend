@@ -5,31 +5,48 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './style.scss';
 import { NavLink } from 'react-router-dom';
-
-function LoginPage({ setIsLogin }) {
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../../slices/userAuthSlice';
+import { setIsLogin } from '../../slices/loginSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import {toast } from 'react-toastify';
+function LoginPage() {
   const [loginType, setLoginType] = useState('patient'); // Default to 'patient' login
   const navigate=useNavigate();
-
+  const dispatch = useDispatch();
   const [formData,setFormData]=useState({
     email:'',
     password:'',
-    role:'user'
-  })
+    role:''
+  });
 
-
+  const isLogin = useSelector((state)=>state.isLogin.isLogin);
+  console.log(isLogin);
   const login= async (e)=>{
     e.preventDefault();
-    console.log("login function triggered");
+    console.log(formData);
     try{
       const result = await axios.post("http://localhost:5001/user/login",formData,{ withCredentials: true,});
       console.log(result);
       if(result.data.ok)
       { 
-        console.log(result.data.token);
+        console.log(result.data);
         localStorage.setItem('token', result.data.token);
-        localStorage.setItem('isLogin',true);
-        setIsLogin(true);
+        dispatch(setIsLogin());
+        console.log(result.data.user);
+       dispatch(setUser(result.data.user));
+       toast.success("Login Successfully...!",{
+            position:"top-right"
+       });
+        if(result.data.user.role === 'doctor')
+        {
+          navigate('/doctorprofile');
+        }
+        else
+        {
          navigate('/');
+        }
       }
       else{
         navigate('/login');
@@ -42,16 +59,24 @@ function LoginPage({ setIsLogin }) {
     
   }
 
+  const goToHome =()=>{
+    navigate('/');
+  }
+
   return (
-    <div className="min-h-screen bg-gray-200 flex items-center justify-center ">
+    <div className="min-h-screen bg-gray-200 flex flex-col items-center justify-center ">
+     
       <div className="w-full max-w-lg  p-6 bg-white rounded-lg shadow-md my-10 mx-7">
+      <div className="items-start mb-5 ">
+        <button onClick={goToHome} className=' p-2  hover:bg-blue-500 rounded-lg'><FontAwesomeIcon className='mr-2' icon={faArrowLeft} />Go to Home</button>
+      </div>
         <div className="flex justify-evenly md:gap-4 gap-2  mb-6">
           {/* Buttons to switch login type */}
           <button
             className={`px-6 py-2  text-sm  md:text-lg  font-medium border ${
               loginType === 'patient' ? 'bg-blue-500 text-white' : 'text-gray-700'
             } rounded-md`}
-            onClick={() => setLoginType('patient')}
+            onClick={() => {setLoginType('patient');setFormData({...formData,role:'user'})}}
           >
             Patient Login
           </button>
@@ -59,7 +84,7 @@ function LoginPage({ setIsLogin }) {
             className={`px-6 py-2 text-sm  md:text-lg  font-medium border ${
               loginType === 'doctor' ? 'bg-blue-500 text-white' : 'text-gray-700'
             } rounded-md`}
-            onClick={() => setLoginType('doctor')}
+            onClick={() => {setLoginType('doctor');setFormData({...formData,role:'doctor'})}}
           >
             Doctor Login
           </button>
@@ -67,7 +92,7 @@ function LoginPage({ setIsLogin }) {
             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
               loginType === 'admin' ? 'bg-blue-500 text-white' : 'text-gray-700'
             } rounded-md`}
-            onClick={() => setLoginType('admin')}
+            onClick={() => {setLoginType('admin');setFormData({...formData,role:'admin'})}}
           >
             Admin Login
           </button>
@@ -109,6 +134,8 @@ function LoginPage({ setIsLogin }) {
                 <label className="block text-gray-700 md:text-lg text-sm ml-1 mb-2">Email address</label>
                 <input
                   type="email"
+                  value={formData.email}
+                  onChange={(e)=> setFormData({...formData,email:e.target.value})}
                   className="w-full px-3 py-2 border rounded-md md:text-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your email"
                   required
@@ -118,17 +145,10 @@ function LoginPage({ setIsLogin }) {
                 <label className="block md:text-lg text-sm text-gray-700 ml-1 mb-2">Password</label>
                 <input
                   type="password"
+                  value={formData.password}
+                  onChange={(e)=> setFormData({...formData,password:e.target.value})}
                   className="w-full px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block md:text-lg text-sm text-gray-700 ml-1 mb-2">Doctor ID</label>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 md:text-lg text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your Doctor ID"
                   required
                 />
               </div>
@@ -142,6 +162,8 @@ function LoginPage({ setIsLogin }) {
                 <label className="block text-gray-700 mb-2 md:text-lg ml-1 text-sm">Email address</label>
                 <input
                   type="email"
+                  value={formData.email}
+                  onChange={(e)=> setFormData({...formData,email:e.target.value})}
                   className="w-full px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your email"
                   required
@@ -151,6 +173,8 @@ function LoginPage({ setIsLogin }) {
                 <label className="block text-gray-700 mb-2 md:text-lg ml-1 text-sm">Password</label>
                 <input
                   type="password"
+                  value={formData.password}
+                  onChange={(e)=> setFormData({...formData,password:e.target.value})}
                   className="w-full px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
                   required

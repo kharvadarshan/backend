@@ -5,12 +5,23 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from 'react-redux';
+import { resetUser } from '../../slices/userAuthSlice';
+import { useDispatch } from 'react-redux';
+import { resetIsLogin } from '../../slices/loginSlice';
+import { toast } from 'react-toastify';
 
-const NavBar = ({isLogin,setIsLogin}) => {
+const NavBar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   //const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+  const activeUser = useSelector((state)=>state.user.user);
+  const isLogin = useSelector((state)=>state.isLogin.isLogin);
+  console.log(isLogin);
+
+
   const logout = async (e)=>
   {   
     e.preventDefault();
@@ -24,10 +35,12 @@ const NavBar = ({isLogin,setIsLogin}) => {
             }, withCredentials:true});
             if(result.data.ok)
             {
-              localStorage.setItem('isLogin',false);
+                toast.success("Logout Successfully...!",{
+                          position:"top-right"
+                     });
               localStorage.removeItem('token');
-              setIsLogin(false);
-              //console.log(isLogin);
+              dispatch(resetIsLogin());
+              dispatch(resetUser());
               navigate('/');
             }
 
@@ -41,19 +54,7 @@ const NavBar = ({isLogin,setIsLogin}) => {
   }
 
   const handleLoginPage = () => navigate("/login");
-  
 
-  // Close dropdown when clicking outside
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-  //       setIsDropdownOpen(false);
-  //     }
-  //   };
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => document.removeEventListener("mousedown", handleClickOutside);
-  // }, []);
 
    
 
@@ -112,7 +113,7 @@ const NavBar = ({isLogin,setIsLogin}) => {
 
           {/* Actions */}
           <div className="hidden lg:flex space-x-4 items-center">
-          { !isLogin?<>
+          { !isLogin ?<>
             <button onClick={handleLoginPage} className="bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600">
               Login
             </button>
@@ -129,14 +130,15 @@ const NavBar = ({isLogin,setIsLogin}) => {
           }
                
             <div className="relative" ref={dropdownRef}>
-              <button
+            {
+              isLogin && (<button
                 className="flex flex-row items-center text-white  px-4 py-2 rounded-md hover:text-gray-400 focus:outline-none"
                 onClick={() => navigate('/profile')}
               >
                  {/* <FontAwesomeIcon icon="fa-solid fa-user" /> */}
-                <span className="ml-2 hidden lg:inline"> <FontAwesomeIcon icon={faUser} className="text-blue-500 text-lg pr-2" />Darshan</span>
-              </button>
-              
+                <span className="ml-2 hidden lg:inline"> <FontAwesomeIcon icon={faUser} className="text-blue-500 text-lg pr-2" />{ activeUser ? activeUser.email :''}</span>
+              </button>)
+            }
            
 
               {/* {isDropdownOpen && (

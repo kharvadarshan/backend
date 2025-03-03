@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
-  const menu = ["Dashboard", "Appointments", "Doctors List", "Add Doctor", "All Contacts"];
+  const menu = [ "Appointments", "Doctors List", "Add Doctor", "All Contacts"];
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -37,6 +37,11 @@ const Sidebar = () => {
         <div className="p-4">
           <h2 className="text-2xl font-bold">Hospital</h2>
           <ul className="mt-6">
+            <li>
+            <Link to='/admin'  className="block p-2 hover:bg-blue-900 rounded"  onClick={closeSidebar} >
+              DashBoard
+            </Link>
+            </li>
             {
               menu.map(
                 (item) => (

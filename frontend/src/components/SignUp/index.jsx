@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
 import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const SignUp = () => {
   const navigate=useNavigate();
@@ -17,9 +19,13 @@ const SignUp = () => {
     role:signUpRole
   }) ;
 
+  useEffect(()=>{
+       
+  },[]);
   const register=async (e)=>{
     e.preventDefault();
     try{
+        console.log(formData);
        const response = await axios.post("http://localhost:5001/user/signup",formData)
        console.log(response.data);
       if(response.data.ok)
@@ -34,17 +40,23 @@ const SignUp = () => {
       console.error(error)
     }
   }
+  const goToHome =()=>{
+    navigate('/');
+  }
 
   return (
     <div className="min-h-screen  bg-gray-50 flex items-center justify-center">
       <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md my-10 mx-7">
+      <div className="items-start mb-5 ">
+              <button onClick={goToHome} className=' p-2  hover:bg-blue-500 rounded-lg'><FontAwesomeIcon className='mr-2' icon={faArrowLeft} />Go to Home</button>
+            </div>
         <div className="flex justify-evenly mb-6 gap-2 md:gap-4">
           {/* Buttons to switch sign-up type */}
           <button
             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
               signUpRole === 'user' ? 'bg-blue-500 text-white' : 'text-gray-700'
             } rounded-md`}
-            onClick={() => setSignUpRole('user')}
+            onClick={() => {setSignUpRole('user'); setFormData({...formData,role:'user'})}}
           >
             Patient Sign Up
           </button>
@@ -52,7 +64,7 @@ const SignUp = () => {
             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
               signUpRole === 'doctor' ? 'bg-blue-500 text-white' : 'text-gray-700'
             } rounded-md`}
-            onClick={() => setSignUpRole('doctor')}
+            onClick={() => {setSignUpRole('doctor');setFormData({...formData,role:'doctor'})}}
           >
             Doctor Sign Up
           </button>
@@ -60,7 +72,7 @@ const SignUp = () => {
             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
               signUpRole === 'admin' ? 'bg-blue-500 text-white' : 'text-gray-700'
             } rounded-md`}
-            onClick={() => setSignUpRole('admin')}
+            onClick={() => {setSignUpRole('admin');setFormData({...formData,role:'admin'})}}
           >
             Admin Sign Up
           </button>
@@ -144,31 +156,72 @@ const SignUp = () => {
 
           {signUpRole === 'doctor' && (
             <>
-              <h3 className="md:text-xl text-sm text-center font-bold mb-4">Doctor Sign Up</h3>
+            <h3 className="md:text-xl text-center text-sm font-bold mb-4">Patient Sign Up</h3>
+              <div className='d-flex flex-row justify-content-between mb-4' >
+                      <div className=' mr-1'>
+                        <label className="block text-gray-700 md:text-lg  text-sm">First Name</label>
+                        <input
+                          type="text"
+                          value = {formData.firstName}
+                          onChange={(e)=>
+                            setFormData({ ...formData, firstName: e.target.value })
+                          }
+                          className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Enter your frist name"
+                          required
+                        />
+                      </div>
+                      <div className=' ml-1'>
+                        <label className="block text-gray-700 md:text-lg  text-sm">Last Name</label>
+                        <input
+                          type="text"
+                          value = {formData.lastName}
+                          onChange={(e)=>
+                            setFormData({ ...formData, lastName: e.target.value })
+                          }
+                          className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Enter your last name"
+                          required
+                        />
+                      </div>
+              </div>
+              
               <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg ml-1 mb-2  text-sm">Email address</label>
+                <label className="block text-gray-700 md:text-lg  text-sm">Email</label>
                 <input
                   type="email"
-                  className="w-full px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value = {formData.email}
+                  onChange={(e)=>
+                            setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your email"
                   required
                 />
               </div>
               <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg ml-1 mb-2  text-sm">Password</label>
+                <label className="block text-gray-700 md:text-lg  text-sm">Password</label>
                 <input
                   type="password"
-                  className="w-full px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value = {formData.password}
+                  onChange={(e)=>
+                            setFormData({ ...formData, password: e.target.value })
+                  }
+                  className="w-full mt-2 px-3 py-2 border md:text-lg  text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
                   required
                 />
               </div>
               <div className='mb-4'>
-                <label className="block md:text-lg text-sm ml-1 mb-2 text-gray-700">Doctor ID</label>
+                <label className="block text-gray-700 md:text-lg  text-sm">Confirm address</label>
                 <input
-                  type="text"
-                  className="w-full px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your Doctor ID"
+                  type="password"
+                  value = {formData.confirmPassword}
+                  onChange={(e)=>
+                            setFormData({ ...formData,confirmPassword: e.target.value })
+                  }
+                  className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your confirm password"
                   required
                 />
               </div>

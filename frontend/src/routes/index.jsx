@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import {  Route, Routes, useLocation } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Home from '../components/Home';
 import Footer from '../components/Footer';
@@ -11,19 +11,34 @@ import DoctorDetails from '../components/Doctor/IndividualDoctor'
 import BookAppointment from '../components/BookAppointment'
 import Profile from '../components/Profile'
 import DoctorProfile from '../components/DoctorProfile';
-const Layout = ({ children }) => {
+
+const AllRoute = () => {
     const location = useLocation();
     const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup";
-
+   // const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin') === 'true');
     return (
         <>
             <div className='row g-0 custom-row'>
                 <div className='col-12 bg-light'>
                     <div className='d-flex flex-column w-auto  h-auto'>
-                        {!hideNavFooter && <NavBar />}
+                        {!hideNavFooter &&  <NavBar  />}
                         <div className="d-flex justify-content-center">
                             <div className='h-auto w-auto'>
-                                {children}
+                           
+            <Routes>
+                        <Route path="/login"  element={<Login  />} />
+                        <Route path="/signup" element={<SignUp />} />
+                        <Route path="/doctorprofile/*" element={<DoctorProfile/>}></Route>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<h1 className='mt-4 p-4 min-vh-100'>Welcome to About Page</h1>} />
+                        <Route path="/all-doctors" element={<Doctor />} />
+                        <Route path="/admin/*" element={<Admin />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/all-doctors/:id" element={<DoctorDetails />} />
+                        <Route path="/appointment/:id" element={<BookAppointment/>}/>
+                        <Route path="/profile/*" element={<Profile/>}></Route>
+            </Routes>
+       
                             </div>
                         </div>
                         {!hideNavFooter && <Footer />}
@@ -34,32 +49,6 @@ const Layout = ({ children }) => {
     );
 };
 
-const AllRoute = () => {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/*" element={
-                <Layout>
-                    
-                    <Routes>
-                        <Route path="/doctorprofile/*" element={<DoctorProfile/>}></Route>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<h1 className='mt-4 p-4 min-vh-100'>Welcome to About Page</h1>} />
-                        <Route path="/all-doctors" element={<Doctor />} />
-                        <Route path="/admin/*" element={<Admin />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/all-doctors/:id" element={<DoctorDetails />} />
-                        <Route path="/appointment/:id" element={<BookAppointment/>}/>
-                        <Route path="/profile/*" element={<Profile/>}></Route>
-                    </Routes>
-                    
-                </Layout> } />
-            </Routes>
-        </BrowserRouter>
-    );  
-};
 
 export default AllRoute;
 

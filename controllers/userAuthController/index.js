@@ -13,6 +13,7 @@ exports.registerUser = async (req,res)=>{
    try{
        const {firstName,lastName,email,password,confirmPassword,role}=req.body;
        const hashedPassword = await bcrypt.hash(password,10);
+       console.log(req.body);
        if(password == confirmPassword){
          const user = new User({firstName,lastName,email,password:hashedPassword,role});
          await user.save();
@@ -57,8 +58,6 @@ exports.logout = (req,res)=>{
 
 exports.validateLogin = async (req,res)=>{
    const {email,password}=req.body;
-   console.log(req.body);
-
    try{
       const userCredential = await User.findOne( {email });
       console.log(userCredential);
@@ -79,7 +78,7 @@ exports.validateLogin = async (req,res)=>{
                email: userCredential.email,
                role: userCredential.role
             };
-              res.status(201).json({message:'Login successfully.',ok:true,token:token})
+              res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user})
             
             }
             else{

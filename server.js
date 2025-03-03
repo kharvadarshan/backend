@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const doctorRoutes = require('./routes/renderDoctors');
+const doctorProfileRoutes = require('./routes/doctorProfileRoutes');
 const userAuth = require('./routes/userAuth');
 const app = express();
 const MongoStore = require('connect-mongo');
@@ -30,7 +31,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/onlineAppointmentBooking')
 
 app.use('/api',doctorRoutes);
 app.use('/user',userAuth);
-
+app.use('/doctorprofile',doctorProfileRoutes);
 
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
