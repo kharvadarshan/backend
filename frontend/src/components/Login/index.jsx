@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../slices/userAuthSlice';
 import { setIsLogin } from '../../slices/loginSlice';
+import {setDoctor}   from '../../slices/doctorSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import {toast } from 'react-toastify';
@@ -41,6 +42,7 @@ function LoginPage() {
        });
         if(result.data.user.role === 'doctor')
         {
+          dispatch(setDoctor(result.data.user.doctor));
           navigate('/doctorprofile');
         }
         else

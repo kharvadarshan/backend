@@ -1,4 +1,5 @@
 const User = require('../../model/user');
+const Doctor = require('../../model/doctor');
 const JWT = require('jsonwebtoken');
 const { tokenSignature } = require('../../utils/global');
 
@@ -73,11 +74,14 @@ exports.validateLogin = async (req,res)=>{
                   { expiresIn: '1d' }
               );
               console.log(token);
+              // console.log(await Doctor.findOne({contact:email}));
               req.session.user = {
                id: userCredential._id,
                email: userCredential.email,
-               role: userCredential.role
-            };
+               role: userCredential.role,
+               doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
+              };
+             
               res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user})
             
             }

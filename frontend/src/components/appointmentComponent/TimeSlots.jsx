@@ -1,6 +1,7 @@
+
 const TimeSlots = ({ selectedTime, setSelectedTime, onNext, onPrev }) => {
     const timeSlots = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00"];
-  
+   
     return (
       <div className="w-96">
         <h2 className="text-2xl font-bold mb-6">Select a Time Slot</h2>

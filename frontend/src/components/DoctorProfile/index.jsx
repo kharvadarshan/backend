@@ -11,6 +11,8 @@ import { resetIsLogin } from "../../slices/loginSlice";
 import Reports from "./Reports";
 import BookedAppointment from "./BookedAppointment";
 import { toast } from "react-toastify";
+import { resetUser } from "../../slices/userAuthSlice";
+import {resetDoctor} from '../../slices/doctorSlice';
 const DoctorProfile = ()=>{
   //const isLogin = useSelector((state)=>state.isLogin);
   const activeUser = useSelector((state)=>state.user.user);
@@ -35,7 +37,8 @@ const DoctorProfile = ()=>{
                                     });
                 localStorage.removeItem('token');
                 dispatch(resetIsLogin());
-                //console.log(isLogin);
+                dispatch(resetUser());
+                dispatch(resetDoctor());
                 navigate('/');
               }
   

@@ -184,7 +184,7 @@ import { useNavigate , useLocation  } from "react-router-dom";
 // import DoctorList from "../DoctorList";
 // import DoctorDetails from "../Doctor/IndividualDoctor";
 import DatePicker from "../appointmentComponent/DatePicker";
-import TimeSlots from "../appointmentComponent/TimeSlots";
+//import TimeSlots from "../appointmentComponent/TimeSlots";
 import ReasonInput from "../appointmentComponent/ReasonInput";
 import Confirmation from "../appointmentComponent/Confirmation";
 import axios from "axios";
@@ -209,8 +209,7 @@ const BookAppointment = () => {
       time: selectedTime,
       reason,
     };
-
-
+    console.log(appointmentData);
     try {
       // console.log("Sending appointment data:", appointmentData);
       const response = await axios.post("http://localhost:5001/api/appointments", appointmentData);
@@ -226,8 +225,8 @@ const BookAppointment = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6 w-full w-screen">
+      {/* <div className="bg-white p-8 rounded-lg shadow-md  max-w-lg w-auto"> */}
         {!isConfirmed ? (
           <>
             {/* {step === 1 && (
@@ -239,26 +238,31 @@ const BookAppointment = () => {
             )} */}
             {step === 1 && (
               <DatePicker
+                selectedDoctor={selectedDoctor}
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
+                selectedTime={selectedTime}
+                setSelectedTime={setSelectedTime}
                 onNext={() => setStep(2)}
                 onPrev={() => navigate(`/all-doctors/${selectedDoctor._id}`)}
               />
             )}
-            {step === 2 && (
+
+            {/* {step === 2 && (
               <TimeSlots
+               
                 selectedTime={selectedTime}
                 setSelectedTime={setSelectedTime}
                 onNext={() => setStep(3)}
                 onPrev={() => setStep(1)}
               />
-            )}
-            {step === 3 && (
+            )} */}
+            {step === 2 && (
               <ReasonInput
                 reason={reason}
                 setReason={setReason}
                 onSubmit={handleSubmit}
-                onPrev={() => setStep(2)}
+                onPrev={() => setStep(1)}
               />
             )}
           </>
@@ -266,7 +270,7 @@ const BookAppointment = () => {
           <Confirmation />
         )}
       </div>
-    </div>
+    // </div>
   );
 };
 

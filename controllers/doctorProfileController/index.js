@@ -15,3 +15,18 @@ exports.addTimeSlot = async (req,res)=>{
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+exports.getAvailableTimeSlots = async(req,res)=>{
+     try{
+        const {_id}=req.body;
+        const results = await TimeSlot.find({doctorId:_id});
+        if (!results || results.length === 0) {
+            return res.status(404).json({ ok: false, message: 'No time slots found for the given doctor ID.' });
+        }
+        res.status(201).json({ ok:true,result:results});
+
+     }catch(error)
+     {
+        res.status(500).json({ message: 'Error while fetching available time slots.',error });
+     }
+}
