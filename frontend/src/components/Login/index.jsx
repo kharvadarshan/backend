@@ -66,9 +66,9 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-200 flex flex-col items-center justify-center ">
+    <div className="min-h-screen mx-3 flex flex-col items-center justify-center ">
      
-      <div className="w-full max-w-lg  p-6 bg-white rounded-lg shadow-md my-10 mx-7">
+      <div className="w-full  max-w-lg  p-6 bg-white rounded-lg shadow-md my-10 mx-7">
       <div className="items-start mb-5 ">
         <button onClick={goToHome} className=' p-2  hover:bg-blue-500 rounded-lg'><FontAwesomeIcon className='mr-2' icon={faArrowLeft} />Go to Home</button>
       </div>
@@ -90,14 +90,14 @@ function LoginPage() {
           >
             Doctor Login
           </button>
-          <button
+          {/* <button
             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
               loginType === 'admin' ? 'bg-blue-500 text-white' : 'text-gray-700'
             } rounded-md`}
             onClick={() => {setLoginType('admin');setFormData({...formData,role:'admin'})}}
           >
             Admin Login
-          </button>
+          </button> */}
         </div>
 
         <form onSubmit={login} >
@@ -157,7 +157,7 @@ function LoginPage() {
             </>
           )}
 
-          {loginType === 'admin' && (
+          {/* {loginType === 'admin' && (
             <>
               <h3 className="md:text-xl font-bold mb-4 text-center text-sm">Admin Login</h3>
               <div className="mb-4">
@@ -183,7 +183,7 @@ function LoginPage() {
                 />
               </div>
             </>
-          )}
+          )} */}
 
           <div className="flex justify-center md:text-lg text-sm mt-5">
             <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
