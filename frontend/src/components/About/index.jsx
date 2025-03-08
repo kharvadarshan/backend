@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 
 // Animation variants
@@ -55,7 +54,7 @@ const About = () => {
               Who We Are
             </h2>
             <p className="text-gray-600 mb-4">
-              Our hospital appointment scheduling system is designed to simplify the process of booking, managing, and tracking medical appointments. Whether you're a patient or a healthcare provider, our platform ensures a hassle-free experience.
+              Our hospital appointment scheduling system is designed to simplify the process of booking, managing, and tracking medical appointments. Whether you&apos;re a patient or a healthcare provider, our platform ensures a hassle-free experience.
             </p>
             <p className="text-gray-600 mb-4">
               With a focus on user-friendly design and advanced technology, we aim to bridge the gap between patients and doctors, making healthcare more accessible and efficient.
