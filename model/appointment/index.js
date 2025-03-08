@@ -12,6 +12,11 @@ const appointmentSchema = new mongoose.Schema({
       ref: "Doctor", // Reference to the Doctor model
       required: true,
     },
+    patientId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"User",
+      required:true,
+    },
     date: {
       type: String, // Can be changed to Date if needed
       required: true,
@@ -23,6 +28,10 @@ const appointmentSchema = new mongoose.Schema({
     reason: {
       type: String,
       required: true,
+    },
+    status:{
+      type: String,
+      default:"Pending",
     },
     createdAt: {
       type: Date,

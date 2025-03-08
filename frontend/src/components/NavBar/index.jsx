@@ -22,9 +22,9 @@ const NavBar = () => {
   console.log(isLogin);
 
 
-  const logout = async (e)=>
+  const logout = async ()=>
   {   
-    e.preventDefault();
+   
         console.log("logout event triggred.");
        try{
         const token = localStorage.getItem('token');

@@ -1,55 +1,60 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 const BookedAppointment = ()=>{
-    const [doctor, setDoctor] = useState({
-        id: 'doc001',
-        name: 'Dr. Ross Geller',
-        email: 'ross.geller@example.com',
-        specialization: 'Anesthetics',
-        rating: 5.0,
-        isApproved: false,
-        availability: [
-          {
-            date: '2025-02-24',
-            timeSlots: [
-              { time: '09:30', isBooked: false, patient: null },
-              { time: '10:00', isBooked: true, patient: 'Patient A' },
-              { time: '10:30', isBooked: false, patient: null },
-              { time: '11:00', isBooked: false, patient: null },
-            ],
-          },
-          {
-            date: '2025-02-25',
-            timeSlots: [
-              { time: '09:00', isBooked: false, patient: null },
-              { time: '09:30', isBooked: true, patient: 'Patient B' },
-              { time: '10:00', isBooked: false, patient: null },
-            ],
-          },
-        ],
-        medicalReports: [
-          { patient: 'Patient A', report: 'Routine checkup - Normal', date: '2025-02-24' },
-          { patient: 'Patient B', report: 'Prescription for medication X', date: '2025-02-25' },
-        ],
-      });
+  const activeUser = useSelector((state)=>state.doctor.doctor);
+  console.log(activeUser);
+   const [appointments,setAppointment]=useState([]);
+   useEffect(()=>{
+    getAllAppointmentByDoctorId();
+   },[]);
+   
+   const getAllAppointmentByDoctorId = async()=>{
+    try{
+      const response = await axios.post("http://localhost:5001/api/getAppointmentByDoctorId",{id:activeUser._id});
+      console.log(response.data);
+      if(response.data.ok)
+      {
+         setAppointment(response.data.result);
+         console.log(appointments);
+      }
+    }catch(error)
+    {
+      console.log(error); 
+    }
+   }
     return (
         <>
 
         {/* View Booked Appointments */}
       <div className="bg-white p-4 m-4 mb-4 rounded-lg shadow">
         <h3 className="text-xl font-semibold mb-2">Booked Appointments</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {doctor.availability
-            .flatMap((day) =>
-              day.timeSlots.map((slot) => ({ ...slot, date: day.date }))
-            )
-            .filter((slot) => slot.isBooked)
-            .map((slot, index) => (
-              <div key={index} className="bg-gray-100 p-2 rounded break-words">
-                {slot.time} on {slot.date} - Patient: {slot.patient}
-              </div>
-            ))}
-        </div>
+        <table className="w-full bg-white shadow-md rounded">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="p-3">Doctor</th>
+                <th className="p-3">Patient</th>
+                <th className="p-3">Date</th>
+                <th className="p-3">Time</th>
+                <th className="p-3">Reason</th>
+                <th className="p-3">Status</th>
+                <th className="p-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((app) => (
+                <tr key={app._id} className="border-t">
+                  <td className="p-3">{app.doctor}</td>
+                  <td className="p-3">{app.patientId}</td>
+                  <td className="p-3">{app.date}</td>
+                  <td className="p-3">{app.time}</td>
+                  <td className="p-3">{app.reason}</td>
+                  <td className={`p-3 ${app.status === "Approved" ? "text-green-600" : app.status === "Rejected" ? "text-red-600" : "text-yellow-600"}`}>{app.status}</td>
+                  <td className="p-3"><button className="bg-blue-500 text-white px-3 py-1 rounded">View</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
       </div>
 
         </>

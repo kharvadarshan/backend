@@ -188,10 +188,14 @@ import DatePicker from "../appointmentComponent/DatePicker";
 import ReasonInput from "../appointmentComponent/ReasonInput";
 import Confirmation from "../appointmentComponent/Confirmation";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
   // const [selectedDoctor, setSelectedDoctor] = useState(null);
+
+  const activeUser = useSelector((state)=>state.user.user);
+   console.log(activeUser);
   const { state } = useLocation();
   const selectedDoctor = state?.doctor;
   const [selectedDate, setSelectedDate] = useState("");
@@ -205,6 +209,7 @@ const BookAppointment = () => {
   const handleSubmit = async () => {
     const appointmentData = {
       doctor: selectedDoctor._id,
+      patientId:activeUser.id,
       date: selectedDate,
       time: selectedTime,
       reason,
