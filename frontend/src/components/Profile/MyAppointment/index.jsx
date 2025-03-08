@@ -1,68 +1,265 @@
 import { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Trash2 } from "lucide-react";
 
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const [filter, setFilter] = useState("All");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [filterMonth, setFilterMonth] = useState("All");
+  const [filterYear, setFilterYear] = useState("All");
+
+  // useEffect(() => {
+  //   const savedAppointments =
+  //     JSON.parse(localStorage.getItem("appointments")) || [];
+  //   setAppointments(savedAppointments);
+  // }, []);
 
   useEffect(() => {
-    const savedAppointments = JSON.parse(localStorage.getItem("appointments")) || [];
+    const savedAppointments = JSON.parse(
+      localStorage.getItem("appointments")
+    ) || [
+      {
+        id: 1,
+        doctor: "Dr. Smith",
+        date: "2025-03-15",
+        time: "10:00 AM",
+        status: "Confirmed",
+      },
+      {
+        id: 2,
+        doctor: "Dr. Johnson",
+        date: "2025-04-16",
+        time: "11:30 AM",
+        status: "Pending",
+      },
+      {
+        id: 3,
+        doctor: "Dr. Brown",
+        date: "2024-03-17",
+        time: "02:00 PM",
+        status: "Cancelled",
+      },
+      {
+        id: 4,
+        doctor: "Dr. Lee",
+        date: "2025-05-18",
+        time: "09:00 AM",
+        status: "Confirmed",
+      },
+      {
+        id: 5,
+        doctor: "Dr. Adams",
+        date: "2023-03-22",
+        time: "01:00 PM",
+        status: "Pending",
+      },
+    ];
     setAppointments(savedAppointments);
   }, []);
 
   const getStatusBadge = (status) => {
     const statusColors = {
-      Confirmed: "bg-green-200 text-green-700",
-      Pending: "bg-yellow-200 text-yellow-700",
-      Cancelled: "bg-red-200 text-red-700",
+      Confirmed: "bg-green-100 text-green-700 border border-green-400",
+      Pending: "bg-yellow-100 text-yellow-700 border border-yellow-400",
+      Cancelled: "bg-red-100 text-red-700 border border-red-400",
     };
-    return <span className={`px-2 py-1 rounded text-sm ${statusColors[status]}`}>{status}</span>;
+    return (
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[status]}`}
+      >
+        {status}
+      </span>
+    );
   };
 
+  const handleDelete = (id) => {
+    setAppointments((prev) =>
+      prev.filter((appointment) => appointment.id !== id)
+    );
+  };
+
+  const uniqueYears = useMemo(() => {
+    const years = [
+      ...new Set(appointments.map((appt) => appt.date.split("-")[0])),
+    ];
+    return years.sort();
+  }, [appointments]);
+
+  const uniqueMonths = useMemo(() => {
+    const months = [
+      ...new Set(
+        appointments.map((appt) =>
+          new Date(appt.date).toLocaleString("en-US", { month: "long" })
+        )
+      ),
+    ];
+    return months;
+  }, [appointments]);
+
   const filteredAppointments = useMemo(() => {
-    if (filter === "All") return appointments;
-    return appointments.filter((appointment) => appointment.status === filter);
-  }, [appointments, filter]);
+    return appointments.filter((appointment) => {
+      const [year, month] = appointment.date.split("-");
+      const appointmentMonth = new Date(appointment.date).toLocaleString(
+        "en-US",
+        { month: "long" }
+      );
+
+      return (
+        (filterStatus === "All" || appointment.status === filterStatus) &&
+        (filterMonth === "All" || appointmentMonth === filterMonth) &&
+        (filterYear === "All" || year === filterYear)
+      );
+    });
+  }, [appointments, filterStatus, filterMonth, filterYear]);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">My Appointments</h1>
+    <div className="p-6 mt-6  max-w-5xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        📅 My Appointments
+      </h1>
 
       {/* Filter Section */}
-      <div className="mb-3">
-        <label className="mr-2 font-semibold">Filter by Status:</label>
-        <select className="p-2 border rounded" value={filter} onChange={(e) => setFilter(e.target.value)}>
-          <option value="All">All</option>
-          <option value="Confirmed">Confirmed</option>
-          <option value="Pending">Pending</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
-      </div>
+      <div className="flex hover:cursor-pointer flex-wrap gap-4 justify-center mb-5">
+        {/* Status Filter */}
+        <div className="relative">
+          <select
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="All">All Status</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Pending">Pending</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <ChevronDown
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            size={20}
+          />
+        </div>
 
-      {/* Appointment List */}
+        {/* Month Filter */}
+        <div className="relative">
+          <select
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            value={filterMonth}
+            onChange={(e) => setFilterMonth(e.target.value)}
+          >
+            <option value="All">All Months</option>
+            {uniqueMonths.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            size={20}
+          />
+        </div>
+
+        {/* Year Filter */}
+        <div className="relative">
+          <select
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            value={filterYear}
+            onChange={(e) => setFilterYear(e.target.value)}
+          >
+            <option value="All">All Years</option>
+            {uniqueYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            size={20}
+          />
+        </div>
+      </div>
+      {/* Appointments */}
       {filteredAppointments.length === 0 ? (
-        <p className="text-gray-500 text-center">No appointments found.</p>
+        <p className="text-gray-500 text-center text-lg">
+          No appointments found.
+        </p>
       ) : (
-        <div className="p-4 shadow-md bg-white rounded-lg">
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border p-2">Doctor</th>
-                <th className="border p-2">Date</th>
-                <th className="border p-2">Time</th>
-                <th className="border p-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAppointments.map((appointment) => (
-                <tr key={appointment.id} className="border">
-                  <td className="p-2 border">{appointment.doctor}</td>
-                  <td className="p-2 border">{appointment.date}</td>
-                  <td className="p-2 border">{appointment.time}</td>
-                  <td className="p-2 border text-center">{getStatusBadge(appointment.status)}</td>
+        <div className="p-4 shadow-lg bg-white rounded-xl">
+          {/* Table for larger screens */}
+          <div className="hidden md:block">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-blue-100 text-gray-700">
+                  <th className="border p-3">Doctor</th>
+                  <th className="border p-3">Date</th>
+                  <th className="border p-3">Time</th>
+                  <th className="border p-3 text-center">Status</th>
+                  <th className="border p-3 text-center">Action</th>
                 </tr>
+              </thead>
+              <tbody>
+                <AnimatePresence>
+                  {filteredAppointments.map((appointment) => (
+                    <motion.tr
+                      key={appointment.id}
+                      className="border text-center"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <td className="p-3 border">{appointment.doctor}</td>
+                      <td className="p-3 border">{appointment.date}</td>
+                      <td className="p-3 border">{appointment.time}</td>
+                      <td className="p-3 border">
+                        {getStatusBadge(appointment.status)}
+                      </td>
+                      <td className="p-3 border">
+                        <button
+                          onClick={() => handleDelete(appointment.id)}
+                          className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Cards for mobile view */}
+          <div className="md:hidden text-center space-y-4">
+            <AnimatePresence>
+              {filteredAppointments.map((appointment) => (
+                <motion.div
+                  key={appointment.id}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm border flex flex-col space-y-2"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    {appointment.doctor}
+                  </h2>
+                  <p className="text-gray-600">📅 {appointment.date}</p>
+                  <p className="text-gray-600">⏰ {appointment.time}</p>
+                  <div className="self-start mx-auto">
+                    {getStatusBadge(appointment.status)}
+                  </div>
+                  <button
+                    onClick={() => handleDelete(appointment.id)}
+                    className="py-2 mx-auto px-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg flex items-center w-fit"
+                  >
+                    <Trash2 size={18} className="mr-2" />
+                    Delete
+                  </button>
+                </motion.div>
               ))}
-            </tbody>
-          </table>
+            </AnimatePresence>
+          </div>
         </div>
       )}
     </div>
@@ -70,209 +267,3 @@ const MyAppointments = () => {
 };
 
 export default MyAppointments;
-
-
-
-// import { useState, useEffect, useMemo } from "react";
-
-// const Appointments = () => {
-//   const [appointments, setAppointments] = useState([]);
-//   const [newAppointment, setNewAppointment] = useState({ doctor: "", date: "", time: "", status: "Confirmed" });
-//   const [filter, setFilter] = useState("All");
-
-//   useEffect(() => {
-//     const savedAppointments = JSON.parse(localStorage.getItem("appointments")) || [];
-//     setAppointments(savedAppointments);
-//   }, []);
-
-//   useEffect(() => {
-//     localStorage.setItem("appointments", JSON.stringify(appointments));
-//   }, [appointments]);
-
-//   const handleAddAppointment = () => {
-//     if (!newAppointment.doctor || !newAppointment.date || !newAppointment.time) {
-//       alert("Please fill in all fields!");
-//       return;
-//     }
-
-//     const newEntry = { ...newAppointment, id: Date.now() };
-//     setAppointments([...appointments, newEntry]);
-//     setNewAppointment({ doctor: "", date: "", time: "", status: "Confirmed" });
-//   };
-
-//   const handleRemoveAppointment = (id) => {
-//     if (window.confirm("Are you sure you want to remove this appointment?")) {
-//       setAppointments(appointments.filter((appointment) => appointment.id !== id));
-//     }
-//   };
-
-//   const getStatusBadge = (status) => {
-//     const statusColors = {
-//       Confirmed: "bg-green-200 text-green-700",
-//       Pending: "bg-yellow-200 text-yellow-700",
-//       Cancelled: "bg-red-200 text-red-700",
-//     };
-//     return <span className={`px-2 py-1 rounded text-sm ${statusColors[status]}`}>{status}</span>;
-//   };
-
-//   const filteredAppointments = useMemo(() => {
-//     if (filter === "All") return appointments;
-//     return appointments.filter((appointment) => appointment.status === filter);
-//   }, [appointments, filter]);
-
-//   return (
-//     <div className="p-6 max-w-4xl mx-auto">
-//       <h1 className="text-2xl font-bold mb-4">My Appointments</h1>
-
-//       {/* Appointment Form */}
-//       <div className="p-4 shadow-md bg-white rounded-lg mb-4">
-//         <h2 className="text-lg font-semibold mb-2">Book an Appointment</h2>
-//         <div className="grid grid-cols-2 gap-2 mb-3">
-//           <input
-//             type="text"
-//             placeholder="Doctor's Name"
-//             className="p-2 border rounded"
-//             value={newAppointment.doctor}
-//             onChange={(e) => setNewAppointment({ ...newAppointment, doctor: e.target.value })}
-//           />
-//           <input
-//             type="date"
-//             className="p-2 border rounded"
-//             value={newAppointment.date}
-//             onChange={(e) => setNewAppointment({ ...newAppointment, date: e.target.value })}
-//           />
-//           <input
-//             type="time"
-//             className="p-2 border rounded"
-//             value={newAppointment.time}
-//             onChange={(e) => setNewAppointment({ ...newAppointment, time: e.target.value })}
-//           />
-//           <select
-//             className="p-2 border rounded"
-//             value={newAppointment.status}
-//             onChange={(e) => setNewAppointment({ ...newAppointment, status: e.target.value })}
-//           >
-//             <option value="Confirmed">Confirmed</option>
-//             <option value="Pending">Pending</option>
-//             <option value="Cancelled">Cancelled</option>
-//           </select>
-//         </div>
-//         <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" onClick={handleAddAppointment}>
-//           Add Appointment
-//         </button>
-//       </div>
-
-//       {/* Filter Section */}
-//       <div className="mb-3">
-//         <label className="mr-2 font-semibold">Filter by Status:</label>
-//         <select className="p-2 border rounded" value={filter} onChange={(e) => setFilter(e.target.value)}>
-//           <option value="All">All</option>
-//           <option value="Confirmed">Confirmed</option>
-//           <option value="Pending">Pending</option>
-//           <option value="Cancelled">Cancelled</option>
-//         </select>
-//       </div>
-
-//       {/* Appointment List */}
-//       {filteredAppointments.length === 0 ? (
-//         <p className="text-gray-500 text-center">No appointments found.</p>
-//       ) : (
-//         <div className="p-4 shadow-md bg-white rounded-lg">
-//           <table className="w-full border-collapse border border-gray-300">
-//             <thead>
-//               <tr className="bg-gray-100">
-//                 <th className="border p-2">Doctor</th>
-//                 <th className="border p-2">Date</th>
-//                 <th className="border p-2">Time</th>
-//                 <th className="border p-2">Status</th>
-//                 <th className="border p-2">Action</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {filteredAppointments.map((appointment) => (
-//                 <tr key={appointment.id} className="border">
-//                   <td className="p-2 border">{appointment.doctor}</td>
-//                   <td className="p-2 border">{appointment.date}</td>
-//                   <td className="p-2 border">{appointment.time}</td>
-//                   <td className="p-2 border text-center">{getStatusBadge(appointment.status)}</td>
-//                   <td className="p-2 border text-center">
-//                     <button
-//                       className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
-//                       onClick={() => handleRemoveAppointment(appointment.id)}
-//                     >
-//                       Remove
-//                     </button>
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Appointments;
-
-
-
-
-
-
-
-
-
-// import { useState } from "react";
-
-// const Appointments = () => {
-//   const [appointments, setAppointments] = useState([
-//     { id: 1, doctor: "Dr. A Sharma", date: "2025-02-20", time: "10:00 AM", status: "Confirmed" },
-//     { id: 2, doctor: "Dr. B Gupta", date: "2025-02-22", time: "12:30 PM", status: "Pending" },
-//     { id: 3, doctor: "Dr. C Rao", date: "2025-02-25", time: "03:00 PM", status: "Cancelled" },
-//   ]);
-
-//   // Function to remove an appointment by ID
-//   const removeAppointment = (id) => {
-//     setAppointments(appointments.filter((appointment) => appointment.id !== id));
-//   };
-
-//   return (
-//     <div className="p-6 max-w-4xl mx-auto">
-//       <h1 className="text-2xl font-bold mb-4">My Appointments</h1>
-//       <div className="p-4 shadow-md bg-white rounded-lg">
-//         <table className="w-full border-collapse border border-gray-300">
-//           <thead>
-//             <tr className="bg-gray-100">
-//               <th className="border p-2">Doctor</th>
-//               <th className="border p-2">Date</th>
-//               <th className="border p-2">Time</th>
-//               <th className="border p-2">Status</th>
-//               <th className="border p-2">Action</th> {/* New Action Column */}
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {appointments.map((appointment) => (
-//               <tr key={appointment.id} className="border">
-//                 <td className="p-2 border">{appointment.doctor}</td>
-//                 <td className="p-2 border">{appointment.date}</td>
-//                 <td className="p-2 border">{appointment.time}</td>
-//                 <td className="p-2 border">{appointment.status}</td>
-//                 <td className="p-2 border text-center">
-//                   <button
-//                     className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
-//                     onClick={() => removeAppointment(appointment.id)}
-//                   >
-//                     Remove
-//                   </button>
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Appointments;
