@@ -23,7 +23,7 @@ const DashBoard = () => {
     
   
     return (
-      <div className="min-h-screen bg-gray-100 flex">
+      <div className="min-h-[650px] bg-gray-100 flex">
         <main className="flex-1 p-6">
           <h2 className="text-2xl font-bold mb-4">Appointment List</h2>
           <div className="grid grid-cols-4 gap-4 mb-6">

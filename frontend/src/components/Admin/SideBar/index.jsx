@@ -30,7 +30,7 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`min-h-screen  z-50 inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-blue-800 text-white transform ${
+        className={` min-h-[650px] z-50 inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-blue-800 text-white transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 transition-transform duration-200 ease-in-out`}
       >
