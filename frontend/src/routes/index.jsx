@@ -12,6 +12,7 @@ import BookAppointment from '../components/BookAppointment'
 import Profile from '../components/Profile'
 import DoctorProfile from '../components/DoctorProfile';
 import About from '../components/About';
+import FeedbackForm from '../components/FeedBackForm/FeedBack';
 
 const AllRoute = () => {
     const location = useLocation();
@@ -38,6 +39,7 @@ const AllRoute = () => {
                         <Route path="/all-doctors/:id" element={<DoctorDetails />} />
                         <Route path="/appointment/:id" element={<BookAppointment/>}/>
                         <Route path="/profile/*" element={<Profile/>}></Route>
+                        <Route path="/feedbackform" element={<FeedbackForm/>}></Route>
             </Routes>
        
                             </div>
