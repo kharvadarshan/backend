@@ -17,4 +17,5 @@ router.get('/allcontacts', contactController.gettingContact);
 router.delete('/allcontacts/:id', contactController.delettingContact);
 router.get('/getAllAppointment',appointmentController.getAllAppointments);
 router.post('/getAppointmentByDoctorId',appointmentController.getAllAppointmentsByDoctorId);
+router.post('/getAppointmentByPatientId',appointmentController.getAllAppointmentsByPatientId);
 module.exports = router;

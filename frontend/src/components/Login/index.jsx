@@ -7,7 +7,7 @@ import './style.scss';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../slices/userAuthSlice';
-import { setIsLogin } from '../../slices/loginSlice';
+import { setIsLogin, setRole } from '../../slices/loginSlice';
 import {setDoctor}   from '../../slices/doctorSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -29,15 +29,16 @@ function LoginPage() {
     console.log(formData);
     try{
       const result = await axios.post("http://localhost:5001/user/login",formData,{ withCredentials: true,});
-      console.log(result);
+     
       if(result.data.ok)
       { 
         console.log(result.data);
         localStorage.setItem('token', result.data.token);
         dispatch(setIsLogin());
+        dispatch(setRole(result.data.user.role));
         console.log(result.data.user);
-       dispatch(setUser(result.data.user));
-       toast.success("Login Successfully...!",{
+        dispatch(setUser(result.data.user));
+        toast.success("Login Successfully...!",{
             position:"top-right"
        });
         if(result.data.user.role === 'doctor')

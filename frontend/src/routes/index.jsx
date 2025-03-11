@@ -11,13 +11,17 @@ import DoctorDetails from '../components/Doctor/IndividualDoctor'
 import BookAppointment from '../components/BookAppointment'
 import Profile from '../components/Profile'
 import DoctorProfile from '../components/DoctorProfile';
+import { useSelector } from 'react-redux';
 import About from '../components/About';
 import FeedbackForm from '../components/FeedBackForm/FeedBack';
 import Chatbot from '../components/Chatbot/Chatbot';
 
 const AllRoute = () => {
     const location = useLocation();
-    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup";
+    const role = useSelector((state)=>state.isLogin.role);
+
+    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup" || role === 'doctor' ;
+     console.log(role);
    // const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin') === 'true');
     return (
         <>
@@ -28,10 +32,12 @@ const AllRoute = () => {
                         <div className="d-flex justify-content-center">
                             <div className='h-auto w-auto'>
                            
-            <Routes>
+            <Routes>  
+                       
+                           
+                        <Route path="/doctorprofile/*" element={role==='doctor' ? <DoctorProfile/> : <Home/>}></Route>
                         <Route path="/login"  element={<Login  />} />
                         <Route path="/signup" element={<SignUp />} />
-                        <Route path="/doctorprofile/*" element={<DoctorProfile/>}></Route>
                         <Route path="/" element={<Home />} />
                         <Route path="/about" element={ <About/>} />
                         <Route path="/all-doctors" element={<Doctor />} />

@@ -1,12 +1,33 @@
+import axios from "axios";
+import { useSelector } from "react-redux";
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Trash2 } from "lucide-react";
-
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
+  const activeUser = useSelector((state)=>state.user.user);
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
   const [filterYear, setFilterYear] = useState("All");
+  useEffect(() => {
+     getAllAppointmentsByPatientId();
+  }, []);
+
+  const getAllAppointmentsByPatientId = async()=>{
+    const response  =  await axios.post("http://localhost:5001/api/getAppointmentByPatientId",{id:activeUser.id});
+
+    if(response.data.ok)
+    {
+      setAppointments(response.data.result);
+    }
+  }
+  
+
+ 
+
+
+
+  
 
   // useEffect(() => {
   //   const savedAppointments =

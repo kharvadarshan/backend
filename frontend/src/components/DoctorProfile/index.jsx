@@ -15,7 +15,7 @@ import ManageSchedule from "./ManageSchedule";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { resetIsLogin } from "../../slices/loginSlice";
+import { resetIsLogin, resetRole } from "../../slices/loginSlice";
 import Reports from "./Reports";
 import BookedAppointment from "./BookedAppointment";
 import { toast } from "react-toastify";
@@ -48,6 +48,7 @@ const DoctorProfile = () => {
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetDoctor());
+        dispatch(resetRole());
         navigate("/");
       }
     } catch (err) {

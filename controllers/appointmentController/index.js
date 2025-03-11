@@ -61,3 +61,23 @@ exports.getAllAppointmentsByDoctorId= async(req,res)=>{
     res.status(500).json({ error: error.message });
   }
 }
+
+
+exports.getAllAppointmentsByPatientId= async(req,res)=>{
+  try
+  {
+    const {id} = req.body;
+    console.log(req.body);
+
+    const result = await AppointmentModel.find({patientId:id}).sort({ createdAt:-1});
+
+    if (!result || result.length === 0) {
+      return res.status(404).json({message : "Appointment not Found."})
+    }
+    res.status(201).json({ok: true,result:result});
+
+  }catch(error)
+  {
+    res.status(500).json({ error: error.message });
+  }
+}

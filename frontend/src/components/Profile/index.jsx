@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faCalendarWeek, faPenToSquare, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { resetIsLogin } from "../../slices/loginSlice.jsx";
+import { resetIsLogin, resetRole } from "../../slices/loginSlice.jsx";
 import { resetUser } from "../../slices/userAuthSlice.jsx";
 import { toast } from "react-toastify";
 import { useState } from "react";
