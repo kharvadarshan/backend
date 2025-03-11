@@ -7,14 +7,15 @@ const app = express();
 const MongoStore = require('connect-mongo');
 const cors=require('cors');
 const session=require('express-session');
-
+const env = require('dotenv')
+env.config();
 const PORT=5001;
 app.use(cors({origin:"http://localhost:5173", credentials: true,}));
 app.use(express.json()); // For parsing JSON
 app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded form data
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/onlineAppointmentBooking')
+mongoose.connect(process.env.MONGODB_URL)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Failed to connect to MongoDB', err));
 

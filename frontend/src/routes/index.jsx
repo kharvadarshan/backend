@@ -12,6 +12,8 @@ import BookAppointment from '../components/BookAppointment'
 import Profile from '../components/Profile'
 import DoctorProfile from '../components/DoctorProfile';
 import { useSelector } from 'react-redux';
+import About from '../components/About';
+import FeedbackForm from '../components/FeedBackForm/FeedBack';
 
 const AllRoute = () => {
     const location = useLocation();
@@ -36,13 +38,14 @@ const AllRoute = () => {
                         <Route path="/login"  element={<Login  />} />
                         <Route path="/signup" element={<SignUp />} />
                         <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<h1 className='mt-4 p-4 min-vh-100'>Welcome to About Page</h1>} />
+                        <Route path="/about" element={ <About/>} />
                         <Route path="/all-doctors" element={<Doctor />} />
                         <Route path="/admin/*" element={<Admin />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/all-doctors/:id" element={<DoctorDetails />} />
                         <Route path="/appointment/:id" element={<BookAppointment/>}/>
                         <Route path="/profile/*" element={<Profile/>}></Route>
+                        <Route path="/feedbackform" element={<FeedbackForm/>}></Route>
             </Routes>
        
                             </div>

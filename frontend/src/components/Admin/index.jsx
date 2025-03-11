@@ -17,7 +17,7 @@ const Admin=()=>{
                         <SideBar/>
                     </div>
                     
-                    <div className="w-screen lg:max-w-7xl h-screen  overflow-y-auto">
+                    <div className="w-screen lg:max-w-7xl max-h-[650px]  overflow-y-auto">
                        <Routes>
                         
                        

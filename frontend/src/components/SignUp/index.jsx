@@ -45,8 +45,8 @@ const SignUp = () => {
   }
 
   return (
-    <div className="min-h-screen  bg-gray-50 flex items-center justify-center">
-      <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md my-10 mx-7">
+    <div className="min-h-screen mx-3 flex items-center justify-center">
+      <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md my-10 ">
       <div className="items-start mb-5 ">
               <button onClick={goToHome} className=' p-2  hover:bg-blue-500 rounded-lg'><FontAwesomeIcon className='mr-2' icon={faArrowLeft} />Go to Home</button>
             </div>
@@ -68,14 +68,14 @@ const SignUp = () => {
           >
             Doctor Sign Up
           </button>
-          <button
+          {/* <button
             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
               signUpRole === 'admin' ? 'bg-blue-500 text-white' : 'text-gray-700'
             } rounded-md`}
             onClick={() => {setSignUpRole('admin');setFormData({...formData,role:'admin'})}}
           >
             Admin Sign Up
-          </button>
+          </button> */}
         </div>
 
         {/* Dynamic Form */}
@@ -156,7 +156,7 @@ const SignUp = () => {
 
           {signUpRole === 'doctor' && (
             <>
-            <h3 className="md:text-xl text-center text-sm font-bold mb-4">Patient Sign Up</h3>
+            <h3 className="md:text-xl text-center text-sm font-bold mb-4">Doctor Sign Up</h3>
               <div className='d-flex flex-row justify-content-between mb-4' >
                       <div className=' mr-1'>
                         <label className="block text-gray-700 md:text-lg  text-sm">First Name</label>
@@ -228,7 +228,7 @@ const SignUp = () => {
             </>
           )}
 
-          {signUpRole === 'admin' && (
+          {/* {signUpRole === 'admin' && (
             <>
               <h3 className="md:text-xl text-sm text-center font-bold mb-4">Admin Sign Up</h3>
               <div className='mb-4'>
@@ -250,7 +250,7 @@ const SignUp = () => {
                 />
               </div>
             </>
-          )}
+          )} */}
 
           <div className="flex justify-center mt-5 md:text-lg text-sm">
             <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">

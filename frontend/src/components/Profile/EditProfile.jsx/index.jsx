@@ -1,95 +1,149 @@
 import { useState } from "react";
-const EditProfile = ()=>{
 
-   const [formData,setFormData]=useState({
+const EditProfile = () => {
+  const [formData, setFormData] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
     contact: "+1234567890",
-   });
+  });
 
-   const [photo, setPhoto] = useState(null); // State for the selected photo file
-   const [photoPreview, setPhotoPreview] = useState('C:\\Users\\Admin\\Desktop\\DesignEngineering\\Backend\\frontend\\public\\assets\\circle-user-solid.svg'); // State for photo preview
+  const [photo, setPhoto] = useState(null); // State for the selected photo file
+  const [photoPreview, setPhotoPreview] = useState(
+    "https://randomuser.me/api/portraits/men/94.jpg"
+  ); // State for photo preview
 
-   const handlePhotoChange = (e) => {
+  const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setPhoto(file);
       setPhotoPreview(URL.createObjectURL(file)); // Create a preview URL
     }
   };
-   console.log(formData);
 
-    return(
-        <form className="flex-1 p-8" onSubmit='' >
-        <h1 className="text-3xl font-bold mb-6">Profile</h1>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <div className="flex items-center space-x-6">
-            <img
-              src={photoPreview}
-              alt="Profile"
-              className="w-24 h-24 rounded-full"
-            />
-            <div>
-               <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Upload Photo
-               </label>
-              <input 
-                 type='file'
-                 accept="image/*"
-                 onChange={handlePhotoChange}
-                 className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                 />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold">John Doe</h2>
-              <p className="text-gray-600">john.doe@example.com</p>
-            </div>
-          </div>
-          <hr className="my-6 border-gray-200" />
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Full Name
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData);
+    console.log("Photo:", photo);
+    // Add your form submission logic here
+  };
+
+  return (
+    <div className="min-h-[650px] mt-10 md:my-2 p-4">
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden"
+      >
+        {/* Header */}
+        <div className="bg-blue-400 p-6">
+          <h1 className="text-3xl font-bold text-center text-white">Edit Profile</h1>
+        </div>
+
+        {/* Profile Photo Section */}
+        <div className="p-6">
+          <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6">
+            <div className="relative">
+              <img
+                src={photoPreview}
+                alt="Profile"
+                className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
+              />
+              <label
+                htmlFor="photo-upload"
+                className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600 transition"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
               </label>
               <input
-                type="text"
-                value={formData.name}
-                onClick={(e)=>setFormData({...formData,name:e.target.value})}
-                defaultValue="John Doe"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                id="photo-upload"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="hidden"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                type="email"
-                value={formData.email}
-                onClick={(e)=>setFormData({...formData,email:e.target.value})}
-                defaultValue="john.doe@example.com"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              />
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl text-center font-bold text-gray-800">{formData.name}</h2>
+              <p className="text-gray-600">{formData.email}</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                value={formData.contact}
-                onClick={(e)=>setFormData({...formData,contact:e.target.value})}
-                defaultValue="+1234567890"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Save Changes
-            </button>
           </div>
         </div>
-        </form>
-    )
-}
+
+        {/* Form Fields */}
+        <div className="p-6 space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              name="contact"
+              value={formData.contact}
+              onChange={handleInputChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        {/* Save Button */}
+        <div className="p-6 bg-gray-50">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
 
 export default EditProfile;

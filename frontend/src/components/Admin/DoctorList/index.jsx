@@ -24,7 +24,7 @@ const DoctorList = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 bg-gray-100 min-h-screen">
+    <div className="max-w-7xl mx-auto p-4 bg-gray-100 min-h-[650px]">
       <motion.h1
         className="text-2xl md:text-4xl font-bold text-center mb-6 text-gray-800"
         initial={{ opacity: 0, y: -20 }}

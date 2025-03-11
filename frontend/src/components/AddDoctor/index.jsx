@@ -3,7 +3,7 @@
 const AddDoctor=()=>{
     return(
 
-    <div className="container  flex justify-center items-center mt-[80px] lg:mt-[40px] mb-5 px-4 lg:px-20">
+    <div className="container min-h-[650px] flex justify-center items-center mt-[80px] lg:mt-[40px] mb-5 px-4 lg:px-20">
       <div className="bg-gray-900 text-white shadow-lg rounded-lg p-6 w-full max-w-7xl">
         <h2 className="text-center text-red-500 font-bold text-2xl mb-4">Add Doctor</h2>
         <form>

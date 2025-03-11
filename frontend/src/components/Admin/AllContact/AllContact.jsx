@@ -34,7 +34,7 @@ const ContactList = () => {
 
 
   return (
-    <div className="w-full min-h-screen max-h-screen flex flex-col  items-center bg-gray-200 p-4">
+    <div className="w-full min-h-[650px]  flex flex-col  items-center bg-gray-200 p-4">
       <motion.h1
         className="p-2 md:m-2 lg:pt-0  text-2xl  sm:text-3xl font-bold text-center mb-4"
         initial={{ opacity: 0, y: -20 }}
