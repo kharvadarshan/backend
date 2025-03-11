@@ -48,6 +48,7 @@ const DoctorProfile = () => {
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetDoctor());
+        dispatch(resetRole());
         navigate("/");
       }
     } catch (err) {
