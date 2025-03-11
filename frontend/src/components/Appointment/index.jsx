@@ -1,21 +1,37 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-
+import { useState,useEffect } from "react";
+import axios from "axios";
 const Appointment = () => {
   const [selectedReason, setSelectedReason] = useState(null);
   const contact = {
     message : "Reason Here Reason HereReason Here"
   }
   const tableData = [
-    "ID",
-    "Name",
-    "Contact No",
-    "Doctor Name",
+    "Doctor",
+    "Patient",
     "Date",
-    "Time", 
+    "Time",
+    "Reason", 
     "Status",
     "Action",
   ];
+
+  const [appointments,setAppointment]=useState([]);
+    useEffect(()=>{
+      getAllAppointment();
+    },[])
+    const getAllAppointment = async()=>{
+      try{
+        const response = await axios.get("http://localhost:5001/api/getAllAppointment");
+        if(response.data.Ok){
+        setAppointment(response.data.result);
+        }
+        console.log(appointments);
+      }catch(error)
+      {
+        console.log(error);
+      }
+    }
 
   const reasonPopUp = () => {
     if (!selectedReason) return null; // Prevents rendering when no reason is selected
@@ -117,30 +133,30 @@ const Appointment = () => {
             </tr>
           </thead>
           <tbody className="divide-y text-center divide-gray-200">
-            {[1, 2].map((id) => (
+            {appointments.map((app,index) => (
               <motion.tr
-                key={id}
+                key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: id * 0.2 }}
+                transition={{ delay: index * 0.2 }}
                 className="hover:bg-gray-50 transition"
               >
-                <td className="px-4 py-4">{id}</td>
-                <td className="px-4 py-4">John Doe</td>
-                <td className="px-4 py-4">1234567890</td>
-                <td className="px-4 py-4">Dr. ABC</td>
-                <td className="px-4 py-4">12/03/2025 </td>
-                <td className="px-4 py-4">12:30</td>
+                <td className="px-4 py-4">{app.doctor}</td>
+                <td className="px-4 py-4">{app.patientId}</td>
+                <td className="px-4 py-4">{app.date}</td>
+                <td className="px-4 py-4">{app.time}</td>
+                <td className="px-4 py-4">{app.reason}</td>
                 <td className="px-4 py-4">
-                  <span
-                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      id === 1
+                 <span
+                    className={`px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 ${
+                    app.status === 'Confirmed'
                         ? "bg-red-100 text-red-800"
-                        : "bg-green-100 text-green-800"
+                        : "",
+                    app.status === 'Rejected' ? "bg-green-100 text-green-800":""
                     }`}
                   >
-                    {id === 1 ? "Inactive" : "Confirmed"}
-                  </span>
+                   {app.status}
+                  </span> 
                 </td>
                 <td className="px-4 py-4 flex space-x-3">
                   <motion.button

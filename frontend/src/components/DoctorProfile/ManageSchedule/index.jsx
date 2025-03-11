@@ -36,7 +36,7 @@ const ManageSchedule = () => {
  
 
   return (
-    <div className="flex flex-row p-4 min-h-screen  mx-auto  ">
+    <div className="flex flex-row  h-full p-3 mx-auto my-auto ">
       {/* Manage Availability */}
       <div className="basis-2/3  bg-white p-4   rounded-lg shadow">
         <h3 className="text-xl font-semibold mb-2">Manage Availability</h3>

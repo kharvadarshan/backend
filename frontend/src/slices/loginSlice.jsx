@@ -1,7 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    isLogin:false 
+    isLogin:false ,
+    role: ''
 };
 
 const loginSlice = createSlice({
@@ -13,9 +14,15 @@ const loginSlice = createSlice({
         },
         resetIsLogin:(state)=>{
             state.isLogin=false
+        },
+        setRole:(state,action)=>{
+            state.role = action.payload
+        },
+        resetRole:(state)=>{
+            state.role=''
         }
     }
 });
 
-export const { setIsLogin,resetIsLogin } = loginSlice.actions;
+export const { setRole,resetRole,setIsLogin,resetIsLogin } = loginSlice.actions;
 export default loginSlice.reducer;

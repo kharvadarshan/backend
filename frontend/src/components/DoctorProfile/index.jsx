@@ -7,7 +7,7 @@ import ManageSchedule from './ManageSchedule';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { resetIsLogin } from "../../slices/loginSlice";
+import { resetIsLogin, resetRole } from "../../slices/loginSlice";
 import Reports from "./Reports";
 import BookedAppointment from "./BookedAppointment";
 import { toast } from "react-toastify";
@@ -39,6 +39,7 @@ const DoctorProfile = ()=>{
                 dispatch(resetIsLogin());
                 dispatch(resetUser());
                 dispatch(resetDoctor());
+                dispatch(resetRole());
                 navigate('/');
               }
   
@@ -49,7 +50,7 @@ const DoctorProfile = ()=>{
     }
     return(
            <>
-              <div className="flex flex-row w-screen h-full min-vw-100">
+              <div className="flex flex-row w-screen h-screen h-full min-vw-100">
                  <div className="basis-1/5 flex flex-col items-center h-auto m-4 p-2">
                       <img src="https://randomuser.me/api/portraits/men/94.jpg" className="w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0"></img>
                       <h1 className="text-xl font-bold">John Doe</h1>
@@ -73,7 +74,7 @@ const DoctorProfile = ()=>{
                        </NavLink>
                        </div>
                   </div>
-                  <div className="basis-4/5 bg-blue-500 m-4 p-2">
+                  <div className="basis-4/5 bg-blue-500 m-4 p-2 h-full">
                    <Routes>
                           <Route path='editprofile' 
                           element={<EditProfile/>}> </Route>

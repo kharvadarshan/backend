@@ -1,34 +1,31 @@
-import { useState, useEffect, useMemo } from "react";
-
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const [filter, setFilter] = useState("All");
-
+  const activeUser = useSelector((state)=>state.user.user);
   useEffect(() => {
-    const savedAppointments = JSON.parse(localStorage.getItem("appointments")) || [];
-    setAppointments(savedAppointments);
+     getAllAppointmentsByPatientId();
   }, []);
 
-  const getStatusBadge = (status) => {
-    const statusColors = {
-      Confirmed: "bg-green-200 text-green-700",
-      Pending: "bg-yellow-200 text-yellow-700",
-      Cancelled: "bg-red-200 text-red-700",
-    };
-    return <span className={`px-2 py-1 rounded text-sm ${statusColors[status]}`}>{status}</span>;
-  };
+  const getAllAppointmentsByPatientId = async()=>{
+    const response  =  await axios.post("http://localhost:5001/api/getAppointmentByPatientId",{id:activeUser.id});
 
-  const filteredAppointments = useMemo(() => {
-    if (filter === "All") return appointments;
-    return appointments.filter((appointment) => appointment.status === filter);
-  }, [appointments, filter]);
+    if(response.data.ok)
+    {
+      setAppointments(response.data.result);
+    }
+  }
+  
+
+ 
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">My Appointments</h1>
 
       {/* Filter Section */}
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <label className="mr-2 font-semibold">Filter by Status:</label>
         <select className="p-2 border rounded" value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="All">All</option>
@@ -36,10 +33,10 @@ const MyAppointments = () => {
           <option value="Pending">Pending</option>
           <option value="Cancelled">Cancelled</option>
         </select>
-      </div>
+      </div> */}
 
       {/* Appointment List */}
-      {filteredAppointments.length === 0 ? (
+      {appointments.length === 0 ? (
         <p className="text-gray-500 text-center">No appointments found.</p>
       ) : (
         <div className="p-4 shadow-md bg-white rounded-lg">
@@ -47,18 +44,39 @@ const MyAppointments = () => {
             <thead>
               <tr className="bg-gray-100">
                 <th className="border p-2">Doctor</th>
+                <th className="border p-2">Patient</th>
                 <th className="border p-2">Date</th>
                 <th className="border p-2">Time</th>
+                <th className="border p-2">Reason</th>
                 <th className="border p-2">Status</th>
+                <th className="border p-2">Actions</th>
+
               </tr>
             </thead>
             <tbody>
-              {filteredAppointments.map((appointment) => (
-                <tr key={appointment.id} className="border">
+              {appointments.map((appointment) => (
+                <tr key={appointment._id} className="border">
                   <td className="p-2 border">{appointment.doctor}</td>
+                  <td className="p-2 border">{appointment.patientId}</td>
                   <td className="p-2 border">{appointment.date}</td>
                   <td className="p-2 border">{appointment.time}</td>
-                  <td className="p-2 border text-center">{getStatusBadge(appointment.status)}</td>
+                  <td className="p-2 border">{appointment.reason}</td>
+                  <td className="p-2 border text-center">
+                  <span
+                    className={`px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 ${
+                    appointment.status === 'Confirmed'
+                        ? "bg-red-100 text-red-800"
+                        : "",
+                    appointment.status === 'Rejected' ? "bg-green-100 text-green-800":""
+                    }`}
+                  >
+                   {appointment.status}
+                  </span> 
+                  </td>
+                  <td className="p-2 border">
+                  
+                  </td>
+
                 </tr>
               ))}
             </tbody>

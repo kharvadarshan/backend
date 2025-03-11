@@ -8,7 +8,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from 'react-redux';
 import { resetUser } from '../../slices/userAuthSlice';
 import { useDispatch } from 'react-redux';
-import { resetIsLogin } from '../../slices/loginSlice';
+import { resetIsLogin, resetRole } from '../../slices/loginSlice';
 import { toast } from 'react-toastify';
 
 const NavBar = () => {
@@ -41,6 +41,7 @@ const NavBar = () => {
               localStorage.removeItem('token');
               dispatch(resetIsLogin());
               dispatch(resetUser());
+              dispatch(resetRole());
               navigate('/');
             }
 
