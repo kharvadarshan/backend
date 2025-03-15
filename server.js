@@ -9,7 +9,7 @@ const cors=require('cors');
 const session=require('express-session');
 const env = require('dotenv')
 env.config();
-const PORT=5001;
+const PORT=process.env.PORT;
 app.use(cors({origin:"http://localhost:5173", credentials: true,}));
 app.use(express.json()); // For parsing JSON
 app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded form data

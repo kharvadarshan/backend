@@ -14,6 +14,7 @@ import DoctorProfile from '../components/DoctorProfile';
 import { useSelector } from 'react-redux';
 import About from '../components/About';
 import FeedbackForm from '../components/FeedBackForm/FeedBack';
+import Chatbot from '../components/Chatbot/Chatbot';
 
 const AllRoute = () => {
     const location = useLocation();
@@ -45,6 +46,7 @@ const AllRoute = () => {
                         <Route path="/appointment/:id" element={role===''? navigate('/login'):<BookAppointment/>}/>
                         <Route path="/profile/*" element={role===''? navigate('/login'):<Profile/>}></Route>
                         <Route path="/feedbackform" element={role===''? navigate('/login'):<FeedbackForm/>}></Route>
+                        <Route path="/chatbot" element={<Chatbot/>}></Route>
             </Routes>
        
                             </div>

@@ -1,96 +1,107 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
 
+const AddDoctor = () => {
+   const fieldData = [
+    { id: "name", label: "Your Name" },
+    { id: "specialization", label: "Specialization" },
+    { id: "experience", label: "Experience", type: "number" },
+    { id: "degree", label: "Degree" },
+    { id: "fees", label: "Fees", type: "number" },
+    { id: "address", label: "Address" },
+  ];
 
-const AddDoctor=()=>{
-    return(
+  const [formData, setFormData] = useState({
+    name: "",
+    specialization: "",
+    experience: "",
+    degree: "",
+    fees: "",
+    address: "",
+    about: "",
+  });
 
-    <div className="container min-h-[650px] flex justify-center items-center mt-[80px] lg:mt-[40px] mb-5 px-4 lg:px-20">
-      <div className="bg-gray-900 text-white shadow-lg rounded-lg p-6 w-full max-w-7xl">
-        <h2 className="text-center text-red-500 font-bold text-2xl mb-4">Add Doctor</h2>
-        <form>
-          <div className="grid grid-cols-1 lg:m-5 gap-4">
-            <div>
-              <label htmlFor="name" className="block mb-1">Your Name</label>
-              <input
-                type="text"
-                id="name"
-                className="w-full lg:max-w-6xl  p-2 border border-gray-300 rounded-lg text-black"
-                placeholder="Enter Your Name"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="specialization" className="block mb-1">Specialization</label>
-              <input
-                type="text"
-                id="specialization"
-                className="w-full p-2  border border-gray-300 rounded-lg text-black"
-                placeholder="Enter Your Specialization"
-                required
-              />
-            </div>
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Doctor Data:", formData);
+    alert("Doctor added successfully!");
+    setFormData({
+      name: "",
+      specialization: "",
+      experience: "",
+      degree: "",
+      fees: "",
+      address: "",
+      about: "",
+    });
+  };
+
+  return (
+    <div className="container py-20 md:py-10 min-h-screen flex justify-center items-center p-6 bg-gradient-to-r from-blue-50 to-blue-100">
+      <div className="bg-white text-gray-900 shadow-2xl rounded-2xl p-8 w-full max-w-3xl transform transition">
+        <h2 className="text-center text-blue-600 font-bold text-3xl mb-6">
+          Add Doctor
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {fieldData.map(({ id, label, type = "text" }) => (
+              <div key={id}>
+                <label
+                  htmlFor={id}
+                  className="block pl-1 mb-2 text-sm font-medium text-gray-700"
+                >
+                  {label}
+                </label>
+                <input
+                  type={type}
+                  id={id}
+                  value={formData[id]}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none"
+                  placeholder={`Enter ${label}`}
+                  required
+                />
+              </div>
+            ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:m-5  gap-4 mt-4">
-            <div>
-              <label htmlFor="experience" className="block mb-1">Experience</label>
-              <input
-                type="text"
-                id="experience"
-                className="w-full p-2 border border-gray-300 rounded-lg text-black"
-                placeholder="Enter Your Experience"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="degree" className="block mb-1">Degree</label>
-              <input
-                type="text"
-                id="degree"
-                className="w-full p-2 border border-gray-300 rounded-lg text-black"
-                placeholder="Enter Your Degree"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 lg:m-5 ">
-            <label htmlFor="fees" className="block mb-1">Fees</label>
-            <input
-              type="text"
-              id="fees"
-              className="w-full p-2 border border-gray-300 rounded-lg text-black"
-              placeholder="Enter Your Fees"
-              required
-            />
-          </div>
-
-          <div className="mt-4 lg:m-5 ">
-            <label htmlFor="address" className="block mb-1">Address</label>
-            <input
-              type="text"
-              id="address"
-              className="w-full p-2 border border-gray-300 rounded-lg text-black"
-              placeholder="Enter Your Address"
-              required
-            />
-          </div>
-
-          <div className="mt-4 lg:m-5 ">
-            <label htmlFor="about" className="block mb-1">About</label>
+          <div className="mt-6">
+            <label
+              htmlFor="about"
+              className="block pl-1 mb-2 text-sm font-medium text-gray-700"
+            >
+              About
+            </label>
             <textarea
               id="about"
-              className="w-full p-2 border border-gray-300 rounded-lg text-black"
+              value={formData.about}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none"
               placeholder="Enter About"
-              rows="3"
+              rows="4"
             ></textarea>
           </div>
 
-          <div className="flex justify-center mt-4">
-            <button className="bg-red-500 text-white px-6 py-2 rounded-lg w-full md:w-auto">Add Doctor</button>
+          <div className="flex justify-center mt-8">
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0px 4px 10px rgba(0, 0, 255, 0.3)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold transition"
+              type="submit"
+            >
+              Add Doctor
+            </motion.button>
           </div>
         </form>
       </div>
     </div>
-    )
-}
+  );
+};
+
 export default AddDoctor;
