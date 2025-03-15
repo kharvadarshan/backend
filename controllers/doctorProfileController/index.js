@@ -1,5 +1,5 @@
 const TimeSlot = require('../../model/timeSlot');
-
+const Doctor = require('../../model/doctor');
 
 exports.addTimeSlot = async (req,res)=>{
     try{
@@ -29,4 +29,14 @@ exports.getAvailableTimeSlots = async(req,res)=>{
      {
         res.status(500).json({ message: 'Error while fetching available time slots.',error });
      }
+}
+
+exports.getDoctorById = async(req,res)=>{
+    try{
+          const {email }=req.body;
+          const result = await Doctor.find({contact:email})
+    }catch(error)
+    {
+        res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+    }
 }

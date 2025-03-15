@@ -50,7 +50,7 @@ const DashBoard = () => {
             </thead>
             <tbody>
               {appointments.map((app) => (
-                <tr key={app.id} className="border-t">
+                <tr key={app._id} className="border-t">
                   <td className="p-3">{app.doctor}</td>
                   <td className="p-3">{app.patientId}</td>
                   <td className="p-3">{app.date}</td>
