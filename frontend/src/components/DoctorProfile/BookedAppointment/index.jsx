@@ -1,20 +1,80 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Swal from 'sweetalert2'
+import {faCheck,faXmark} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const BookedAppointment = () => {
   const activeUser = useSelector((state) => state.doctor.doctor);
+  console.log(activeUser);
   const [appointments, setAppointment] = useState([]);
 
   useEffect(() => {
     getAllAppointmentByDoctorId();
   }, []);
 
+  const handleAccept = async (appointmentId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to accept this appointment?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Accept",
+      cancelButtonText: "No, Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.post("http://localhost:5001/doctorprofile/changeAppointment", {
+            id: appointmentId,
+          });
+  
+          if (response.data.ok) {
+            Swal.fire("Accepted!", "The appointment has been accepted.", "success");
+          } else {
+            Swal.fire("Error!", "Something went wrong. Try again.", "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "Could not connect to the server.", "error");
+        }
+      }
+    });
+  };
+
+  const handleReject=async(appointmentId) =>{
+    Swal.fire({
+            title:"Are you sure?",
+            text:"Do you really want to reject this appointment?",
+            icon:"warning",
+            confirmButtonText:"Yes, Reject",
+            cancelButtonText:"No, Cancel",
+    }).then(async(result)=>{
+      if(result.isConfirmed){
+        try{
+              const response = await axios.post("http://localhost:5001/doctorprofile/rejectAppointment",{
+                id:appointmentId
+              });
+
+              if(!response.data.ok)
+              {
+                   Swal.fire("Rejected!","The appointment request has been rejected.","success");
+              }else
+              {
+                   Swal.fire("Error!","Something went wrong. Try again.","error");
+              }
+        }catch(error)
+        {
+          Swal.fire("Error!","Could not connect to the server.","error");
+        }
+      }
+    });
+  };
+
   const getAllAppointmentByDoctorId = async () => {
     try {
       const response = await axios.post(
         "http://localhost:5001/api/getAppointmentByDoctorId",
-        { id: activeUser._id }
+        { name: activeUser.name }
       );
       if (response.data.ok) {
         setAppointment(response.data.result);
@@ -64,8 +124,11 @@ const BookedAppointment = () => {
                     {app.status}
                   </td>
                   <td className="p-3">
-                    <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                      View
+                    <button disabled={app.status !== "pending"} onClick={()=>handleAccept(app._id)} className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mx-2">
+                     <span className="mx-1"><FontAwesomeIcon  icon={faCheck} /></span>Accept
+                    </button>
+                    <button disabled={app.status !== "pending"} onClick={()=>handleReject(app._id)} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 mx-1">
+                    <span className="mx-1"><FontAwesomeIcon  icon={faXmark} /></span>Reject
                     </button>
                   </td>
                 </tr>

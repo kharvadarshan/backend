@@ -78,7 +78,7 @@ const DoctorProfile = () => {
             className="w-24 h-24 bg-gray-300 rounded-full mb-4"
             alt="Profile"
           />
-          <h1 className="text-xl font-bold">John Doe</h1>
+          <h1 className="text-xl font-bold">{activeUser.doctor.name}</h1>
           <hr className="my-4 border-gray-700 w-full" />
         </div>
         <nav className="flex flex-col space-y-3">
@@ -135,7 +135,7 @@ const DoctorProfile = () => {
       {/* Main Content */}
       <div className="flex-1 p-4  mt-16 md:mt-0">
         <Routes>
-          <Route path="editprofile" element={<EditProfile />} />
+          <Route path="editprofile"   element={<EditProfile doctor={activeUser.doctor}  />} />
           <Route path="bookings" element={<BookedAppointment />} />
           <Route path="manageschedule" element={<ManageSchedule />} />
           <Route path="reports" element={<Reports />} />

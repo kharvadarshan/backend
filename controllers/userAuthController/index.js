@@ -78,6 +78,7 @@ exports.validateLogin = async (req,res)=>{
               req.session.user = {
                id: userCredential._id,
                email: userCredential.email,
+               name:userCredential.firstName+" "+userCredential.lastName,
                role: userCredential.role,
                doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
               };

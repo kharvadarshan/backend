@@ -1,12 +1,27 @@
 const TimeSlot = require('../../model/timeSlot');
 const Doctor = require('../../model/doctor');
+const Appointment = require('../../model/appointment');
+
 
 exports.addTimeSlot = async (req,res)=>{
     try{
 
        const  {doctorId,date,slot}= req.body; 
-       console.log(req.body);
-       const timeSlots = new TimeSlot({doctorId,date,slot});
+
+       const isoDate = `${date}T00:00:00.000Z`;
+
+       const transformedSlots = slot.map((s) => {
+        const startIso = `${date}T${s.start}:00.000Z`; 
+        const endIso = `${date}T${s.end}:00.000Z`;    
+        return {
+          start:startIso,
+          end: endIso,
+          status: s.status,
+        };
+      });
+      console.log(doctorId,isoDate,transformedSlots);
+
+       const timeSlots = new TimeSlot({doctorId:doctorId,date:isoDate,slot:transformedSlots});
        await timeSlots.save();
        res.status(201).json({message:'Time Slot added successfully..', ok:true});
 
@@ -38,5 +53,67 @@ exports.getDoctorById = async(req,res)=>{
     }catch(error)
     {
         res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+    }
+}
+
+exports.acceptAppointment = async(req,res)=>{
+    try{
+        const {id}=req.body;
+        const result = await  Appointment.updateOne({
+            _id:id
+        },{
+            $set:{status:"Confirmed"}
+        });
+
+        if(result.modifiedCount > 0)
+        {
+            res.status(201).json({ok:true,message:"Requeste accepted successfully."});
+        }
+        else
+        {
+            res.status(200).json({ok:false,message:"No chnaes were made."});
+        }
+    }catch(error)
+    {
+        res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+    }
+}
+
+exports.rejectAppointment = async(req,res)=>{
+    try{
+        const {id}=req.body;
+        const result = await  Appointment.updateOne({
+            _id:id
+        },{
+            $set:{status:"Rejected"}
+        });
+
+        if(result.modifiedCount > 0)
+        {
+            res.status(201).json({ok:false,message:"Requeste rejected successfully."});
+        }
+        else
+        {
+            res.status(200).json({ok:true,message:"No changes were made."});
+        }
+    }catch(error)
+    {
+        res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+    }
+}
+
+exports.editProfile = async(req,res)=>{
+    try{
+          const formData= req.body;
+          console.log(req.body);
+          const result = await Doctor.updateOne({_id:formData._id},{$set:formData});
+          if(result.modifiedCount>0){
+            res.status(201).json({ok:true,message:"Profile updated successfully."});
+          }else{
+                res.status(200).json({ok:false,message:"No changes were made."})
+          }
+    }catch(error)
+    {
+        res.status(500).json({ message: 'Error while updating doctor profile.',error });  
     }
 }

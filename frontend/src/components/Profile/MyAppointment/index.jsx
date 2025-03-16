@@ -14,8 +14,8 @@ const MyAppointments = () => {
   }, []);
 
   const getAllAppointmentsByPatientId = async()=>{
-    const response  =  await axios.post("http://localhost:5001/api/getAppointmentByPatientId",{id:activeUser.id});
-
+    const response  =  await axios.post("http://localhost:5001/api/getAppointmentByPatientId",{id:activeUser.email});
+    
     if(response.data.ok)
     {
       setAppointments(response.data.result);
@@ -36,46 +36,7 @@ const MyAppointments = () => {
   // }, []);
 
   useEffect(() => {
-    const savedAppointments = JSON.parse(
-      localStorage.getItem("appointments")
-    ) || [
-      {
-        id: 1,
-        doctor: "Dr. Smith",
-        date: "2025-03-15",
-        time: "10:00 AM",
-        status: "Confirmed",
-      },
-      {
-        id: 2,
-        doctor: "Dr. Johnson",
-        date: "2025-04-16",
-        time: "11:30 AM",
-        status: "Pending",
-      },
-      {
-        id: 3,
-        doctor: "Dr. Brown",
-        date: "2024-03-17",
-        time: "02:00 PM",
-        status: "Cancelled",
-      },
-      {
-        id: 4,
-        doctor: "Dr. Lee",
-        date: "2025-05-18",
-        time: "09:00 AM",
-        status: "Confirmed",
-      },
-      {
-        id: 5,
-        doctor: "Dr. Adams",
-        date: "2023-03-22",
-        time: "01:00 PM",
-        status: "Pending",
-      },
-    ];
-    setAppointments(savedAppointments);
+   
   }, []);
 
   const getStatusBadge = (status) => {
@@ -212,8 +173,10 @@ const MyAppointments = () => {
               <thead>
                 <tr className="bg-blue-100 text-gray-700">
                   <th className="border p-3">Doctor</th>
+                  <th className="border p-3">Patient</th>
                   <th className="border p-3">Date</th>
                   <th className="border p-3">Time</th>
+                  <th className="border p-3">Reason</th>
                   <th className="border p-3 text-center">Status</th>
                   <th className="border p-3 text-center">Action</th>
                 </tr>
@@ -222,7 +185,7 @@ const MyAppointments = () => {
                 <AnimatePresence>
                   {filteredAppointments.map((appointment) => (
                     <motion.tr
-                      key={appointment.id}
+                      key={appointment._id}
                       className="border text-center"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -230,8 +193,10 @@ const MyAppointments = () => {
                       transition={{ duration: 0.2 }}
                     >
                       <td className="p-3 border">{appointment.doctor}</td>
+                      <td className="p-3 border">{appointment.patientId}</td>
                       <td className="p-3 border">{appointment.date}</td>
                       <td className="p-3 border">{appointment.time}</td>
+                      <td className="p-3 border">{appointment.reason}</td>
                       <td className="p-3 border">
                         {getStatusBadge(appointment.status)}
                       </td>
