@@ -22,6 +22,7 @@ const SignUp = () => {
   useEffect(()=>{
        
   },[]);
+
   const register=async (e)=>{
     e.preventDefault();
     try{
@@ -253,7 +254,7 @@ const SignUp = () => {
           )} */}
 
           <div className="flex justify-center mt-5 md:text-lg text-sm">
-            <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+            <button type="submit" onClick={register} className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
               Sign Up
             </button>
           </div>
