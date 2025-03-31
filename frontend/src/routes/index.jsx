@@ -1,72 +1,114 @@
-import {  useNavigate, Route, Routes, useLocation } from 'react-router-dom';
-import NavBar from '../components/NavBar';
-import Home from '../components/Home';
-import Footer from '../components/Footer';
-import Admin from '../components/Admin';
-import Contact from '../components/Contact';
-import Doctor from '../components/Doctor';
+import {
+//   useNavigate,
+  Route,
+  Routes,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
+import NavBar from "../components/NavBar";
+import Home from "../components/Home";
+import Footer from "../components/Footer";
+import Admin from "../components/Admin";
+import Contact from "../components/Contact";
+import Doctor from "../components/Doctor";
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
-import DoctorDetails from '../components/Doctor/IndividualDoctor'
-import BookAppointment from '../components/BookAppointment'
-import Profile from '../components/Profile'
-import DoctorProfile from '../components/DoctorProfile';
-import { useSelector } from 'react-redux';
-import About from '../components/About';
-import FeedbackForm from '../components/FeedBackForm/FeedBack';
-import Chatbot from '../components/Chatbot/Chatbot';
+import DoctorDetails from "../components/Doctor/IndividualDoctor";
+import BookAppointment from "../components/BookAppointment";
+import Profile from "../components/Profile";
+import DoctorProfile from "../components/DoctorProfile";
+import { useSelector } from "react-redux";
+import About from "../components/About";
+import FeedbackForm from "../components/FeedBackForm/FeedBack";
+import Chatbot from "../components/Chatbot/Chatbot";
 
 const AllRoute = () => {
-    const location = useLocation();
-    const role = useSelector((state)=>state.isLogin.role);
-   const navigate=useNavigate();
-    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup" || role === 'doctor' ;
-    /// console.log("hello"+role);
-   // const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin') === 'true');
-    return (
-        <>
-            <div className='row g-0 custom-row'>
-                <div className='col-12 bg-light'>
-                    <div className='d-flex flex-column w-auto  h-auto'>
-                        {!hideNavFooter &&  <NavBar  />}
-                        <div className="d-flex justify-content-center">
-                            <div className='h-auto w-auto'>
-            <Routes>  
-                       
-                           
-                        <Route path="/doctorprofile/*" element={role==='doctor' ? <DoctorProfile/> : <Home/>}></Route>
-                        <Route path="/login"  element={<Login  />} />
-                        <Route path="/signup" element={<SignUp />} />
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={role===''? navigate('/login'):<About />}/>
-                        <Route path="/all-doctors" element={role===''? navigate('/login'):<Doctor />} />
-                        <Route path="/admin/*" element={role===''? navigate('/login'):<Admin />} />
-                        <Route path="/contact" element={role===''? navigate('/login'):<Contact />} />
-                        <Route path="/all-doctors/:id" element={role===''? navigate('/login'):<DoctorDetails />} />
-                        <Route path="/appointment/:id" element={role===''? navigate('/login'):<BookAppointment/>}/>
-                        <Route path="/profile/*" element={role===''? navigate('/login'):<Profile/>}></Route>
-                        <Route path="/feedbackform" element={role===''? navigate('/login'):<FeedbackForm/>}></Route>
-                        <Route path="/chatbot" element={<Chatbot/>}></Route>
-            </Routes>
-       
-                            </div>
-                        </div>
-                        {!hideNavFooter && <Footer />}
-                    </div>
-                </div>
+  const location = useLocation();
+  const role = useSelector((state) => state.isLogin.role);
+//   const navigate = useNavigate();
+  const hideNavFooter =
+    location.pathname === "/login" ||
+    location.pathname === "/signup" ||
+    role === "doctor";
+  /// console.log("hello"+role);
+  // const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin') === 'true');
+  return (
+    <>
+      <div className="row g-0 custom-row">
+        <div className="col-12 bg-light">
+          <div className="d-flex flex-column w-auto  h-auto">
+            {!hideNavFooter && <NavBar />}
+            <div className="d-flex justify-content-center">
+              <div className="h-auto w-auto">
+                <Routes>
+                  <Route
+                    path="/doctorprofile/*"
+                    element={role === "doctor" ? <DoctorProfile /> : <Home />}
+                  />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/" element={<Home />} />
+                  <Route
+                    path="/about"
+                    element={role === "" ? <Navigate to="/login" /> : <About />}
+                  />
+                  <Route
+                    path="/all-doctors"
+                    element={
+                      role === "" ? <Navigate to="/login" /> : <Doctor />
+                    }
+                  />
+                  <Route
+                    path="/admin/*"
+                    element={role === "" ? <Navigate to="/login" /> : <Admin />}
+                  />
+                  <Route
+                    path="/contact"
+                    element={
+                      role === "" ? <Navigate to="/login" /> : <Contact />
+                    }
+                  />
+                  <Route
+                    path="/all-doctors/:id"
+                    element={
+                      role === "" ? <Navigate to="/login" /> : <DoctorDetails />
+                    }
+                  />
+                  <Route
+                    path="/appointment/:id"
+                    element={
+                      role === "" ? (
+                        <Navigate to="/login" />
+                      ) : (
+                        <BookAppointment />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/profile/*"
+                    element={
+                      role === "" ? <Navigate to="/login" /> : <Profile />
+                    }
+                  />
+                  <Route
+                    path="/feedbackform"
+                    element={
+                      role === "" ? <Navigate to="/login" /> : <FeedbackForm />
+                    }
+                  />
+                  <Route path="/chatbot" element={<Chatbot />} />
+                </Routes>
+              </div>
             </div>
-        </>
-    );
+            {!hideNavFooter && <Footer />}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
-
 export default AllRoute;
-
-
-
-
-
-
 
 
 // import {   Route, Routes, useLocation } from 'react-router-dom';
@@ -97,7 +139,7 @@ export default AllRoute;
 //                             {!isLoginPage && <NavBar isLogin={isLogin} setIsLogin={setIsLogin} />}
 //                             <div className="flex justify-center">
 //                                 <div className="h-auto w-auto">
-                               
+
 //                                     <Routes>
 //                                         <Route path="/doctorprofile/*" element={<DoctorProfile/>}></Route>
 //                                         <Route path="/" element={<Home />}></Route>
@@ -118,7 +160,7 @@ export default AllRoute;
 //                                         <Route path="/appointment/:id" element={<BookAppointment/>}/>
 //                                         <Route path="/profile/*" element={<Profile/>}></Route>
 //                                     </Routes>
-                                
+
 //                                 </div>
 //                             </div>
 //                             {!isLoginPage && <Footer/>}
@@ -128,8 +170,7 @@ export default AllRoute;
 //        </div>
 //     </>
 //     );
-            
-       
-// }; 
+
+// };
 
 // export default AllRoute;
