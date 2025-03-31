@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { useState } from 'react';
-
+import { toast } from 'react-toastify';
 const ManageSchedule = () => {
   const [timeSlot, setTimeSlot] = useState({
     doctorId: '67a8ddf7f417c09f242f0e42',
@@ -12,6 +13,8 @@ const ManageSchedule = () => {
       },
     ],
   });
+
+  console.log(timeSlot);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,8 +35,22 @@ const ManageSchedule = () => {
     });
   };
 
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    try{
+            const response = await axios.post('http://localhost:5001/doctorprofile/addSlot',timeSlot);
+            if(response.data.ok)
+            {
+               toast.success("Time slot added Successfully...!",{ position:"top-right"});
+            }
+    }catch(error)
+    {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row p-4 min-h-screen mx-auto">
+    <form className="flex flex-col lg:flex-row p-4 min-h-screen mx-auto"  onSubmit={handleSubmit}> 
       {/* Manage Availability */}
       <div className="w-full lg:basis-2/3 bg-white p-4 rounded-lg shadow">
         <h3 className="text-xl font-semibold mb-4">Manage Availability</h3>
@@ -89,10 +106,10 @@ const ManageSchedule = () => {
           </button>
           <button
             type="submit"
-            onClick={addSlot}
+           
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
           >
-            Create Time Slot
+            Submit
           </button>
         </div>
       </div>
@@ -109,7 +126,7 @@ const ManageSchedule = () => {
           <h1 className="text-xl font-semibold">Slots According to Date and its Status</h1>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

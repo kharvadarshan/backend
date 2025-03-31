@@ -35,6 +35,7 @@ const Profile = () => {
         localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());
+        dispatch(resetRole());
         navigate("/");
       }
     } catch (err) {

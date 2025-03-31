@@ -1,12 +1,10 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const EditProfile = () => {
-  const [formData, setFormData] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    contact: "+1234567890",
-  });
-
+  const [user,setUser]=useState({});
+  const activeUser = useSelector((state)=>state.user.user);
   const [photo, setPhoto] = useState(null); // State for the selected photo file
   const [photoPreview, setPhotoPreview] = useState(
     "https://randomuser.me/api/portraits/men/94.jpg"
@@ -22,15 +20,31 @@ const EditProfile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setUser({ ...user, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+    console.log("Form Data:", user);
     console.log("Photo:", photo);
     // Add your form submission logic here
   };
+  useEffect(()=>{
+     fetchUser();
+  },[]);
+   const fetchUser = async ()=>{
+    try{
+           const response = await axios.post('http://localhost:5001/profile/edit',{id:activeUser.id});
+          
+           if(response.data.ok)
+           {
+               setUser(response.data.result[0]);
+           }
+    }catch(error)
+    {
+      console.error(error);
+    }
+   }
 
   return (
     <div className="min-h-[650px] mt-10 md:my-2 p-4">
@@ -86,8 +100,8 @@ const EditProfile = () => {
               />
             </div>
             <div className="text-center md:text-left">
-              <h2 className="text-2xl text-center font-bold text-gray-800">{formData.name}</h2>
-              <p className="text-gray-600">{formData.email}</p>
+              <h2 className="text-2xl text-center font-bold text-gray-800">{user.firstName}</h2>
+              <p className="text-gray-600">{}</p>
             </div>
           </div>
         </div>
@@ -96,12 +110,24 @@ const EditProfile = () => {
         <div className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
+              First Name
             </label>
             <input
               type="text"
               name="name"
-              value={formData.name}
+              value={user.firstName}
+              onChange={handleInputChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Last Name
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={user.lastName}
               onChange={handleInputChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -111,21 +137,9 @@ const EditProfile = () => {
               Email
             </label>
             <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number
-            </label>
-            <input
               type="tel"
               name="contact"
-              value={formData.contact}
+              value={user.email}
               onChange={handleInputChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

@@ -208,8 +208,8 @@ const BookAppointment = () => {
 
   const handleSubmit = async () => {
     const appointmentData = {
-      doctor: selectedDoctor._id,
-      patientId:activeUser.id,
+      doctor: selectedDoctor.name,
+      patientId:activeUser.email,
       date: selectedDate,
       time: selectedTime,
       reason,
