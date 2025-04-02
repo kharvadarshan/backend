@@ -68,7 +68,6 @@ const AllRoute = () => {
                     </div>
                 </div>
             </div>
-            {!hideNavFooter && <Footer />}
     </>
   );
 };

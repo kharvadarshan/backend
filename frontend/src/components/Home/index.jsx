@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 // Animation variants
 const fadeInUp = {
@@ -20,7 +21,8 @@ const staggerContainer = {
 const testimonials = [
   {
     name: "John Doe",
-    comment: "This platform made booking appointments so easy! Highly recommended.",
+    comment:
+      "This platform made booking appointments so easy! Highly recommended.",
   },
   {
     name: "Jane Smith",
@@ -41,6 +43,7 @@ const testimonials = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
       {/* Hero Section */}
@@ -60,12 +63,14 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-lg md:text-xl max-w-2xl mx-auto"
           >
-            Book, manage, and track your medical appointments with ease. Experience the future of healthcare scheduling.
+            Book, manage, and track your medical appointments with ease.
+            Experience the future of healthcare scheduling.
           </motion.p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold mt-8 hover:bg-blue-50 transition"
+            onClick={() => navigate("/all-doctors")}
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold mt-8 hover:bg-blue-100 transition"
           >
             Get Started
           </motion.button>
@@ -203,7 +208,9 @@ const Home = () => {
                 <p className="text-gray-600 italic mb-4">
                   {`"${testimonial.comment}"`}
                 </p>
-                <p className="text-gray-800 font-semibold">- {testimonial.name}</p>
+                <p className="text-gray-800 font-semibold">
+                  - {testimonial.name}
+                </p>
               </div>
             ))}
           </motion.div>
@@ -227,12 +234,14 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-lg mb-8"
           >
-            Join thousands of satisfied users and experience the future of healthcare scheduling.
+            Join thousands of satisfied users and experience the future of
+            healthcare scheduling.
           </motion.p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
+            onClick={() => navigate("/all-doctors")}
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-100 transition"
           >
             Book Now
           </motion.button>
