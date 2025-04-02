@@ -3,7 +3,7 @@ import {
   Route,
   Routes,
   useLocation,
-  Navigate,
+  useNavigate,
 } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Home from "../components/Home";
@@ -69,9 +69,6 @@ const AllRoute = () => {
                 </div>
             </div>
             {!hideNavFooter && <Footer />}
-          </div>
-        </div>
-      </div>
     </>
   );
 };

@@ -27,12 +27,12 @@ const DoctorProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [photo,setPhoto]=useState(`http://localhost:5001${activeUser.doctor.image}`);
+  const [photo,setPhoto]=useState(`http://localhost:5001${activeUser.doctor?.image}`);
   
   useEffect(()=>{
     if(activeUser?.doctor?.image)
     {
-      setPhoto(`http://localhost:5001${activeUser.doctor.image}`);
+      setPhoto(`http://localhost:5001${activeUser.doctor?.image}`);
     }
   },[photo]);
   console.log(photo);
