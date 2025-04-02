@@ -60,7 +60,7 @@ const DoctorProfile = () => {
     <div className="flex flex-col md:flex-row  min-h-screen">
       {/* Sidebar Toggle Button for Mobile */}
       <button
-        className={`md:hidden p-4 absolute ${isSidebarOpen ? "left-48" : "left-0"} top-16  z-50 text-gray-700 rounded`}
+        className={`md:hidden p-4 absolute ${isSidebarOpen ? "left-[230px] text-blue-500" : "left-0  top-6 "} z-50  rounded`}
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         <FontAwesomeIcon icon={faBars} className="text-2xl" />
@@ -68,7 +68,7 @@ const DoctorProfile = () => {
 
       {/* Sidebar */}
       <div
-        className={`absolute md:relative  w-64 bg-gray-600 text-white p-4 z-40 transform ${
+        className={`absolute min-h-screen md:relative  w-64 bg-gray-600 text-white p-4 z-40 transform ${
           isSidebarOpen ? "translate-x-0 " : "-translate-x-full"
         } md:translate-x-0  transition-transform duration-300 ease-in-out md:flex md:flex-col `}
       >
@@ -78,7 +78,7 @@ const DoctorProfile = () => {
             className="w-24 h-24 bg-gray-300 rounded-full mb-4"
             alt="Profile"
           />
-          <h1 className="text-xl font-bold">{activeUser.doctor.name}</h1>
+          <h1 className="text-xl font-bold">{activeUser.doctor?.name}</h1>
           <hr className="my-4 border-gray-700 w-full" />
         </div>
         <nav className="flex flex-col space-y-3">
