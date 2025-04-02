@@ -15,14 +15,21 @@ import { useSelector } from 'react-redux';
 import About from '../components/About';
 import FeedbackForm from '../components/FeedBackForm/FeedBack';
 import Chatbot from '../components/Chatbot/Chatbot';
+import { useEffect } from 'react';
 
 const AllRoute = () => {
     const location = useLocation();
     const role = useSelector((state)=>state.isLogin.role);
    const navigate=useNavigate();
     const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup" || role === 'doctor' ;
-    /// console.log("hello"+role);
-   // const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin') === 'true');
+     const publicRoutes = ['/login','/signup','/','/chatbot'];
+    useEffect(()=>{
+        if(role==='' && !publicRoutes.includes(location.pathname))
+        {
+            navigate('/login');
+        }
+    },[role,location.pathname,navigate])
+
     return (
         <>
             <div className='row g-0 custom-row'>
@@ -34,18 +41,18 @@ const AllRoute = () => {
             <Routes>  
                        
                            
-                        <Route path="/doctorprofile/*" element={role==='doctor' ? <DoctorProfile/> : <Home/>}></Route>
+                        <Route path="/doctorprofile/*" element={ <DoctorProfile/>}></Route>
                         <Route path="/login"  element={<Login  />} />
                         <Route path="/signup" element={<SignUp />} />
                         <Route path="/" element={<Home />} />
-                        <Route path="/about" element={role===''? navigate('/login'):<About />}/>
-                        <Route path="/all-doctors" element={role===''? navigate('/login'):<Doctor />} />
-                        <Route path="/admin/*" element={role===''? navigate('/login'):<Admin />} />
-                        <Route path="/contact" element={role===''? navigate('/login'):<Contact />} />
-                        <Route path="/all-doctors/:id" element={role===''? navigate('/login'):<DoctorDetails />} />
-                        <Route path="/appointment/:id" element={role===''? navigate('/login'):<BookAppointment/>}/>
-                        <Route path="/profile/*" element={role===''? navigate('/login'):<Profile/>}></Route>
-                        <Route path="/feedbackform" element={role===''? navigate('/login'):<FeedbackForm/>}></Route>
+                        <Route path="/about" element={<About />}/>
+                        <Route path="/all-doctors" element={<Doctor />} />
+                        <Route path="/admin/*" element={<Admin />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/all-doctors/:id" element={<DoctorDetails />} />
+                        <Route path="/appointment/:id" element={<BookAppointment/>}/>
+                        <Route path="/profile/*" element={<Profile/>}></Route>
+                        <Route path="/feedbackform" element={<FeedbackForm/>}></Route>
                         <Route path="/chatbot" element={<Chatbot/>}></Route>
             </Routes>
        

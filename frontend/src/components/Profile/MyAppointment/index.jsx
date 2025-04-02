@@ -12,13 +12,20 @@ const MyAppointments = () => {
   useEffect(() => {
      getAllAppointmentsByPatientId();
   }, []);
+console.log(activeUser);
 
   const getAllAppointmentsByPatientId = async()=>{
-    const response  =  await axios.post("http://localhost:5001/api/getAppointmentByPatientId",{id:activeUser.email});
+   
+    try{
+        const response  =  await axios.post("http://localhost:5001/api/getAppointmentByPatientId",{email:activeUser.email});
     
-    if(response.data.ok)
+      if(response.data.ok)
+      {
+         setAppointments(response.data.result);
+       }
+    }catch(error)
     {
-      setAppointments(response.data.result);
+      console.log(error);
     }
   }
   

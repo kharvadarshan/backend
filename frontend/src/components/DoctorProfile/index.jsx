@@ -9,7 +9,7 @@ import {
   faFileMedical,
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import EditProfile from "./EditProfile";
 import ManageSchedule from "./ManageSchedule";
 import axios from "axios";
@@ -27,6 +27,18 @@ const DoctorProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [photo,setPhoto]=useState(`http://localhost:5001${activeUser.doctor.image}`);
+  
+
+
+  
+  useEffect(()=>{
+    if(activeUser?.doctor?.image)
+    {
+      setPhoto(`http://localhost:5001${activeUser.doctor.image}`);
+    }
+  },[photo]);
+  console.log(photo);
 
   const logout = async (e) => {
     e.preventDefault();
@@ -74,7 +86,7 @@ const DoctorProfile = () => {
       >
         <div className="flex flex-col items-center">
           <img
-            src="https://randomuser.me/api/portraits/men/94.jpg"
+            src={photo}
             className="w-24 h-24 bg-gray-300 rounded-full mb-4"
             alt="Profile"
           />

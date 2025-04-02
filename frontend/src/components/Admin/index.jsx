@@ -4,7 +4,6 @@ import Appointment from "../Appointment";
 import SideBar from "./SideBar";
 import { Route,Routes,Outlet } from "react-router-dom";
 import ContactList from "./AllContact/AllContact";
-import DashBoard from "../Admin/Dashboard/Dashboard";
 import DoctorList from "./DoctorList";
 
 const Admin=()=>{
@@ -23,10 +22,7 @@ const Admin=()=>{
                        
 
                           <Route path='/'
-                          element={<DashBoard/>}> </Route>
-
-                          <Route path='/appointments' 
-                          element={<Appointment/>}/>
+                          element={<Appointment/>}> </Route>
 
                           <Route path='/allcontacts' 
                           element={<ContactList/>}

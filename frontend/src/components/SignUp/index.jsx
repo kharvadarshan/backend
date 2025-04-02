@@ -9,7 +9,9 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 const SignUp = () => {
   const navigate=useNavigate();
   const [signUpRole, setSignUpRole] = useState('user'); // Default to 'patient' sign up
-
+  const [message,setMessage]=useState('');
+  const [otp,setOTP] = useState('');
+  const [step,setStep] = useState('register');
   const [formData,setFormData ]  = useState({
     firstName:'',
     lastName:'',
@@ -22,24 +24,74 @@ const SignUp = () => {
   useEffect(()=>{
        
   },[]);
-  const register=async (e)=>{
+
+   const requestOTP = async(e) =>{
+    e.preventDefault();
+             if(formData.password !== formData.confirmPassword)
+             {
+               setMessage('Passwords do not match');
+             }
+             try{
+                const response = await axios.post('http://localhost:5001/user/sendOTP',{ email:formData.email});
+
+                 if(response.data.ok){
+                  setMessage(response.data.message);
+                  setStep('verify');
+                 }
+             }catch(error)
+             {
+                   setMessage(error.response?.data?.message || "Error requesting OTP");
+             }
+   };
+
+   const verifyOTPAndRegister = async(e) =>{
     e.preventDefault();
     try{
-        console.log(formData);
-       const response = await axios.post("http://localhost:5001/user/signup",formData)
-       console.log(response.data);
-      if(response.data.ok)
-      {
-           navigate('/login');
-      }
-      else{
-           navigate('/signup');
-      }
+          const verifyResponse = await axios.post("http://localhost:5001/user/sendOTP",{ email:formData.email,otp:otp});
+          if(verifyResponse.data.ok)
+          {
+            try{
+       
+              const response = await axios.post("http://localhost:5001/user/signup",formData)
+             
+             if(response.data.ok)
+             {
+                  navigate('/login');
+             }
+             else{
+                  navigate('/signup');
+             }
+           }catch(error)
+           {
+             console.error(error)
+           }
+          }
     }catch(error)
     {
-      console.error(error)
+        setMessage(error.response?.data?.message || "Error during verification");
     }
-  }
+   }
+
+
+
+  // const register = async (e)=>{
+  //   e.preventDefault();
+  //   try{
+       
+  //      const response = await axios.post("http://localhost:5001/user/signup",formData)
+      
+  //     if(response.data.ok)
+  //     {
+  //          navigate('/login');
+  //     }
+  //     else{
+  //          navigate('/signup');
+  //     }
+  //   }catch(error)
+  //   {
+  //     console.error(error)
+  //   }
+  // }
   const goToHome =()=>{
     navigate('/');
   }
@@ -50,228 +102,237 @@ const SignUp = () => {
       <div className="items-start mb-5 ">
               <button onClick={goToHome} className=' p-2  hover:bg-blue-500 rounded-lg'><FontAwesomeIcon className='mr-2' icon={faArrowLeft} />Go to Home</button>
             </div>
-        <div className="flex justify-evenly mb-6 gap-2 md:gap-4">
-          {/* Buttons to switch sign-up type */}
-          <button
-            className={`px-6 py-2 text-sm md:text-lg font-medium border ${
-              signUpRole === 'user' ? 'bg-blue-500 text-white' : 'text-gray-700'
-            } rounded-md`}
-            onClick={() => {setSignUpRole('user'); setFormData({...formData,role:'user'})}}
-          >
-            Patient Sign Up
-          </button>
-          <button
-            className={`px-6 py-2 text-sm md:text-lg font-medium border ${
-              signUpRole === 'doctor' ? 'bg-blue-500 text-white' : 'text-gray-700'
-            } rounded-md`}
-            onClick={() => {setSignUpRole('doctor');setFormData({...formData,role:'doctor'})}}
-          >
-            Doctor Sign Up
-          </button>
-          {/* <button
-            className={`px-6 py-2 text-sm md:text-lg font-medium border ${
-              signUpRole === 'admin' ? 'bg-blue-500 text-white' : 'text-gray-700'
-            } rounded-md`}
-            onClick={() => {setSignUpRole('admin');setFormData({...formData,role:'admin'})}}
-          >
-            Admin Sign Up
-          </button> */}
-        </div>
+            {step==='register' && (
+              <>
+                               <div className="flex justify-evenly mb-6 gap-2 md:gap-4">
+                           {/* Buttons to switch sign-up type */}
+                           <button
+                             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
+                               signUpRole === 'user' ? 'bg-blue-500 text-white' : 'text-gray-700'
+                             } rounded-md`}
+                             onClick={() => {setSignUpRole('user'); setFormData({...formData,role:'user'})}}
+                           >
+                             Patient Sign Up
+                           </button>
+                           <button
+                             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
+                               signUpRole === 'doctor' ? 'bg-blue-500 text-white' : 'text-gray-700'
+                             } rounded-md`}
+                             onClick={() => {setSignUpRole('doctor');setFormData({...formData,role:'doctor'})}}
+                           >
+                             Doctor Sign Up
+                           </button>
+                           {/* <button
+                             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
+                                                signUpRole === 'admin' ? 'bg-blue-500 text-white' : 'text-gray-700'
+                             } rounded-md`}
+                             onClick={() => {setSignUpRole('admin');setFormData({...formData,role:'admin'})}}
+                           >
+                             Admin Sign Up
+                           </button> */}
+                         </div>
+                              <form className="space-y-4" onSubmit={requestOTP} >
+                                {signUpRole === 'user' && (
+                                  <>
+                                    <h3 className="md:text-xl text-center text-sm font-bold mb-4">Patient Sign Up</h3>
+                                    <div className='d-flex flex-row justify-content-between mb-4' >
+                                            <div className=' mr-1'>
+                                              <label className="block text-gray-700 md:text-lg  text-sm">First Name</label>
+                                              <input
+                                                type="text"
+                                                value = {formData.firstName}
+                                                onChange={(e)=>
+                                                  setFormData({ ...formData, firstName: e.target.value })
+                                                }
+                                                className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                placeholder="Enter your frist name"
+                                                required
+                                              />
+                                            </div>
+                                            <div className=' ml-1'>
+                                              <label className="block text-gray-700 md:text-lg  text-sm">Last Name</label>
+                                              <input
+                                                type="text"
+                                                value = {formData.lastName}
+                                                onChange={(e)=>
+                                                  setFormData({ ...formData, lastName: e.target.value })
+                                                }
+                                                className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                placeholder="Enter your last name"
+                                                required
+                                              />
+                                            </div>
+                                    </div>
+                                    
+                                    <div className='mb-4'>
+                                      <label className="block text-gray-700 md:text-lg  text-sm">Email</label>
+                                      <input
+                                        type="email"
+                                        value = {formData.email}
+                                        onChange={(e)=>
+                                                  setFormData({ ...formData, email: e.target.value })
+                                        }
+                                        className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Enter your email"
+                                        required
+                                      />
+                                    </div>
+                                    <div className='mb-4'>
+                                      <label className="block text-gray-700 md:text-lg  text-sm">Password</label>
+                                      <input
+                                        type="password"
+                                        value = {formData.password}
+                                        onChange={(e)=>
+                                                  setFormData({ ...formData, password: e.target.value })
+                                        }
+                                        className="w-full mt-2 px-3 py-2 border md:text-lg  text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Enter your password"
+                                        required
+                                      />
+                                    </div>
+                                    <div className='mb-4'>
+                                      <label className="block text-gray-700 md:text-lg  text-sm">Confirm address</label>
+                                      <input
+                                        type="password"
+                                        value = {formData.confirmPassword}
+                                        onChange={(e)=>
+                                                  setFormData({ ...formData,confirmPassword: e.target.value })
+                                        }
+                                        className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Enter your confirm password"
+                                        required
+                                      />
+                                    </div>
+                                  </>
+                                )}
 
+                                     {signUpRole === 'doctor' && (
+                                       <>
+                                       <h3 className="md:text-xl text-center text-sm font-bold mb-4">Doctor Sign Up</h3>
+                                         <div className='d-flex flex-row justify-content-between mb-4' >
+                                                 <div className=' mr-1'>
+                                                   <label className="block text-gray-700 md:text-lg  text-sm">First Name</label>
+                                                   <input
+                                                     type="text"
+                                                     value = {formData.firstName}
+                                                     onChange={(e)=>
+                                                       setFormData({ ...formData, firstName: e.target.value })
+                                                     }
+                                                     className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                     placeholder="Enter your frist name"
+                                                     required
+                                                   />
+                                                 </div>
+                                                 <div className=' ml-1'>
+                                                   <label className="block text-gray-700 md:text-lg  text-sm">Last Name</label>
+                                                   <input
+                                                     type="text"
+                                                     value = {formData.lastName}
+                                                     onChange={(e)=>
+                                                       setFormData({ ...formData, lastName: e.target.value })
+                                                     }
+                                                     className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                     placeholder="Enter your last name"
+                                                     required
+                                                   />
+                                                 </div>
+                                         </div>
+                                         
+                                         <div className='mb-4'>
+                                           <label className="block text-gray-700 md:text-lg  text-sm">Email</label>
+                                           <input
+                                             type="email"
+                                             value = {formData.email}
+                                             onChange={(e)=>
+                                                       setFormData({ ...formData, email: e.target.value })
+                                             }
+                                             className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                             placeholder="Enter your email"
+                                             required
+                                           />
+                                         </div>
+                                         <div className='mb-4'>
+                                           <label className="block text-gray-700 md:text-lg  text-sm">Password</label>
+                                           <input
+                                             type="password"
+                                             value = {formData.password}
+                                             onChange={(e)=>
+                                                       setFormData({ ...formData, password: e.target.value })
+                                             }
+                                             className="w-full mt-2 px-3 py-2 border md:text-lg  text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                             placeholder="Enter your password"
+                                             required
+                                           />
+                                         </div>
+                                         <div className='mb-4'>
+                                           <label className="block text-gray-700 md:text-lg  text-sm">Confirm address</label>
+                                           <input
+                                             type="password"
+                                             value = {formData.confirmPassword}
+                                             onChange={(e)=>
+                                                       setFormData({ ...formData,confirmPassword: e.target.value })
+                                             }
+                                             className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                             placeholder="Enter your confirm password"
+                                             required
+                                           />
+                                         </div>
+                                       </>
+                                     )}
+
+          
+
+                                    <div className="flex justify-center mt-5 md:text-lg text-sm">
+                                                <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+                                                    Request OTP
+                                                 </button>
+                                     </div>
+                                      <div className='md:text-lg text-sm text-center'>
+                                            <p>Already Sign Up? <Link to="/login" className='text-blue-500 ' >Login</Link></p>
+                                       </div>
+
+                                     <div className="flex flex-col space-y-3 mt-6">
+                                           <button className="flex items-center justify-center md:text-lg text-sm border py-2 rounded-md">
+                                             <FcGoogle className="mr-2" />
+                                              Continue with Google
+                                           </button>
+                                             <button className="flex items-center justify-center md:text-lg text-sm border py-2 rounded-md">
+                                               <FaFacebook className="text-blue-700 mr-2" />
+                                               Continue with Facebook
+                                             </button>
+                                     </div>
+                                     {message && <p className="text-center text-red-500">{message}</p>}
+                             </form>
+              </> )}
+       
+           { step==='verify' && (
+            <>
+            <form className="space-y-4" onSubmit={verifyOTPAndRegister}>
+            <h3 className="md:text-xl text-center text-sm font-bold mb-4">Verify OTP</h3>
+            <div className='mb-4'>
+              <label className="block text-gray-700 md:text-lg text-sm">Enter OTP</label>
+              <input
+                type="text"
+                value={otp}
+                onChange={(e) => setOTP(e.target.value)}
+                className="w-full mt-2 px-3 md:text-lg text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter the OTP sent to your email"
+                required
+              />
+            </div>
+
+            <div className="flex justify-center mt-5 md:text-lg text-sm">
+              <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+                Verify & Register
+              </button>
+            </div>
+
+            {message && <p className="text-center text-red-500">{message}</p>}
+          </form>
+            </>
+           )}
         {/* Dynamic Form */}
-        <form className="space-y-4" onSubmit={register} action="/" >
-          {signUpRole === 'user' && (
-            <>
-              <h3 className="md:text-xl text-center text-sm font-bold mb-4">Patient Sign Up</h3>
-              <div className='d-flex flex-row justify-content-between mb-4' >
-                      <div className=' mr-1'>
-                        <label className="block text-gray-700 md:text-lg  text-sm">First Name</label>
-                        <input
-                          type="text"
-                          value = {formData.firstName}
-                          onChange={(e)=>
-                            setFormData({ ...formData, firstName: e.target.value })
-                          }
-                          className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Enter your frist name"
-                          required
-                        />
-                      </div>
-                      <div className=' ml-1'>
-                        <label className="block text-gray-700 md:text-lg  text-sm">Last Name</label>
-                        <input
-                          type="text"
-                          value = {formData.lastName}
-                          onChange={(e)=>
-                            setFormData({ ...formData, lastName: e.target.value })
-                          }
-                          className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Enter your last name"
-                          required
-                        />
-                      </div>
-              </div>
-              
-              <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg  text-sm">Email</label>
-                <input
-                  type="email"
-                  value = {formData.email}
-                  onChange={(e)=>
-                            setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-              <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg  text-sm">Password</label>
-                <input
-                  type="password"
-                  value = {formData.password}
-                  onChange={(e)=>
-                            setFormData({ ...formData, password: e.target.value })
-                  }
-                  className="w-full mt-2 px-3 py-2 border md:text-lg  text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your password"
-                  required
-                />
-              </div>
-              <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg  text-sm">Confirm address</label>
-                <input
-                  type="password"
-                  value = {formData.confirmPassword}
-                  onChange={(e)=>
-                            setFormData({ ...formData,confirmPassword: e.target.value })
-                  }
-                  className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your confirm password"
-                  required
-                />
-              </div>
-            </>
-          )}
-
-          {signUpRole === 'doctor' && (
-            <>
-            <h3 className="md:text-xl text-center text-sm font-bold mb-4">Doctor Sign Up</h3>
-              <div className='d-flex flex-row justify-content-between mb-4' >
-                      <div className=' mr-1'>
-                        <label className="block text-gray-700 md:text-lg  text-sm">First Name</label>
-                        <input
-                          type="text"
-                          value = {formData.firstName}
-                          onChange={(e)=>
-                            setFormData({ ...formData, firstName: e.target.value })
-                          }
-                          className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Enter your frist name"
-                          required
-                        />
-                      </div>
-                      <div className=' ml-1'>
-                        <label className="block text-gray-700 md:text-lg  text-sm">Last Name</label>
-                        <input
-                          type="text"
-                          value = {formData.lastName}
-                          onChange={(e)=>
-                            setFormData({ ...formData, lastName: e.target.value })
-                          }
-                          className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Enter your last name"
-                          required
-                        />
-                      </div>
-              </div>
-              
-              <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg  text-sm">Email</label>
-                <input
-                  type="email"
-                  value = {formData.email}
-                  onChange={(e)=>
-                            setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-              <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg  text-sm">Password</label>
-                <input
-                  type="password"
-                  value = {formData.password}
-                  onChange={(e)=>
-                            setFormData({ ...formData, password: e.target.value })
-                  }
-                  className="w-full mt-2 px-3 py-2 border md:text-lg  text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your password"
-                  required
-                />
-              </div>
-              <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg  text-sm">Confirm address</label>
-                <input
-                  type="password"
-                  value = {formData.confirmPassword}
-                  onChange={(e)=>
-                            setFormData({ ...formData,confirmPassword: e.target.value })
-                  }
-                  className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your confirm password"
-                  required
-                />
-              </div>
-            </>
-          )}
-
-          {/* {signUpRole === 'admin' && (
-            <>
-              <h3 className="md:text-xl text-sm text-center font-bold mb-4">Admin Sign Up</h3>
-              <div className='mb-4'>
-                <label className="block md:text-lg text-sm ml-1 mb-2 text-gray-700">Email address</label>
-                <input
-                  type="email"
-                  className="w-full px-3 py-2 md:text-lg text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-              <div className='mb-4'>
-                <label className="block text-gray-700 md:text-lg text-sm ml-1 mb-2">Password</label>
-                <input
-                  type="password"
-                  className="w-full px-3 py-2 border rounded-md md:text-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your password"
-                  required
-                />
-              </div>
-            </>
-          )} */}
-
-          <div className="flex justify-center mt-5 md:text-lg text-sm">
-            <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-              Sign Up
-            </button>
-          </div>
-          <div className='md:text-lg text-sm text-center'>
-            <p>Already Sign Up? <Link to="/login" className='text-blue-500 ' >Login</Link></p>
-          </div>
-
-          <div className="flex flex-col space-y-3 mt-6">
-            <button className="flex items-center justify-center md:text-lg text-sm border py-2 rounded-md">
-              <FcGoogle className="mr-2" />
-              Continue with Google
-            </button>
-            <button className="flex items-center justify-center md:text-lg text-sm border py-2 rounded-md">
-              <FaFacebook className="text-blue-700 mr-2" />
-              Continue with Facebook
-            </button>
-          </div>
-        </form>
+       
       </div>
     </div>
   );

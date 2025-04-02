@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
-const DatePicker = ({ selectedDoctor,selectedDate, setSelectedDate,selectedTime,setSelectedTime, onNext, onPrev }) => {
+const DatePicker = ({ selectedDoctor,selectedDate, setSelectedDate,selectedTime,setSelectedTime,selectedSlot,setSlot, onNext, onPrev }) => {
  // const timeSlots = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00"];
   const [timeSlot,setTimeSlot]=useState([]);
+
    console.log(selectedDoctor);
     useEffect(()=>{
         getAvailableTimeSlots();
@@ -37,12 +38,13 @@ const DatePicker = ({ selectedDoctor,selectedDate, setSelectedDate,selectedTime,
                     <div key={slot._id} className="bg-white p-6 rounded-lg shadow-md mt-3 mb-3">
                       
                         <div className="space-y-2">
-                            <button onClick={()=>setSelectedDate(new Date(slot.date).toLocaleDateString())} className="bg-indigo-700 text-white py-2 px-4 rounded-md"><span className="font-medium">Date:</span> {new Date(slot.date).toLocaleDateString()}</button>
+                            <button onClick={()=>setSelectedDate(new Date(slot.date).toLocaleDateString())} className={`  py-2 px-4 rounded-md ${selectedDate=="" ? 'bg-blue-50':''} ${selectedDate=== new Date(slot.date).toLocaleDateString() ?'text-white bg-indigo-700' :'bg-blue-50'}`}><span className="font-medium">Date:</span> {new Date(slot.date).toLocaleDateString()}</button>
                             <div>
                                 <h3 className="font-medium mt-2 mb-2">Slots:</h3>
                                  <div className="grid grid-cols-3 gap-4">
                                     {slot.slot.map((time, idx) => (
-                                        <div key={time._id} onClick={()=>setSelectedTime(`${new Date(time.start).toLocaleTimeString()} - ${new Date(time.end).toLocaleTimeString()}`)} className="ml-4   p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                        <div key={time._id} onClick={()=>{setSelectedTime(`${new Date(time.start).toLocaleTimeString()} - ${new Date(time.end).toLocaleTimeString()}`),setSlot(time._id)}}
+                                         className={`ml-4   p-4 mb-4 text-sm  rounded-lg border-2 border-dark dark:bg-gray-800 dark:text-red-400  ${ time.status=='Booked'? 'bg-red-50 cursor-not-allowed':'bg-blue-50'} ${selectedSlot===time._id ?'text-white bg-indigo-700':'bg-blue-50'}`} role="alert">
                                             <span className="font-medium">Slot {idx + 1}:</span> {new Date(time.start).toLocaleTimeString()} - {new Date(time.end).toLocaleTimeString()} ({time.status})
                                         </div>
                                     ))}
@@ -72,7 +74,7 @@ const DatePicker = ({ selectedDoctor,selectedDate, setSelectedDate,selectedTime,
           </button>
           <button
             onClick={onNext}
-            disabled={!selectedDate}
+            disabled={!selectedDate || !selectedTime } 
             className="bg-indigo-600 text-white py-2 px-4 rounded-md disabled:bg-indigo-300"
           >
             Next
