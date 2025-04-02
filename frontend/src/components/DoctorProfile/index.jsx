@@ -29,9 +29,6 @@ const DoctorProfile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [photo,setPhoto]=useState(`http://localhost:5001${activeUser.doctor.image}`);
   
-
-
-  
   useEffect(()=>{
     if(activeUser?.doctor?.image)
     {
