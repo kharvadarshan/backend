@@ -1,20 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from 'axios';
 import {toast } from 'react-toastify';
 
 const EditProfile = ({doctor}) => {
   
-  const [formData,setFormData] = useState({...doctor});
+  const [formData,setFormData] = useState("");
+  
+    const fetchDoctor = async()=>{
+      try{
+            const response = await axios.post("http://localhost:5001/doctorprofile/getDoctorById",{email:doctor.contact});
+            if(response.data.ok)
+            {
+                 setFormData(response.data.result[0]);
+            }
+      }catch(error)
+      {
+             console.log(error);
+      }
+    }
 
+    const [photoPreview, setPhotoPreview] = useState('');
+
+    useEffect(()=>{
+      fetchDoctor();
+      
+    },[]);
+
+    useEffect(()=>{
+      if(formData?.image){
+      setPhotoPreview(`http://localhost:5001${formData.image}`);
+      }
+    },[formData])
+
+   
+   
+           //  `C:\\Users\\Admin\\Desktop\\DesignEngineering\\Backend\\uploads\\${formData.image}`
+
+    const handlePhotoChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        formData.image=file;
+        setPhotoPreview(URL.createObjectURL(file)); // Create a preview URL
+      }
+    };
+
+    
   const handleSubmit = async(e)=>{
     e.preventDefault();
      try{
-            const response = await axios.post('http://localhost:5001/doctorprofile/editProfile',formData);
+            
+            const response = await axios.post('http://localhost:5001/doctorprofile/editProfile',
+                                              formData,
+                                              {headers: {
+                                                'Content-Type':'multipart/form-data'
+                                              }});
            if(response.data.ok)
            {
                 toast.success("Profile updated Successfully...!",{
                            position:"top-right"
                       });
+               
            }
 
      }catch(error)
@@ -28,21 +73,58 @@ const EditProfile = ({doctor}) => {
     <form className="flex-1 p-4 md:p-8" onSubmit={handleSubmit}> 
       {/* Heading */}
       <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Profile</h1>
-
+       
       {/* Profile Card */}
       <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
         {/* Profile Image and Name */}
-        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-          <img
-            src="https://randomuser.me/api/portraits/men/94.jpg"
-            alt="Profile"
-            className="w-20 h-20 md:w-24 md:h-24 rounded-full"
-          />
-          <div className="text-center md:text-left">
-            <h2 className="text-xl md:text-2xl font-bold">{formData.name}</h2>
-            <p className="text-gray-600">{formData.contact}</p>
+        <div className="p-6">
+          <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6">
+            <div className="relative">
+              <img
+                src={photoPreview}
+                alt="Profile"
+                className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
+              />
+              <label
+                htmlFor="photo-upload"
+                className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600 transition"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </label>
+              <input
+                id="photo-upload"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="hidden"
+              />
+            </div>
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl text-center font-bold text-gray-800">{formData.name}</h2>
+              <p className="text-gray-600">{formData.contact}</p>
+            </div>
           </div>
         </div>
+        
 
         {/* Divider */}
         <hr className="my-4 md:my-6 border-gray-200" />

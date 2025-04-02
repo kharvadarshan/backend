@@ -2,13 +2,89 @@ const User = require('../../model/user');
 const Doctor = require('../../model/doctor');
 const JWT = require('jsonwebtoken');
 const { tokenSignature } = require('../../utils/global');
-
+const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
-exports.renderData = (req,res)=>{
-   console.log("hello");
-   res.send('Login successful');
+const redis = require('redis');
+const joi = require('joi');
+const env = require('dotenv')
+env.config();
+
+const redisClient = redis.createClient();
+
+(async ()=>{
+   try{
+        await redisClient.connect();
+        console.log("connected");
+   }catch(error)
+   {
+      console.error(error);
+   }  
+})();
+
+
+
+
+
+const generateOTP = ()=> Math.floor(100000 + Math.random()*900000).toString();
+
+const transporter = nodemailer.createTransport({
+   service:"gmail",
+   auth :{
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+   } 
+});
+
+
+
+exports.sendOTP = async(req,res) =>{
+   
+   try{
+
+      const {email } = req.body;
+
+   if(!email) {
+      return res.status(400).json({message:"Email is required"});
+   }
+
+   const otp = generateOTP();
+   await redisClient.setEx(email,300,otp);
+
+   const mailOptions = {
+      from:process.env.EMAIL_USER,
+      to:email,
+      subject:"Your OTP Code",
+      text:`Your OTP code is ${otp}.It is valid for 5 minutes.`,
+   };
+    
+   await transporter.sendMail(mailOptions);
+   res.json({message:"OTP sent successfully!",ok:true});
+
+   }catch(error)
+   {
+      res.status(500).json({message:"Error sending OTP",error});
+   }
 };
 
+
+exports.verifyOTP = async(req,res)=>{
+   try{
+        const {email,otp} = req.body;
+        console.log(email,otp);
+        const storedOtp = await redisClient.get(email);
+        
+        if(!storedOtp || storedOtp !== otp)
+        {
+          res.status(400).json({message:"Invalid or expired OTP."});
+        }
+
+        await redisClient.del(email);
+        res.json({message:"OTP verified successfully!",ok:true});
+   }catch(error)
+   {
+      res.status(500).json({message:"Error during OTP verification!"});
+   }
+}
 
 exports.registerUser = async (req,res)=>{
    try{
@@ -39,7 +115,7 @@ exports.registerUser = async (req,res)=>{
 
 
 exports.logout = (req,res)=>{
-   console.log(req.session);
+  // console.log(req.session);
    if (req.session.user) {
       req.session.destroy((err) => {
          if (err) {

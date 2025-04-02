@@ -23,20 +23,17 @@ function LoginPage() {
   });
 
   const isLogin = useSelector((state)=>state.isLogin.isLogin);
-  console.log(isLogin);
   const login= async (e)=>{
     e.preventDefault();
-    console.log(formData);
     try{
       const result = await axios.post("http://localhost:5001/user/login",formData,{ withCredentials: true,});
      
       if(result.data.ok)
       { 
-        console.log(result.data);
+
         localStorage.setItem('token', result.data.token);
         dispatch(setIsLogin());
         dispatch(setRole(result.data.user.role));
-        console.log(result.data.user);
         dispatch(setUser(result.data.user));
         toast.success("Login Successfully...!",{
             position:"top-right"

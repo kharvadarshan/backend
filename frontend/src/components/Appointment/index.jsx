@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import axios from "axios";
 
 const Appointment = () => {
   const [selectedReason, setSelectedReason] = useState(null);
@@ -10,13 +11,29 @@ const Appointment = () => {
     message: "Reason Here Reason HereReason Here",
   };
 
+  const [appointment,setAppointment]=useState([]);
+    useEffect(()=>{
+      getAllAppointment();
+    },[])
+    const getAllAppointment = async()=>{
+      try{
+        const response = await axios.get("http://localhost:5001/api/getAllAppointment");
+        if(response.data.Ok){
+        setAppointment(response.data.result);
+        }
+      }catch(error)
+      {
+        console.log(error);
+      }
+    }
+
+
   const tableData = [
-    "ID",
-    "Name",
-    "Contact No",
-    "Doctor Name",
+    "Doctor",
+    "Patient",
     "Date",
     "Time",
+    "Reason",
     "Status",
     "Action",
   ];
@@ -33,7 +50,7 @@ const Appointment = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = appointments.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = appointment.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(appointments.length / itemsPerPage);
 
@@ -44,9 +61,13 @@ const Appointment = () => {
   const prevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
+  
+
+  
 
   return (
     <div className="max-w-7xl  mx-auto p-4">
+    
       <motion.h2
         className="text-red-600 pt-14 md:pt-7 lg:p-3 text-center text-2xl md:text-4xl font-bold mb-6"
         initial={{ opacity: 0, y: -20 }}
@@ -54,6 +75,12 @@ const Appointment = () => {
       >
         Latest Appointments
       </motion.h2>
+      <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="p-4 bg-blue-500 text-white rounded">Total: {appointments.length}</div>
+            <div className="p-4 bg-yellow-500 text-white rounded">Pending: {appointments.filter(app => app.status === "Pending").length}</div>
+            <div className="p-4 bg-green-500 text-white rounded">Approved: {appointments.filter(app => app.status === "Approved").length}</div>
+            <div className="p-4 bg-red-500 text-white rounded">Rejected: {appointments.filter(app => app.status === "Rejected").length}</div>
+          </div>
 
       <div className="overflow-x-auto bg-gray-300 rounded-lg shadow-lg">
         <table className="min-w-full divide-y divide-gray-300">
@@ -78,12 +105,11 @@ const Appointment = () => {
                 transition={{ delay: 0.2 }}
                 className="hover:bg-gray-50 transition"
               >
-                <td className="px-4 py-4">{item.id}</td>
-                <td className="px-4 py-4">{item.name}</td>
-                <td className="px-4 py-4">{item.contact}</td>
                 <td className="px-4 py-4">{item.doctor}</td>
+                <td className="px-4 py-4">{item.patientId}</td>
                 <td className="px-4 py-4">{item.date}</td>
                 <td className="px-4 py-4">{item.time}</td>
+                <td className="px-4 py-4">{item.reason}</td>
                 <td className="px-4 py-4">
                   <span
                     className={`px-2 py-1 text-xs font-semibold rounded-full ${

@@ -7,6 +7,8 @@ const profile = require('./routes/profileRoutes');
 const app = express();
 const MongoStore = require('connect-mongo');
 const cors=require('cors');
+const multer=require('multer');
+const path=require('path');
 const session=require('express-session');
 const env = require('dotenv')
 env.config();
@@ -15,6 +17,10 @@ app.use(cors({origin:"http://localhost:5173", credentials: true,}));
 app.use(express.json()); // For parsing JSON
 app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded form data
 
+
+
+
+app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => console.log('Connected to MongoDB'))

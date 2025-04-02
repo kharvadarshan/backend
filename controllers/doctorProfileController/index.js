@@ -49,7 +49,8 @@ exports.getAvailableTimeSlots = async(req,res)=>{
 exports.getDoctorById = async(req,res)=>{
     try{
           const {email }=req.body;
-          const result = await Doctor.find({contact:email})
+          const result = await Doctor.find({contact:email});
+          res.status(201).json({ok:true,result:result});
     }catch(error)
     {
         res.status(500).json({ message: 'Error while fetching available time slots.',error });  
@@ -90,7 +91,7 @@ exports.rejectAppointment = async(req,res)=>{
 
         if(result.modifiedCount > 0)
         {
-            res.status(201).json({ok:false,message:"Requeste rejected successfully."});
+            res.status(201).json({ok:false,message:"Request rejected successfully."});
         }
         else
         {
@@ -98,7 +99,28 @@ exports.rejectAppointment = async(req,res)=>{
         }
     }catch(error)
     {
-        res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+        res.status(500).json({ message: 'Error while rejecting appointment request.',error });  
+    }
+}
+
+exports.markCompleted = async(req,res)=>{
+    try{
+           const {id}=req.body;
+           const result = await Appointment.updateOne({
+             _id:id
+           },{
+             $set:{status:"Completed"}
+           });
+
+           if(result.modifiedCount>0)
+           {
+             res.status(201).json({ok:true,message:"Appointment marked to completed successfully."})
+           }else{
+            res.status(200).json({ok:false,message:"No chnages were made"});
+           }
+    }catch(error)
+    {
+
     }
 }
 
@@ -106,6 +128,11 @@ exports.editProfile = async(req,res)=>{
     try{
           const formData= req.body;
           console.log(req.body);
+          if(req.file)
+          {
+            formData.image = `/uploads/${req.file.filename}`;
+            console.log(formData);
+          }
           const result = await Doctor.updateOne({_id:formData._id},{$set:formData});
           if(result.modifiedCount>0){
             res.status(201).json({ok:true,message:"Profile updated successfully."});

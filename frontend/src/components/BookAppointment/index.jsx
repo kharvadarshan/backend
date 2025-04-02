@@ -201,6 +201,7 @@ const BookAppointment = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [reason, setReason] = useState("");
+  const [slot,setSlot ]= useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const navigate = useNavigate();
 
@@ -213,6 +214,8 @@ const BookAppointment = () => {
       date: selectedDate,
       time: selectedTime,
       reason,
+      slot,
+      doctorId:selectedDoctor._id
     };
     console.log(appointmentData);
     try {
@@ -248,6 +251,8 @@ const BookAppointment = () => {
                 setSelectedDate={setSelectedDate}
                 selectedTime={selectedTime}
                 setSelectedTime={setSelectedTime}
+                selectedSlot={slot}
+                setSlot={setSlot}
                 onNext={() => setStep(2)}
                 onPrev={() => navigate(`/all-doctors/${selectedDoctor._id}`)}
               />

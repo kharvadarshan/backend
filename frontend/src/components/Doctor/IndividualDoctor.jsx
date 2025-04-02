@@ -9,6 +9,7 @@ const DoctorDetails = () => {
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [photo,setPhoto]=useState(null);
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -29,8 +30,19 @@ const DoctorDetails = () => {
       }
     };
 
+   
+
     fetchDoctor();
   }, [id]);
+
+  useEffect(()=>{
+    if(doctor?.image)
+    {
+      setPhoto(`http://localhost:5001${doctor.image}`);
+    }else{
+      setPhoto("/assets/doctor.png")
+    }
+  },[doctor]);
 
   if (loading) return <div className="text-center text-lg">Loading...</div>;
   if (error) return <div className="text-center text-red-500">{error}</div>;
@@ -46,7 +58,7 @@ const DoctorDetails = () => {
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <div className="flex flex-col items-center text-center">
           <motion.img
-            src={doctor.image || "https://via.placeholder.com/150"}
+            src={photo} 
             alt={doctor.name}
             className="w-32 h-32 object-cover rounded-full mb-4 border-4 border-blue-500"
             whileHover={{ scale: 1.1 }}

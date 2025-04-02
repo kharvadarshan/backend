@@ -13,92 +13,60 @@ import Contact from "../components/Contact";
 import Doctor from "../components/Doctor";
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
-import DoctorDetails from "../components/Doctor/IndividualDoctor";
-import BookAppointment from "../components/BookAppointment";
-import Profile from "../components/Profile";
-import DoctorProfile from "../components/DoctorProfile";
-import { useSelector } from "react-redux";
-import About from "../components/About";
-import FeedbackForm from "../components/FeedBackForm/FeedBack";
-import Chatbot from "../components/Chatbot/Chatbot";
+import DoctorDetails from '../components/Doctor/IndividualDoctor'
+import BookAppointment from '../components/BookAppointment'
+import Profile from '../components/Profile'
+import DoctorProfile from '../components/DoctorProfile';
+import { useSelector } from 'react-redux';
+import About from '../components/About';
+import FeedbackForm from '../components/FeedBackForm/FeedBack';
+import Chatbot from '../components/Chatbot/Chatbot';
+import { useEffect } from 'react';
 
 const AllRoute = () => {
-  const location = useLocation();
-  const role = useSelector((state) => state.isLogin.role);
-//   const navigate = useNavigate();
-  const hideNavFooter =
-    location.pathname === "/login" ||
-    location.pathname === "/signup" ||
-    role === "doctor";
-  /// console.log("hello"+role);
-  // const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin') === 'true');
-  return (
-    <>
-      <div className="row g-0 custom-row">
-        <div className="col-12 bg-light">
-          <div className="d-flex flex-column w-auto  h-auto">
-            {!hideNavFooter && <NavBar />}
-            <div className="d-flex justify-content-center">
-              <div className="h-auto w-auto">
-                <Routes>
-                  <Route
-                    path="/doctorprofile/*"
-                    element={role === "doctor" ? <DoctorProfile /> : <Home />}
-                  />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/" element={<Home />} />
-                  <Route
-                    path="/about"
-                    element={role === "" ? <Navigate to="/login" /> : <About />}
-                  />
-                  <Route
-                    path="/all-doctors"
-                    element={
-                      role === "" ? <Navigate to="/login" /> : <Doctor />
-                    }
-                  />
-                  <Route
-                    path="/admin/*"
-                    element={role === "" ? <Navigate to="/login" /> : <Admin />}
-                  />
-                  <Route
-                    path="/contact"
-                    element={
-                      role === "" ? <Navigate to="/login" /> : <Contact />
-                    }
-                  />
-                  <Route
-                    path="/all-doctors/:id"
-                    element={
-                      role === "" ? <Navigate to="/login" /> : <DoctorDetails />
-                    }
-                  />
-                  <Route
-                    path="/appointment/:id"
-                    element={
-                      role === "" ? (
-                        <Navigate to="/login" />
-                      ) : (
-                        <BookAppointment />
-                      )
-                    }
-                  />
-                  <Route
-                    path="/profile/*"
-                    element={
-                      role === "" ? <Navigate to="/login" /> : <Profile />
-                    }
-                  />
-                  <Route
-                    path="/feedbackform"
-                    element={
-                      role === "" ? <Navigate to="/login" /> : <FeedbackForm />
-                    }
-                  />
-                  <Route path="/chatbot" element={<Chatbot />} />
-                </Routes>
-              </div>
+    const location = useLocation();
+    const role = useSelector((state)=>state.isLogin.role);
+   const navigate=useNavigate();
+    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup" || role === 'doctor' ;
+     const publicRoutes = ['/login','/signup','/','/chatbot'];
+    useEffect(()=>{
+        if(role==='' && !publicRoutes.includes(location.pathname))
+        {
+            navigate('/login');
+        }
+    },[role,location.pathname,navigate])
+
+    return (
+        <>
+            <div className='row g-0 custom-row'>
+                <div className='col-12 bg-light'>
+                    <div className='d-flex flex-column w-auto  h-auto'>
+                        {!hideNavFooter &&  <NavBar  />}
+                        <div className="d-flex justify-content-center">
+                            <div className='h-auto w-auto'>
+            <Routes>  
+                       
+                           
+                        <Route path="/doctorprofile/*" element={ <DoctorProfile/>}></Route>
+                        <Route path="/login"  element={<Login  />} />
+                        <Route path="/signup" element={<SignUp />} />
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />}/>
+                        <Route path="/all-doctors" element={<Doctor />} />
+                        <Route path="/admin/*" element={<Admin />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/all-doctors/:id" element={<DoctorDetails />} />
+                        <Route path="/appointment/:id" element={<BookAppointment/>}/>
+                        <Route path="/profile/*" element={<Profile/>}></Route>
+                        <Route path="/feedbackform" element={<FeedbackForm/>}></Route>
+                        <Route path="/chatbot" element={<Chatbot/>}></Route>
+            </Routes>
+       
+                            </div>
+                        </div>
+                        {!hideNavFooter && <Footer />}
+                    </div>
+                </div>
             </div>
             {!hideNavFooter && <Footer />}
           </div>

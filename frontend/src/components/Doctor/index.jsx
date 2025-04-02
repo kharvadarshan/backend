@@ -7,7 +7,7 @@ const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
   const [selectedSpecialization, setSelectedSpecialization] = useState("All");
   const navigate = useNavigate();
-
+  const [photo,setPhoto]=useState("/assets/doctor.png")
   useEffect(() => {
     fetchDoctors();
   }, []);
@@ -62,7 +62,7 @@ const DoctorList = () => {
                   className="cursor-pointer border p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 bg-white border-gray-300"
                 >
                   <img
-                    src={doctor.image}
+                    src={doctor?.image !== "" ? `http://localhost:5001${doctor.image}`: "/assets/doctor.png" }
                     alt={doctor.name}
                     className="w-20 h-20 object-cover rounded-full mx-auto mb-3"
                   />
