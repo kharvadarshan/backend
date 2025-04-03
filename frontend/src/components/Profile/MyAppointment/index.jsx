@@ -1,14 +1,13 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Trash2 } from "lucide-react";
+import {  Trash2 } from "lucide-react";
+import {toast} from 'react-toastify';
+
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const activeUser = useSelector((state)=>state.user.user);
-  const [filterStatus, setFilterStatus] = useState("All");
-  const [filterMonth, setFilterMonth] = useState("All");
-  const [filterYear, setFilterYear] = useState("All");
   useEffect(() => {
      getAllAppointmentsByPatientId();
   }, []);
@@ -28,19 +27,26 @@ console.log(activeUser);
       console.log(error);
     }
   }
-  
 
- 
+  const handleDelete = async(appointmentId)=>{
+    try{
 
+      const response = await  axios.delete(`http://localhost:5001/appointments/deleteAppointment/${appointmentId}`);
+      
+      if(response.data.ok)
+      {
+          toast.success("Appointment deleted Successfully!",{positon:"top-right"});
+      }else
+      {
+          toast.failure("Something went wrong!");
+      }
 
+    }catch(error)
+    {
+           console.log(error);
+    }   
 
-  
-
-  // useEffect(() => {
-  //   const savedAppointments =
-  //     JSON.parse(localStorage.getItem("appointments")) || [];
-  //   setAppointments(savedAppointments);
-  // }, []);
+  }
 
   useEffect(() => {
    
@@ -61,45 +67,45 @@ console.log(activeUser);
     );
   };
 
-  const handleDelete = (id) => {
-    setAppointments((prev) =>
-      prev.filter((appointment) => appointment.id !== id)
-    );
-  };
+  // const handleDelete = (id) => {
+  //   setAppointments((prev) =>
+  //     prev.filter((appointment) => appointment.id !== id)
+  //   );
+  // };
 
-  const uniqueYears = useMemo(() => {
-    const years = [
-      ...new Set(appointments.map((appt) => appt.date.split("-")[0])),
-    ];
-    return years.sort();
-  }, [appointments]);
+  // const uniqueYears = useMemo(() => {
+  //   const years = [
+  //     ...new Set(appointments.map((appt) => appt.date.split("-")[0])),
+  //   ];
+  //   return years.sort();
+  // }, [appointments]);
 
-  const uniqueMonths = useMemo(() => {
-    const months = [
-      ...new Set(
-        appointments.map((appt) =>
-          new Date(appt.date).toLocaleString("en-US", { month: "long" })
-        )
-      ),
-    ];
-    return months;
-  }, [appointments]);
+  // const uniqueMonths = useMemo(() => {
+  //   const months = [
+  //     ...new Set(
+  //       appointments.map((appt) =>
+  //         new Date(appt.date).toLocaleString("en-US", { month: "long" })
+  //       )
+  //     ),
+  //   ];
+  //   return months;
+  // }, [appointments]);
 
-  const filteredAppointments = useMemo(() => {
-    return appointments.filter((appointment) => {
-      const [year, month] = appointment.date.split("-");
-      const appointmentMonth = new Date(appointment.date).toLocaleString(
-        "en-US",
-        { month: "long" }
-      );
+  // const filteredAppointments = useMemo(() => {
+  //   return appointments.filter((appointment) => {
+  //     const [year, month] = appointment.date.split("-");
+  //     const appointmentMonth = new Date(appointment.date).toLocaleString(
+  //       "en-US",
+  //       { month: "long" }
+  //     );
 
-      return (
-        (filterStatus === "All" || appointment.status === filterStatus) &&
-        (filterMonth === "All" || appointmentMonth === filterMonth) &&
-        (filterYear === "All" || year === filterYear)
-      );
-    });
-  }, [appointments, filterStatus, filterMonth, filterYear]);
+  //     return (
+  //       (filterStatus === "All" || appointment.status === filterStatus) &&
+  //       (filterMonth === "All" || appointmentMonth === filterMonth) &&
+  //       (filterYear === "All" || year === filterYear)
+  //     );
+  //   });
+  // }, [appointments, filterStatus, filterMonth, filterYear]);
 
   return (
     <div className="p-6 mt-6  max-w-5xl mx-auto">
@@ -110,7 +116,7 @@ console.log(activeUser);
       {/* Filter Section */}
       <div className="flex hover:cursor-pointer flex-wrap gap-4 justify-center mb-5">
         {/* Status Filter */}
-        <div className="relative">
+        {/* <div className="relative">
           <select
             className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
             value={filterStatus}
@@ -125,10 +131,10 @@ console.log(activeUser);
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
             size={20}
           />
-        </div>
+        </div> */}
 
         {/* Month Filter */}
-        <div className="relative">
+        {/* <div className="relative">
           <select
             className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
             value={filterMonth}
@@ -145,9 +151,9 @@ console.log(activeUser);
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
             size={20}
           />
-        </div>
+        </div>*/}
 
-        {/* Year Filter */}
+        {/* Year Filter 
         <div className="relative">
           <select
             className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
@@ -165,10 +171,10 @@ console.log(activeUser);
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
             size={20}
           />
-        </div>
+        </div> */}
       </div>
       {/* Appointments */}
-      {filteredAppointments.length === 0 ? (
+      {appointments.length === 0 ? (
         <p className="text-gray-500 text-center text-lg">
           No appointments found.
         </p>
@@ -190,7 +196,7 @@ console.log(activeUser);
               </thead>
               <tbody>
                 <AnimatePresence>
-                  {filteredAppointments.map((appointment) => (
+                  {appointments.map((appointment) => (
                     <motion.tr
                       key={appointment._id}
                       className="border text-center"
@@ -209,7 +215,7 @@ console.log(activeUser);
                       </td>
                       <td className="p-3 border">
                         <button
-                          onClick={() => handleDelete(appointment.id)}
+                          onClick={() => handleDelete(appointment._id)}
                           className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
                         >
                           <Trash2 size={18} />
@@ -225,7 +231,7 @@ console.log(activeUser);
           {/* Cards for mobile view */}
           <div className="md:hidden text-center space-y-4">
             <AnimatePresence>
-              {filteredAppointments.map((appointment) => (
+              {appointments.map((appointment) => (
                 <motion.div
                   key={appointment.id}
                   className="p-4 bg-gray-50 rounded-lg shadow-sm border flex flex-col space-y-2"
@@ -243,7 +249,7 @@ console.log(activeUser);
                     {getStatusBadge(appointment.status)}
                   </div>
                   <button
-                    onClick={() => handleDelete(appointment.id)}
+                    onClick={() => handleDelete(appointment._id)}
                     className="py-2 mx-auto px-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg flex items-center w-fit"
                   >
                     <Trash2 size={18} className="mr-2" />
