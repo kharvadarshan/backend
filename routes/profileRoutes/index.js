@@ -1,5 +1,15 @@
 const express = require('express');
+const multer = require('multer');
 const router  = express.Router();
-const {getUserDetailsById} = require('../../controllers/profileController');
+const {getUserDetailsById,editProfile} = require('../../controllers/profileController');
+const storage = multer.diskStorage({
+    destination: './uploads/',
+    filename: (req,file,cb) =>{
+        cb(null,`${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload = multer({ storage });
 router.post('/edit',getUserDetailsById);
+router.post('/editProfile',upload.single('image'),editProfile);
 module.exports = router;

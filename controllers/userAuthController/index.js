@@ -42,6 +42,7 @@ exports.sendOTP = async(req,res) =>{
    try{
 
       const {email } = req.body;
+      console.log(email);
 
    if(!email) {
       return res.status(400).json({message:"Email is required"});
@@ -88,11 +89,11 @@ exports.verifyOTP = async(req,res)=>{
 
 exports.registerUser = async (req,res)=>{
    try{
-       const {firstName,lastName,email,password,confirmPassword,role}=req.body;
+       const {userName,email,password,confirmPassword,role}=req.body;
        const hashedPassword = await bcrypt.hash(password,10);
        console.log(req.body);
        if(password == confirmPassword){
-         const user = new User({firstName,lastName,email,password:hashedPassword,role});
+         const user = new User({userName,email,password:hashedPassword,role});
          await user.save();
             res.status(201).json({
                message: 'User registered successfully',ok:true });
@@ -154,7 +155,7 @@ exports.validateLogin = async (req,res)=>{
               req.session.user = {
                id: userCredential._id,
                email: userCredential.email,
-               name:userCredential.firstName+" "+userCredential.lastName,
+               name:userCredential.userName,
                role: userCredential.role,
                doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
               };

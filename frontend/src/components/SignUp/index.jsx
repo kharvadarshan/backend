@@ -13,12 +13,12 @@ const SignUp = () => {
   const [otp,setOTP] = useState('');
   const [step,setStep] = useState('register');
   const [formData,setFormData ]  = useState({
-    firstName:'',
-    lastName:'',
+    userName:'',
     email:'',
     password:'',
     confirmPassword:'',
-    role:signUpRole
+    role:signUpRole,
+    image:""
   }) ;
 
   useEffect(()=>{
@@ -30,7 +30,7 @@ const SignUp = () => {
              if(formData.password !== formData.confirmPassword)
              {
                setMessage('Passwords do not match');
-             }
+             }else{
              try{
                 const response = await axios.post('http://localhost:5001/user/sendOTP',{ email:formData.email});
 
@@ -42,6 +42,7 @@ const SignUp = () => {
              {
                    setMessage(error.response?.data?.message || "Error requesting OTP");
              }
+            }
    };
 
    const verifyOTPAndRegister = async(e) =>{
@@ -137,31 +138,19 @@ const SignUp = () => {
                                     <h3 className="md:text-xl text-center text-sm font-bold mb-4">Patient Sign Up</h3>
                                     <div className='d-flex flex-row justify-content-between mb-4' >
                                             <div className=' mr-1'>
-                                              <label className="block text-gray-700 md:text-lg  text-sm">First Name</label>
+                                              <label className="block text-gray-700 md:text-lg  text-sm">username</label>
                                               <input
                                                 type="text"
-                                                value = {formData.firstName}
+                                                value = {formData.userName}
                                                 onChange={(e)=>
-                                                  setFormData({ ...formData, firstName: e.target.value })
+                                                  setFormData({ ...formData, userName: e.target.value })
                                                 }
                                                 className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 placeholder="Enter your frist name"
                                                 required
                                               />
                                             </div>
-                                            <div className=' ml-1'>
-                                              <label className="block text-gray-700 md:text-lg  text-sm">Last Name</label>
-                                              <input
-                                                type="text"
-                                                value = {formData.lastName}
-                                                onChange={(e)=>
-                                                  setFormData({ ...formData, lastName: e.target.value })
-                                                }
-                                                className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                placeholder="Enter your last name"
-                                                required
-                                              />
-                                            </div>
+                                            
                                     </div>
                                     
                                     <div className='mb-4'>
@@ -211,28 +200,15 @@ const SignUp = () => {
                                        <h3 className="md:text-xl text-center text-sm font-bold mb-4">Doctor Sign Up</h3>
                                          <div className='d-flex flex-row justify-content-between mb-4' >
                                                  <div className=' mr-1'>
-                                                   <label className="block text-gray-700 md:text-lg  text-sm">First Name</label>
+                                                   <label className="block text-gray-700 md:text-lg  text-sm">username</label>
                                                    <input
                                                      type="text"
-                                                     value = {formData.firstName}
+                                                     value = {formData.userName}
                                                      onChange={(e)=>
-                                                       setFormData({ ...formData, firstName: e.target.value })
+                                                       setFormData({ ...formData, userName: e.target.value })
                                                      }
                                                      className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                      placeholder="Enter your frist name"
-                                                     required
-                                                   />
-                                                 </div>
-                                                 <div className=' ml-1'>
-                                                   <label className="block text-gray-700 md:text-lg  text-sm">Last Name</label>
-                                                   <input
-                                                     type="text"
-                                                     value = {formData.lastName}
-                                                     onChange={(e)=>
-                                                       setFormData({ ...formData, lastName: e.target.value })
-                                                     }
-                                                     className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                     placeholder="Enter your last name"
                                                      required
                                                    />
                                                  </div>

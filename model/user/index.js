@@ -3,11 +3,11 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const userSchema = new mongoose.Schema({
     userId:  { type: Number, unique:true},
-    firstName: { type: String, required: true, allowNull: false },
-    lastName: { type: String, required: true, allowNull: false },
+    userName: { type: String, required: true, allowNull: false },
     email: { type: String, required: true, unique: true, allowNull: false },
     password: { type: String, required: true, allowNull: false },
-    role : { type: String, enum : ['user','doctor','admin'],required:true}
+    role : { type: String, enum : ['user','doctor','admin'],required:true},
+    image: { type: String, required: false,default:""}
 });
 
 userSchema.plugin(AutoIncrement, { inc_field: 'userId' });

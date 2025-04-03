@@ -1,19 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import {toast} from 'react-toastify';
 
 const EditProfile = () => {
-  const [user,setUser]=useState({});
+  const [user,setUser]=useState("");
   const activeUser = useSelector((state)=>state.user.user);
-  const [photo, setPhoto] = useState(null); // State for the selected photo file
-  const [photoPreview, setPhotoPreview] = useState(
-    "https://randomuser.me/api/portraits/men/94.jpg"
-  ); // State for photo preview
+  const [photoPreview, setPhotoPreview] = useState(''); // State for photo preview
+
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setPhoto(file);
+      user.image = file;
       setPhotoPreview(URL.createObjectURL(file)); // Create a preview URL
     }
   };
@@ -23,15 +22,15 @@ const EditProfile = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Data:", user);
-    console.log("Photo:", photo);
-    // Add your form submission logic here
-  };
+
+
+
+
   useEffect(()=>{
      fetchUser();
   },[]);
+
+
    const fetchUser = async ()=>{
     try{
            const response = await axios.post('http://localhost:5001/profile/edit',{id:activeUser.id});
@@ -45,6 +44,35 @@ const EditProfile = () => {
       console.error(error);
     }
    }
+
+    useEffect(()=>{
+        if(user?.image){
+        setPhotoPreview(`http://localhost:5001${user.image}`);
+        }
+      },[user]);
+
+    console.log(user);
+   const handleSubmit = async(e)=>{
+        e.preventDefault();
+        try{
+               
+               const response = await axios.post('http://localhost:5001/profile/editProfile',
+                                                 user,
+                                                 {headers: {
+                                                   'Content-Type':'multipart/form-data'
+                                                 }});
+              if(response.data.ok)
+              {
+                   toast.success("Profile updated Successfully...!",{
+                              position:"top-right"
+                         });
+              }
+   
+        }catch(error)
+        {
+             console.log(error);
+        }
+     };
 
   return (
     <div className="min-h-[650px] mt-10 md:my-2 p-4">
@@ -100,7 +128,7 @@ const EditProfile = () => {
               />
             </div>
             <div className="text-center md:text-left">
-              <h2 className="text-2xl text-center font-bold text-gray-800">{user.firstName}</h2>
+              <h2 className="text-2xl text-center font-bold text-gray-800">{user.userName}</h2>
               <p className="text-gray-600">{}</p>
             </div>
           </div>
@@ -110,24 +138,12 @@ const EditProfile = () => {
         <div className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              First Name
+              User Name
             </label>
             <input
               type="text"
               name="name"
-              value={user.firstName}
-              onChange={handleInputChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Last Name
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={user.lastName}
+              value={user.userName}
               onChange={handleInputChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
