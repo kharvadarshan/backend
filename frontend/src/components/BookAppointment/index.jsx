@@ -181,7 +181,7 @@
 
 import { useState } from "react";
 import { useNavigate , useLocation  } from "react-router-dom";
-import ReasonInput from "../appointmentComponent/ReasonInput";
+// import ReasonInput from "../appointmentComponent/ReasonInput";
 import Confirmation from "../appointmentComponent/Confirmation";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -198,7 +198,7 @@ const BookAppointment = () => {
   const selectedDoctor = state?.doctor;
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
-  const [reason, setReason] = useState("");
+  // const [reason, setReason] = useState("");
   const [slot,setSlot ]= useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const navigate = useNavigate();
@@ -211,7 +211,6 @@ const BookAppointment = () => {
       patientId:activeUser.email,
       date: selectedDate,
       time: selectedTime,
-      reason,
       slot,
       doctorId:selectedDoctor._id
     };

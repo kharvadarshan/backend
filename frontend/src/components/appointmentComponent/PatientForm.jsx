@@ -15,12 +15,14 @@ const PatientForm = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    specialization: "",
-    experience: "",
-    degree: "",
-    fees: "",
+    patientname: "",
+    age: "",
+    gender: "",
+    email: "",
     address: "",
-    about: "",
+    reason: "",
+    city: "",
+    number: "",
   });
 
   const handleChange = (e) =>
@@ -32,12 +34,14 @@ const PatientForm = () => {
     alert("Doctor added successfully!");
     setFormData({
       name: "",
-      specialization: "",
-      experience: "",
-      degree: "",
-      fees: "",
+      patientname: "",
+      age: "",
+      gender: "",
+      email: "",
       address: "",
-      about: "",
+      reason: "",
+      city: "",
+      number: "",
     });
   };
 
@@ -106,17 +110,17 @@ const PatientForm = () => {
 
           <div className="mt-6">
             <label
-              htmlFor="about"
+              htmlFor="reason"
               className="block pl-1 mb-2 text-sm font-medium text-gray-700"
             >
-              About
+              Enter Your Reason
             </label>
             <textarea
-              id="about"
-              value={formData.about}
+              id="reason"
+              value={formData.reason}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none"
-              placeholder="Enter About"
+              placeholder="Enter Your Reason For The Appointment"
               rows="4"
             ></textarea>
           </div>
