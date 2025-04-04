@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,14 +19,12 @@ const SignUp = () => {
     image:""
   }) ;
 
-  useEffect(() => {}, []);
-
   const requestOTP = async (e) => {
-    e.preventDefault();
-             if(formData.password !== formData.confirmPassword)
-             {
-               setMessage('Passwords do not match');
-             }else{
+           e.preventDefault();
+            //  if(formData.password !== formData.confirmPassword)
+            //  {
+            //    setMessage('Passwords do not match');
+            //  }else{
              try{
                 const response = await axios.post('http://localhost:5001/user/sendOTP',{ email:formData.email});
 
@@ -38,7 +36,6 @@ const SignUp = () => {
              {
                    setMessage(error.response?.data?.message || "Error requesting OTP");
              }
-            }
    };
 
    const verifyOTPAndRegister = async(e) =>{
@@ -66,18 +63,6 @@ const SignUp = () => {
     }catch(error)
     {
         setMessage(error.response?.data?.message || "Error during verification");
-    }
-    try {
-      const response = await axios.post("http://localhost:5001/user/sendOTP", {
-        email: formData.email,
-      });
-
-      if (response.data.ok) {
-        setMessage(response.data.message);
-        setStep("verify");
-      }
-    } catch (error) {
-      setMessage(error.response?.data?.message || "Error requesting OTP");
     }
   };
   const goToHome = () => {
