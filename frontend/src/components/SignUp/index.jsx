@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-// import { FcGoogle } from "react-icons/fc";
-// import { FaFacebook } from "react-icons/fa";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const SignUp = () => {
-<<<<<<< HEAD
   const navigate=useNavigate();
   const [signUpRole, setSignUpRole] = useState('user'); // Default to 'patient' sign up
   const [message,setMessage]=useState('');
@@ -21,27 +18,11 @@ const SignUp = () => {
     role:signUpRole,
     image:""
   }) ;
-=======
-  const navigate = useNavigate();
-  const [signUpRole, setSignUpRole] = useState("user"); // Default to 'patient' sign up
-  const [message, setMessage] = useState("");
-  const [otp, setOTP] = useState("");
-  const [step, setStep] = useState("register");
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: signUpRole,
-  });
->>>>>>> 516ca3a6e2b5de0779f6ff5f2e739efbf18f6a12
 
   useEffect(() => {}, []);
 
   const requestOTP = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
              if(formData.password !== formData.confirmPassword)
              {
                setMessage('Passwords do not match');
@@ -85,10 +66,6 @@ const SignUp = () => {
     }catch(error)
     {
         setMessage(error.response?.data?.message || "Error during verification");
-=======
-    if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords do not match");
->>>>>>> 516ca3a6e2b5de0779f6ff5f2e739efbf18f6a12
     }
     try {
       const response = await axios.post("http://localhost:5001/user/sendOTP", {
@@ -103,53 +80,6 @@ const SignUp = () => {
       setMessage(error.response?.data?.message || "Error requesting OTP");
     }
   };
-
-  const verifyOTPAndRegister = async (e) => {
-    e.preventDefault();
-    try {
-      const verifyResponse = await axios.post(
-        "http://localhost:5001/user/sendOTP",
-        { email: formData.email, otp: otp }
-      );
-      if (verifyResponse.data.ok) {
-        try {
-          const response = await axios.post(
-            "http://localhost:5001/user/signup",
-            formData
-          );
-
-          if (response.data.ok) {
-            navigate("/login");
-          } else {
-            navigate("/signup");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    } catch (error) {
-      setMessage(error.response?.data?.message || "Error during verification");
-    }
-  };
-
-  // const register = async (e)=>{
-  //   e.preventDefault();
-  //   try{
-
-  //      const response = await axios.post("http://localhost:5001/user/signup",formData)
-
-  //     if(response.data.ok)
-  //     {
-  //          navigate('/login');
-  //     }
-  //     else{
-  //          navigate('/signup');
-  //     }
-  //   }catch(error)
-  //   {
-  //     console.error(error)
-  //   }
-  // }
   const goToHome = () => {
     navigate("/");
   };
@@ -196,14 +126,6 @@ const SignUp = () => {
               >
                 Doctor Sign Up
               </button>
-              {/* <button
-                             className={`px-6 py-2 text-sm md:text-lg font-medium border ${
-                                                signUpRole === 'admin' ? 'bg-blue-500 text-white' : 'text-gray-700'
-                             } rounded-md`}
-                             onClick={() => {setSignUpRole('admin');setFormData({...formData,role:'admin'})}}
-                           >
-                             Admin Sign Up
-                           </button> */}
                          </div>
                               <form className="space-y-4" onSubmit={requestOTP} >
                                 {signUpRole === 'user' && (
@@ -329,98 +251,6 @@ const SignUp = () => {
                                        </>
                                      )}
 
-              {signUpRole === "doctor" && (
-                <>
-                  <h3 className="md:text-xl text-center text-sm font-bold mb-4">
-                    Doctor Sign Up
-                  </h3>
-                  <div className="d-flex flex-row justify-content-between mb-4">
-                    <div className=" mr-1">
-                      <label className="block text-gray-700 md:text-lg  text-sm">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.firstName}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            firstName: e.target.value,
-                          })
-                        }
-                        className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter your frist name"
-                        required
-                      />
-                    </div>
-                    <div className=" ml-1">
-                      <label className="block text-gray-700 md:text-lg  text-sm">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.lastName}
-                        onChange={(e) =>
-                          setFormData({ ...formData, lastName: e.target.value })
-                        }
-                        className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter your last name"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block text-gray-700 md:text-lg  text-sm">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
-                      className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter your email"
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 md:text-lg  text-sm">
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      value={formData.password}
-                      onChange={(e) =>
-                        setFormData({ ...formData, password: e.target.value })
-                      }
-                      className="w-full mt-2 px-3 py-2 border md:text-lg  text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter your password"
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 md:text-lg  text-sm">
-                      Confirm address
-                    </label>
-                    <input
-                      type="password"
-                      value={formData.confirmPassword}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          confirmPassword: e.target.value,
-                        })
-                      }
-                      className="w-full mt-2 px-3 md:text-lg  text-sm py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter your confirm password"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
               <div className="flex justify-center mt-5 md:text-lg text-sm">
                 <button
                   type="submit"
@@ -438,16 +268,7 @@ const SignUp = () => {
                 </p>
               </div>
 
-              {/* <div className="flex flex-col space-y-3 mt-6">
-                <button className="flex items-center justify-center md:text-lg text-sm border py-2 rounded-md">
-                  <FcGoogle className="mr-2" />
-                  Continue with Google
-                </button>
-                <button className="flex items-center justify-center md:text-lg text-sm border py-2 rounded-md">
-                  <FaFacebook className="text-blue-700 mr-2" />
-                  Continue with Facebook
-                </button>
-              </div> */}
+              
 
               {message && <p className="text-center text-red-500">{message}</p>}
             </form>
@@ -495,6 +316,10 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
+
+
 
 //import  { useState } from 'react';
 //import { FcGoogle  } from "react-icons/fc";
