@@ -2,9 +2,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 
 const PatientForm = () => {
-   const fieldData = [
+  const fieldData = [
     { id: "name", label: "Your Name" },
     { id: "patientname", label: "Patient Name" },
+    { id: "age", label: "Patient Age", type: "number" },
+    { id: "gender", label: "Patient Gender" },
     { id: "email", label: "Email Address", type: "email" },
     { id: "city", label: "City" },
     { id: "number", label: "Mobile Number", type: "tel" },
@@ -40,7 +42,7 @@ const PatientForm = () => {
   };
 
   return (
-    <div className="container py-20 md:py-10 min-h-screen flex justify-center items-center p-6">
+    <div className="container py-20 md:py-20 min-h-screen flex justify-center items-center">
       <div className="bg-white text-gray-900 shadow-2xl rounded-2xl p-8 w-full max-w-3xl transform transition">
         <h2 className="text-center text-blue-600 font-bold text-3xl mb-6">
           Appointment Form
@@ -55,15 +57,49 @@ const PatientForm = () => {
                 >
                   {label}
                 </label>
-                <input
-                  type={type}
-                  id={id}
-                  value={formData[id]}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none"
-                  placeholder={`Enter ${label}`}
-                  required
-                />
+                {id === "gender" ? (
+                  <div className="relative">
+                    <select
+                      id={id}
+                      value={formData[id]}
+                      onChange={handleChange}
+                      className="w-full appearance-none p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none pr-10"
+                      required
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </select>
+
+                    {/* Custom Down Arrow */}
+                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                ) : (
+                  <input
+                    type={type}
+                    id={id}
+                    value={formData[id]}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none"
+                    placeholder={`Enter ${label}`}
+                    required
+                  />
+                )}
               </div>
             ))}
           </div>

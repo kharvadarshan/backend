@@ -275,14 +275,16 @@ const BookAppointment = () => {
             )}
 
             
-            {step === 3 && (
+            {/* {step === 3 && (
               <ReasonInput
                 reason={reason}
                 setReason={setReason}
                 onSubmit={handleSubmit}
                 onPrev={() => setStep(1)}
               />
-            )}
+            )} */}
+
+
           </>
         ) : (
           <Confirmation />
