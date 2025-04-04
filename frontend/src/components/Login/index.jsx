@@ -1,90 +1,101 @@
-import { useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
-import { FaFacebook } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './style.scss';
-import { NavLink } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '../../slices/userAuthSlice';
-import { setIsLogin, setRole } from '../../slices/loginSlice';
-import {setDoctor}   from '../../slices/doctorSlice';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import {toast } from 'react-toastify';
+import { useState } from "react";
+// import { FcGoogle } from "react-icons/fc";
+// import { FaFacebook } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./style.scss";
+import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../slices/userAuthSlice";
+import { setIsLogin, setRole } from "../../slices/loginSlice";
+import { setDoctor } from "../../slices/doctorSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 function LoginPage() {
-  const [loginType, setLoginType] = useState('patient'); // Default to 'patient' login
-  const navigate=useNavigate();
+  const [loginType, setLoginType] = useState("patient"); // Default to 'patient' login
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [formData,setFormData]=useState({
-    email:'',
-    password:'',
-    role:''
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    role: "",
   });
 
-  const isLogin = useSelector((state)=>state.isLogin.isLogin);
-  const login= async (e)=>{
-    e.preventDefault();
-    try{
-      const result = await axios.post("http://localhost:5001/user/login",formData,{ withCredentials: true,});
-     
-      if(result.data.ok)
-      { 
+  // const isLogin = useSelector((state) => state.isLogin.isLogin);
 
-        localStorage.setItem('token', result.data.token);
+  const login = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await axios.post(
+        "http://localhost:5001/user/login",
+        formData,
+        { withCredentials: true }
+      );
+
+      if (result.data.ok) {
+        localStorage.setItem("token", result.data.token);
         dispatch(setIsLogin());
         dispatch(setRole(result.data.user.role));
         dispatch(setUser(result.data.user));
-        toast.success("Login Successfully...!",{
-            position:"top-right"
-       });
-        if(result.data.user.role === 'doctor')
-        {
+        toast.success("Login Successfully...!", {
+          position: "top-right",
+        });
+        if (result.data.user.role === "doctor") {
           dispatch(setDoctor(result.data.user.doctor));
-          navigate('/doctorprofile');
+          navigate("/doctorprofile");
+        } else {
+          navigate("/");
         }
-        else
-        {
-         navigate('/');
-        }
+      } else {
+        navigate("/login");
       }
-      else{
-        navigate('/login');
-      }
-      
-    }catch(err)
-    {
+    } catch (err) {
       console.error(err);
     }
-    
-  }
+  };
 
-  const goToHome =()=>{
-    navigate('/');
-  }
+  const goToHome = () => {
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen mx-3 flex flex-col items-center justify-center ">
-     
-      <div className="w-full  max-w-lg  p-6 bg-white rounded-lg shadow-md my-10 mx-7">
-      <div className="items-start mb-5 ">
-        <button onClick={goToHome} className=' p-2  hover:bg-blue-500 rounded-lg'><FontAwesomeIcon className='mr-2' icon={faArrowLeft} />Go to Home</button>
-      </div>
+      <div className="w-full  max-w-lg  p-6 bg-white border border-blue-300 rounded-lg shadow-md my-10 mx-7">
+        <div className="items-start mb-5 ">
+          <button
+            onClick={goToHome}
+            className=" p-2  hover:border-blue-500 hover:border rounded-lg"
+          >
+            <FontAwesomeIcon className="mr-2" icon={faArrowLeft} />
+            Go to Home
+          </button>
+        </div>
         <div className="flex justify-evenly md:gap-4 gap-2  mb-6">
           {/* Buttons to switch login type */}
           <button
             className={`px-6 py-2  text-sm  md:text-lg  font-medium border ${
-              loginType === 'patient' ? 'bg-blue-500 text-white' : 'text-gray-700'
+              loginType === "patient"
+                ? "bg-blue-500 text-white"
+                : "text-gray-700"
             } rounded-md`}
-            onClick={() => {setLoginType('patient');setFormData({...formData,role:'user'})}}
+            onClick={() => {
+              setLoginType("patient");
+              setFormData({ ...formData, role: "user" });
+            }}
           >
             Patient Login
           </button>
           <button
             className={`px-6 py-2 text-sm  md:text-lg  font-medium border ${
-              loginType === 'doctor' ? 'bg-blue-500 text-white' : 'text-gray-700'
+              loginType === "doctor"
+                ? "bg-blue-500 text-white"
+                : "text-gray-700"
             } rounded-md`}
-            onClick={() => {setLoginType('doctor');setFormData({...formData,role:'doctor'})}}
+            onClick={() => {
+              setLoginType("doctor");
+              setFormData({ ...formData, role: "doctor" });
+            }}
           >
             Doctor Login
           </button>
@@ -98,27 +109,37 @@ function LoginPage() {
           </button> */}
         </div>
 
-        <form onSubmit={login} >
-          {loginType === 'patient' && (
+        <form onSubmit={login}>
+          {loginType === "patient" && (
             <>
-              <h3 className="md:text-xl font-bold mb-4 text-center  text-sm">Patient Login</h3>
+              <h3 className="md:text-xl font-bold mb-4 text-center  text-sm">
+                Patient Login
+              </h3>
               <div className="mb-4">
-                <label className="block ml-1 text-gray-700 md:text-lg text-sm">Email address</label>
+                <label className="block ml-1 text-gray-700 md:text-lg text-sm">
+                  Email address
+                </label>
                 <input
-                  type="email" 
+                  type="email"
                   value={formData.email}
-                  onChange={(e)=> setFormData({...formData,email:e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full mt-2 px-3 py-2 border rounded-md md:text-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your email"
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block ml-1 text-gray-700 md:text-lg  text-sm">Password</label>
+                <label className="block ml-1 text-gray-700 md:text-lg  text-sm">
+                  Password
+                </label>
                 <input
                   type="password"
                   value={formData.password}
-                  onChange={(e)=> setFormData({...formData,password:e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className="w-full mt-2 px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
                   required
@@ -127,26 +148,36 @@ function LoginPage() {
             </>
           )}
 
-          {loginType === 'doctor' && (
+          {loginType === "doctor" && (
             <>
-              <h3 className="md:text-xl  font-bold text-sm text-center mb-4">Doctor Login</h3>
+              <h3 className="md:text-xl  font-bold text-sm text-center mb-4">
+                Doctor Login
+              </h3>
               <div className="mb-4">
-                <label className="block text-gray-700 md:text-lg text-sm ml-1 mb-2">Email address</label>
+                <label className="block text-gray-700 md:text-lg text-sm ml-1 mb-2">
+                  Email address
+                </label>
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e)=> setFormData({...formData,email:e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full px-3 py-2 border rounded-md md:text-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your email"
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block md:text-lg text-sm text-gray-700 ml-1 mb-2">Password</label>
+                <label className="block md:text-lg text-sm text-gray-700 ml-1 mb-2">
+                  Password
+                </label>
                 <input
                   type="password"
                   value={formData.password}
-                  onChange={(e)=> setFormData({...formData,password:e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className="w-full px-3 py-2 border md:text-lg text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
                   required
@@ -184,20 +215,27 @@ function LoginPage() {
           )} */}
 
           <div className="flex justify-center md:text-lg text-sm mt-5">
-            <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+            <button
+              type="submit"
+              className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+            >
               Login
             </button>
           </div>
 
           <div className="flex justify-center mt-4">
-            <p className='md:text-lg text-sm'>
-              Don&apos;t have an account? <NavLink to="/signup" className="text-blue-500 md:text-lg text-sm ">
-               SignUp
+            <p className="md:text-lg text-sm">
+              Don&apos;t have an account?{" "}
+              <NavLink
+                to="/signup"
+                className="text-blue-500 md:text-lg text-sm hover:font-semibold"
+              >
+                SignUp
               </NavLink>
             </p>
           </div>
 
-          <div className="flex flex-col space-y-3 mt-6">
+          {/* <div className="flex flex-col space-y-3 mt-6">
             <button className="flex items-center justify-center  text-sm md:text-lg border py-2 rounded-md hover:bg-orange-500">
               <FcGoogle className="mr-2" />
               Continue with Google
@@ -206,7 +244,9 @@ function LoginPage() {
               <FaFacebook className="text-blue-700 mr-2" /> 
               Continue with Facebook
             </button>
-          </div>
+          </div> */}
+
+          
         </form>
       </div>
     </div>
@@ -214,6 +254,8 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+
 
 
 
@@ -230,9 +272,9 @@ export default LoginPage;
 
 //   return (
 //     <div className='container-fluid d-flex flex-column justify-content-center border border-1 my-5 p-3 ' >
-//        <div 
-//             className='btn-group mx-3 my-5 d-flex flex-row justify-content-between bg-light' 
-//             role="group" 
+//        <div
+//             className='btn-group mx-3 my-5 d-flex flex-row justify-content-between bg-light'
+//             role="group"
 //             aria-label="Basic outlined example"
 //           >
 //         {/* Buttons to switch login type */}
@@ -250,8 +292,8 @@ export default LoginPage;
 //         >
 //           Doctor Login
 //         </button>
-//         <button 
-//             type="button" 
+//         <button
+//             type="button"
 //             className={`btn btn-outline-primary  ${loginType === 'admin' ? 'active' : ''}`}
 //             onClick={() => setLoginType('admin')}>
 //           Admin Login
@@ -282,7 +324,6 @@ export default LoginPage;
 //         </div>
 //         </>
 //       )}
-        
 
 //         {/* Extra field for Doctor Login */}
 //         {loginType === 'doctor' && (
@@ -359,18 +400,14 @@ export default LoginPage;
 
 // export default LoginPage;
 
-
-
-
 // import React from "react";
 // import './style.css';
 // import { useState,useEffect } from "react";
 // const Login=()=>{
 //     const [formData,setFormData]=useState({});
 
-    
 //     return (
-    
+
 //           <div className='container-fluid border border-1 mx-3 p-3' >
 //               <div className='mx-3'>
 //                  <button className='btn btn-success'>Patient Login</button>
@@ -389,7 +426,6 @@ export default LoginPage;
 //                <button type='submit' className='btn btn-primary'>Login</button>
 //            </form>
 
-         
 //           </div>
 
 //     )

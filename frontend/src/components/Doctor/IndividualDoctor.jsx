@@ -55,7 +55,7 @@ const DoctorDetails = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
+      <div className="max-w-3xl mx-auto bg-white shadow-lg border border-blue-200 rounded-lg p-6">
         <div className="flex flex-col items-center text-center">
           <motion.img
             src={photo} 

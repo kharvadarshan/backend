@@ -1,10 +1,16 @@
-import {  useNavigate, Route, Routes, useLocation } from 'react-router-dom';
-import NavBar from '../components/NavBar';
-import Home from '../components/Home';
-import Footer from '../components/Footer';
-import Admin from '../components/Admin';
-import Contact from '../components/Contact';
-import Doctor from '../components/Doctor';
+import {
+//   useNavigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import NavBar from "../components/NavBar";
+import Home from "../components/Home";
+import Footer from "../components/Footer";
+import Admin from "../components/Admin";
+import Contact from "../components/Contact";
+import Doctor from "../components/Doctor";
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
 import DoctorDetails from '../components/Doctor/IndividualDoctor'
@@ -62,18 +68,11 @@ const AllRoute = () => {
                     </div>
                 </div>
             </div>
-        </>
-    );
+    </>
+  );
 };
 
-
 export default AllRoute;
-
-
-
-
-
-
 
 
 // import {   Route, Routes, useLocation } from 'react-router-dom';
@@ -104,7 +103,7 @@ export default AllRoute;
 //                             {!isLoginPage && <NavBar isLogin={isLogin} setIsLogin={setIsLogin} />}
 //                             <div className="flex justify-center">
 //                                 <div className="h-auto w-auto">
-                               
+
 //                                     <Routes>
 //                                         <Route path="/doctorprofile/*" element={<DoctorProfile/>}></Route>
 //                                         <Route path="/" element={<Home />}></Route>
@@ -125,7 +124,7 @@ export default AllRoute;
 //                                         <Route path="/appointment/:id" element={<BookAppointment/>}/>
 //                                         <Route path="/profile/*" element={<Profile/>}></Route>
 //                                     </Routes>
-                                
+
 //                                 </div>
 //                             </div>
 //                             {!isLoginPage && <Footer/>}
@@ -135,8 +134,7 @@ export default AllRoute;
 //        </div>
 //     </>
 //     );
-            
-       
-// }; 
+
+// };
 
 // export default AllRoute;
