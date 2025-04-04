@@ -90,7 +90,7 @@ const Profile = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-white shadow-md ">
+      <div className="flex-1 bg-white shadow-md overflow-y-auto">
         <Routes>
           <Route path="/" element={<EditProfile />} />
           <Route path="myappointment" element={<Appointments />} />
