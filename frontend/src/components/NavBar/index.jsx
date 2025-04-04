@@ -58,9 +58,9 @@ const NavBar = () => {
   const handleLoginPage = () => navigate("/login");
 
   return (
-    <nav className="bg-gray-800 text-white relative z-50 shadow-lg ">
+    <nav className="bg-gray-800 text-white  relative z-50 shadow-lg ">
       {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full   w-screen"> */}
-      <div className="flex justify-between items-center h-16  px-3 ">
+      <div className="flex justify-between  items-center h-16  px-3 ">
         {/* Logo */}
         <div className="flex-shrink-0">
           <h1 className="text-2xl font-bold">Logo</h1>

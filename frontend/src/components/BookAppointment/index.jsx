@@ -181,14 +181,12 @@
 
 import { useState } from "react";
 import { useNavigate , useLocation  } from "react-router-dom";
-// import DoctorList from "../DoctorList";
-// import DoctorDetails from "../Doctor/IndividualDoctor";
-import DatePicker from "../appointmentComponent/DatePicker";
-//import TimeSlots from "../appointmentComponent/TimeSlots";
 import ReasonInput from "../appointmentComponent/ReasonInput";
 import Confirmation from "../appointmentComponent/Confirmation";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import PatientForm from "../appointmentComponent/PatientForm";
+import CustomDatePicker from "../appointmentComponent/DatePicker";
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
@@ -233,7 +231,7 @@ const BookAppointment = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6 w-full w-screen">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6 w-full">
       {/* <div className="bg-white p-8 rounded-lg shadow-md  max-w-lg w-auto"> */}
         {!isConfirmed ? (
           <>
@@ -245,7 +243,7 @@ const BookAppointment = () => {
               />
             )} */}
             {step === 1 && (
-              <DatePicker
+              <CustomDatePicker
                 selectedDoctor={selectedDoctor}
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
@@ -267,7 +265,17 @@ const BookAppointment = () => {
                 onPrev={() => setStep(1)}
               />
             )} */}
+
+
             {step === 2 && (
+              <PatientForm
+                // onSubmit={handlePatientForm}
+                onPrev={() => setStep(1)}
+              />
+            )}
+
+            
+            {step === 3 && (
               <ReasonInput
                 reason={reason}
                 setReason={setReason}
