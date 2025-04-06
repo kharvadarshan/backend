@@ -9,17 +9,26 @@ const joi = require('joi');
 const env = require('dotenv')
 env.config();
 
-const redisClient = redis.createClient();
 
-(async ()=>{
-   try{
-        await redisClient.connect();
-        console.log("connected");
-   }catch(error)
-   {
-      console.error(error);
-   }  
-})();
+const redisClient = redis.createClient({
+   socket: {
+       host: process.env.REDIS_HOSTNAME,
+       port: Number(process.env.REDIS_PORT)
+   },
+   password: process.env.REDIS_PASSWORD
+});
+
+redisClient.on("error", (err) => {
+   console.error("Redis connection error:", err);
+});
+
+redisClient.connect().then(() => {
+   console.log("Connected to Redis!");
+   redisClient.set("aad", "ada");
+});
+
+
+
 
 
 
