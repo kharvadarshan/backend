@@ -1,6 +1,10 @@
 import { useState } from "react";
-import Swal from 'sweetalert2';
-import { faCheck, faXmark, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import Swal from "sweetalert2";
+import {
+  faCheck,
+  faXmark,
+  faCheckCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const BookedAppointment = () => {
@@ -17,7 +21,7 @@ const BookedAppointment = () => {
       date: "2025-04-07",
       time: "10:30",
       reason: "Fever and cold",
-      status: "pending"
+      status: "pending",
     },
     {
       _id: "2",
@@ -26,7 +30,7 @@ const BookedAppointment = () => {
       date: "2025-04-08",
       time: "15:00",
       reason: "Back pain",
-      status: "Approved"
+      status: "Approved",
     },
     {
       _id: "4",
@@ -35,7 +39,7 @@ const BookedAppointment = () => {
       date: "2025-04-09",
       time: "11:00",
       reason: "Cough",
-      status: "Rejected"
+      status: "Rejected",
     },
     {
       _id: "5",
@@ -44,7 +48,7 @@ const BookedAppointment = () => {
       date: "2025-04-07",
       time: "10:30",
       reason: "Fever and cold",
-      status: "pending"
+      status: "pending",
     },
     {
       _id: "6",
@@ -53,7 +57,7 @@ const BookedAppointment = () => {
       date: "2025-04-07",
       time: "10:30",
       reason: "Fever and cold",
-      status: "pending"
+      status: "pending",
     },
     {
       _id: "7",
@@ -62,7 +66,7 @@ const BookedAppointment = () => {
       date: "2025-04-07",
       time: "10:30",
       reason: "Fever and cold",
-      status: "pending"
+      status: "pending",
     },
   ]);
 
@@ -74,8 +78,8 @@ const BookedAppointment = () => {
       date: "2025-03-30",
       time: "14:00",
       reason: "Headache",
-      status: "Completed"
-    }
+      status: "Completed",
+    },
   ]);
 
   const disableButtons = (index) => {
@@ -88,25 +92,36 @@ const BookedAppointment = () => {
 
   const handleAccept = (id) => {
     Swal.fire("Accepted!", "The appointment has been accepted.", "success");
-    setUpcoming(prev => prev.map(a => a._id === id ? { ...a, status: "Approved" } : a));
+    setUpcoming((prev) =>
+      prev.map((a) => (a._id === id ? { ...a, status: "Approved" } : a))
+    );
   };
 
   const handleReject = (id) => {
     Swal.fire("Rejected!", "The appointment has been rejected.", "success");
-    setUpcoming(prev => prev.map(a => a._id === id ? { ...a, status: "Rejected" } : a));
+    setUpcoming((prev) =>
+      prev.map((a) => (a._id === id ? { ...a, status: "Rejected" } : a))
+    );
   };
 
   const handleCompleted = (id) => {
-    Swal.fire("Completed!", "The appointment has been marked completed.", "success");
-    const completedApp = upcoming.find(a => a._id === id);
-    setUpcoming(prev => prev.filter(a => a._id !== id));
-    setCompleted(prev => [...prev, { ...completedApp, status: "Completed" }]);
+    Swal.fire(
+      "Completed!",
+      "The appointment has been marked completed.",
+      "success"
+    );
+    const completedApp = upcoming.find((a) => a._id === id);
+    setUpcoming((prev) => prev.filter((a) => a._id !== id));
+    setCompleted((prev) => [...prev, { ...completedApp, status: "Completed" }]);
   };
 
   const filteredAppointments = () => {
-    if (select === "Upcoming") return upcoming.filter(a => a.status === "pending");
-    if (select === "Accepted") return upcoming.filter(a => a.status === "Approved");
-    if (select === "Rejected") return upcoming.filter(a => a.status === "Rejected");
+    if (select === "Upcoming")
+      return upcoming.filter((a) => a.status === "pending");
+    if (select === "Accepted")
+      return upcoming.filter((a) => a.status === "Approved");
+    if (select === "Rejected")
+      return upcoming.filter((a) => a.status === "Rejected");
     if (select === "Completed") return completed;
     return [];
   };
@@ -118,25 +133,77 @@ const BookedAppointment = () => {
     return filtered.slice(start, end);
   };
 
-  const totalPages = Math.ceil(filteredAppointments().length / appointmentsPerPage);
-
+  const totalPages = Math.ceil(
+    filteredAppointments().length / appointmentsPerPage
+  );
 
   const renderCard = (app, index, isUpcoming = true) => (
-    <div key={app._id} className="border border-gray-300 rounded-xl p-4 mb-4 shadow-sm">
-      <p><strong>Patient:</strong> {app.patientId}</p>
-      <p><strong>Date:</strong> {new Date(app.date).toLocaleDateString()}</p>
-      <p><strong>Time:</strong> {new Date(`1970-01-01T${app.time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-      <p><strong>Reason:</strong> {app.reason}</p>
-      <p><strong>Status:</strong> <span className={`font-semibold ${app.status === "Approved" ? "text-green-600" : app.status === "Rejected" ? "text-red-600" : app.status === "Completed" ? "text-green-700" : "text-yellow-600"}`}>{app.status}</span></p>
+    <div
+      key={app._id}
+      className="border border-gray-300 rounded-xl p-4 mb-4 shadow-sm"
+    >
+      <p>
+        <strong>Patient:</strong> {app.patientId}
+      </p>
+      <p>
+        <strong>Date:</strong> {new Date(app.date).toLocaleDateString()}
+      </p>
+      <p>
+        <strong>Time:</strong>{" "}
+        {new Date(`1970-01-01T${app.time}`).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </p>
+      <p>
+        <strong>Reason:</strong> {app.reason}
+      </p>
+      <p>
+        <strong>Status:</strong>{" "}
+        <span
+          className={`font-semibold ${
+            app.status === "Approved"
+              ? "text-green-600"
+              : app.status === "Rejected"
+              ? "text-red-600"
+              : app.status === "Completed"
+              ? "text-green-700"
+              : "text-yellow-600"
+          }`}
+        >
+          {app.status}
+        </span>
+      </p>
       {isUpcoming && app.status === "pending" && (
         <div className="flex flex-wrap gap-2 mt-3">
-          <button onClick={() => { disableButtons(index); handleAccept(app._id); }} className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50" disabled={actionDisabled[index]}>
+          <button
+            onClick={() => {
+              disableButtons(index);
+              handleAccept(app._id);
+            }}
+            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+            disabled={actionDisabled[index]}
+          >
             <FontAwesomeIcon icon={faCheck} className="mr-1" /> Accept
           </button>
-          <button onClick={() => { disableButtons(index); handleReject(app._id); }} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:opacity-50" disabled={actionDisabled[index]}>
+          <button
+            onClick={() => {
+              disableButtons(index);
+              handleReject(app._id);
+            }}
+            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:opacity-50"
+            disabled={actionDisabled[index]}
+          >
             <FontAwesomeIcon icon={faXmark} className="mr-1" /> Reject
           </button>
-          <button onClick={() => { disableButtons(index); handleCompleted(app._id); }} className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50" disabled={actionDisabled[index]}>
+          <button
+            onClick={() => {
+              disableButtons(index);
+              handleCompleted(app._id);
+            }}
+            className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+            disabled={actionDisabled[index]}
+          >
             <FontAwesomeIcon icon={faCheckCircle} className="mr-1" /> Complete
           </button>
         </div>
@@ -146,18 +213,24 @@ const BookedAppointment = () => {
 
   return (
     <div className="bg-white p-4 m-4 mb-4 border border-blue-400 rounded-lg shadow-lg">
-      <h3 className="text-2xl font-bold mb-6 text-indigo-700">Appointment Requests</h3>
+      <h3 className="text-2xl font-bold mb-6 text-indigo-700">
+        Appointment Requests
+      </h3>
 
       {/* Tabs */}
       <div className="flex flex-wrap gap-3 mb-6">
-        {["Upcoming", "Accepted", "Rejected", "Completed"].map(tab => (
+        {["Upcoming", "Accepted", "Rejected", "Completed"].map((tab) => (
           <button
             key={tab}
             onClick={() => {
               setSelect(tab);
               setCurrentPage(1);
             }}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${select === tab ? "bg-indigo-700 text-white shadow-md" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              select === tab
+                ? "bg-indigo-700 text-white shadow-md"
+                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+            }`}
           >
             {tab}
           </button>
@@ -179,24 +252,66 @@ const BookedAppointment = () => {
           </thead>
           <tbody>
             {paginatedAppointments().map((app, index) => (
-              <tr key={app._id} className="even:bg-gray-50 text-center border-t border-gray-200 hover:bg-gray-100">
+              <tr
+                key={app._id}
+                className="even:bg-gray-50 text-center border-t border-gray-200 hover:bg-gray-100"
+              >
                 <td className="p-3 border-r">{app.patientId}</td>
-                <td className="p-3 border-r">{new Date(app.date).toLocaleDateString()}</td>
-                <td className="p-3 border-r">{new Date(`1970-01-01T${app.time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                <td className="p-3 border-r">
+                  {new Date(app.date).toLocaleDateString()}
+                </td>
+                <td className="p-3 border-r">
+                  {new Date(`1970-01-01T${app.time}`).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </td>
                 <td className="p-3 border-r">{app.reason}</td>
-                <td className={`p-3 border-r font-semibold ${app.status === "Approved" ? "text-green-600" : app.status === "Rejected" ? "text-red-600" : app.status === "Completed" ? "text-green-700" : "text-yellow-600"}`}>
+                <td
+                  className={`p-3 border-r font-semibold ${
+                    app.status === "Approved"
+                      ? "text-green-600"
+                      : app.status === "Rejected"
+                      ? "text-red-600"
+                      : app.status === "Completed"
+                      ? "text-green-700"
+                      : "text-yellow-600"
+                  }`}
+                >
                   {app.status}
                 </td>
                 {select === "Upcoming" && (
                   <td className="p-3 flex flex-wrap justify-center gap-2">
-                    <button onClick={() => { disableButtons(index); handleAccept(app._id); }} className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50" disabled={actionDisabled[index]}>
+                    <button
+                      onClick={() => {
+                        disableButtons(index);
+                        handleAccept(app._id);
+                      }}
+                      className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                      disabled={actionDisabled[index]}
+                    >
                       <FontAwesomeIcon icon={faCheck} className="mr-1" /> Accept
                     </button>
-                    <button onClick={() => { disableButtons(index); handleReject(app._id); }} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:opacity-50" disabled={actionDisabled[index]}>
+                    <button
+                      onClick={() => {
+                        disableButtons(index);
+                        handleReject(app._id);
+                      }}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:opacity-50"
+                      disabled={actionDisabled[index]}
+                    >
                       <FontAwesomeIcon icon={faXmark} className="mr-1" /> Reject
                     </button>
-                    <button onClick={() => { disableButtons(index); handleCompleted(app._id); }} className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50" disabled={actionDisabled[index]}>
-                      <FontAwesomeIcon icon={faCheckCircle} className="mr-1" /> Complete
+                    <button
+                      onClick={() => {
+                        disableButtons(index);
+                        handleCompleted(app._id);
+                      }}
+                      className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+                      disabled={actionDisabled[index]}
+                    >
+                      <FontAwesomeIcon icon={faCheckCircle} className="mr-1" />{" "}
+                      Complete
                     </button>
                   </td>
                 )}
@@ -208,7 +323,9 @@ const BookedAppointment = () => {
 
       {/* Card View (Mobile) */}
       <div className="lg:hidden">
-        {paginatedAppointments().map((app, i) => renderCard(app, i, select === "Upcoming"))}
+        {paginatedAppointments().map((app, i) =>
+          renderCard(app, i, select === "Upcoming")
+        )}
       </div>
 
       {/* Pagination */}
@@ -226,7 +343,9 @@ const BookedAppointment = () => {
           </span>
           <button
             className="px-4 py-2 rounded-full text-base sm:text-lg font-semibold transition-all bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
           >
             Next ▶
@@ -238,15 +357,6 @@ const BookedAppointment = () => {
 };
 
 export default BookedAppointment;
-
-
-
-
-
-
-
-
-
 
 // import { useEffect, useState } from "react";
 // import axios from "axios";
@@ -281,7 +391,7 @@ export default BookedAppointment;
 //           const response = await axios.post("http://localhost:5001/doctorprofile/changeAppointment", {
 //             id: appointmentId,
 //           });
-  
+
 //           if (response.data.ok) {
 //             Swal.fire("Accepted!", "The appointment has been accepted.", "success");
 //           } else {
@@ -377,7 +487,7 @@ export default BookedAppointment;
 //              <button onClick={()=>setSelect("Upcoming")} name="Upcoming" className={` my-2  mr-3 rounded-full  p-2 ${select === "Upcoming" ? "bg-indigo-700  text-white" : "text-black"}`}>UpComing</button>
 //              <button onClick={()=>setSelect("Completed")} name="Completed" className={` my-2  ml-3 rounded-full p-2 ${select === "Completed" ? "bg-indigo-700  text-white" : "text-black"}`}>Completed</button>
 //         </div>
-       
+
 //         {/* Responsive Table Container */}
 //         <div className="overflow-x-auto">
 
@@ -432,8 +542,6 @@ export default BookedAppointment;
 //           </>
 //         )}
 
-
-
 //         {select === "Completed" && (
 //           <>
 //           <table className="w-full bg-white shadow-md rounded">
@@ -483,9 +591,9 @@ export default BookedAppointment;
 //           </table>
 //           </>
 //         )}
-          
+
 //         </div>
-    
+
 //       </div>
 //     </>
 //   );
