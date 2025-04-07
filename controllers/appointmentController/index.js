@@ -52,31 +52,51 @@ exports.getAllAppointments= async(req,res)=>{
 exports.getAllAppointmentsByDoctorId= async(req,res)=>{
   try
   {
-    const {name} = req.body;
+    const {id} = req.params;
     const today = new Date();
     today.setHours(0,0,0,0);
 
     const upcomingAppointments = await AppointmentModel.find({
-      doctor:name,
-      date: { $gt: today},
-      status: { $ne: "Completed"} 
+      doctorId:id,
+      $and:[
+      {date: { $gt: today}},
+      {status: { $eq: "Pending" }} 
+      ]
     }).sort({date:1});
     
 
     const completedAppointments = await AppointmentModel.find({
-       doctor:name,
+       doctorId:id,
        $and: [
         {date:{ $lt:today}},
-        {status: 'Completed'},
+        {status: {$eq:'Completed'}},
        ],
     }).sort({date:-1});
 
-    const result = await AppointmentModel.find({doctor:name}).sort({ createdAt:-1});
+    const rejectedAppointments = await AppointmentModel.find({
+      doctorId:id,
+      status:"Rejected"
+    }).sort({date:-1});
+
+    const confirmedAppointment = await AppointmentModel.find({
+      doctorId:id,
+      status:"Confirmed"
+    }).sort({date:-1});
+
+    const result = await AppointmentModel.find({doctorId:id}).sort({ createdAt:-1});
 
     if (!result || result.length === 0) {
       return res.status(404).json({message : "Appointment not Found."})
     }
-    res.status(201).json({ok: true,result:result,upcomingAppointments:upcomingAppointments,completedAppointments:completedAppointments});
+    res.status(201).json(
+      {  
+        ok: true,
+        result:result,
+        upcomingAppointments:upcomingAppointments,
+        completedAppointments:completedAppointments,
+        rejectedAppointments:rejectedAppointments,
+        confirmedAppointment:confirmedAppointment
+      });
 
   }catch(error)
   {

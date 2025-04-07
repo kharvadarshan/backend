@@ -9,7 +9,7 @@ const appointmentSchema = new mongoose.Schema({
       required:true,
     },
     date: {
-      type: Date, // Can be changed to Date if needed
+      type: Date, 
       required: true,
     },
     slot:{
@@ -17,7 +17,7 @@ const appointmentSchema = new mongoose.Schema({
       required:true,
     },
     time: {
-      type: String, // Example: "10:30 AM"
+      type: String,
       required: true,
     },
     doctorId:{

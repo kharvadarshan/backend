@@ -59,7 +59,7 @@ exports.getDoctorById = async(req,res)=>{
 
 exports.acceptAppointment = async(req,res)=>{
     try{
-        const {id}=req.body;
+        const {id}=req.params;
         const result = await  Appointment.updateOne({
             _id:id
         },{
@@ -82,7 +82,7 @@ exports.acceptAppointment = async(req,res)=>{
 
 exports.rejectAppointment = async(req,res)=>{
     try{
-        const {id}=req.body;
+        const {id}=req.params;
         const result = await  Appointment.updateOne({
             _id:id
         },{
@@ -105,7 +105,7 @@ exports.rejectAppointment = async(req,res)=>{
 
 exports.markCompleted = async(req,res)=>{
     try{
-           const {id}=req.body;
+           const {id}=req.params;
            const result = await Appointment.updateOne({
              _id:id
            },{

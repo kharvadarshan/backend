@@ -145,7 +145,7 @@ const DoctorProfile = () => {
       <div className="flex-1 p-4  mt-16 md:mt-0">
         <Routes>
           <Route path="editprofile"   element={<EditProfile doctor={activeUser.doctor}  />} />
-          <Route path="bookings" element={<BookedAppointment />} />
+          <Route path="bookings" element={<BookedAppointment doctor={activeUser.doctor}/>} />
           <Route path="manageschedule" element={<ManageSchedule />} />
           <Route path="reports" element={<Reports />} />
         </Routes>

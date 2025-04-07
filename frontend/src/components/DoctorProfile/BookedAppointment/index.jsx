@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import {
   faCheck,
@@ -6,81 +6,17 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 
-const BookedAppointment = () => {
+const BookedAppointment = ({doctor}) => {
   const [select, setSelect] = useState("Upcoming");
   const [actionDisabled, setActionDisabled] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const appointmentsPerPage = 8;
-
-  const [upcoming, setUpcoming] = useState([
-    {
-      _id: "1",
-      doctor: "Dr. Neel",
-      patientId: "P123",
-      date: "2025-04-07",
-      time: "10:30",
-      reason: "Fever and cold",
-      status: "pending",
-    },
-    {
-      _id: "2",
-      doctor: "Dr. Neel",
-      patientId: "P124",
-      date: "2025-04-08",
-      time: "15:00",
-      reason: "Back pain",
-      status: "Approved",
-    },
-    {
-      _id: "4",
-      doctor: "Dr. Neel",
-      patientId: "P126",
-      date: "2025-04-09",
-      time: "11:00",
-      reason: "Cough",
-      status: "Rejected",
-    },
-    {
-      _id: "5",
-      doctor: "Dr. Neel",
-      patientId: "P123",
-      date: "2025-04-07",
-      time: "10:30",
-      reason: "Fever and cold",
-      status: "pending",
-    },
-    {
-      _id: "6",
-      doctor: "Dr. Neel",
-      patientId: "P123",
-      date: "2025-04-07",
-      time: "10:30",
-      reason: "Fever and cold",
-      status: "pending",
-    },
-    {
-      _id: "7",
-      doctor: "Dr. Neel",
-      patientId: "P123",
-      date: "2025-04-07",
-      time: "10:30",
-      reason: "Fever and cold",
-      status: "pending",
-    },
-  ]);
-
-  const [completed, setCompleted] = useState([
-    {
-      _id: "3",
-      doctor: "Dr. Neel",
-      patientId: "P125",
-      date: "2025-03-30",
-      time: "14:00",
-      reason: "Headache",
-      status: "Completed",
-    },
-  ]);
+  const [upcoming, setUpcoming] = useState(null);
+  const [completed, setCompleted] = useState(null);
+  const [rejected,setRejected] = useState(null);
+  const [confirmed,setConfirmed] = useState(null);
 
   const disableButtons = (index) => {
     setActionDisabled((prev) => {
@@ -89,80 +25,164 @@ const BookedAppointment = () => {
       return updated;
     });
   };
+ 
+  
 
-  const handleAccept = (id) => {
-    Swal.fire("Accepted!", "The appointment has been accepted.", "success");
-    setUpcoming((prev) =>
-      prev.map((a) => (a._id === id ? { ...a, status: "Approved" } : a))
-    );
+  const fetchAppointment = async()=>{
+    try
+    {
+         const response = await axios.get(`http://localhost:5001/appointments/getAppointmentByDoctorId/${doctor._id}`);
+         if(response.data.ok)
+         {
+           
+             setUpcoming(response.data.upcomingAppointments);
+             setConfirmed(response.data.confirmedAppintments);
+             setRejected(response.data.rejectedAppointments);
+             setCompleted(response.data.completedAppointments);
+         }
+    }catch(error)
+    {
+      console.log(error);
+    }
+  }
+
+  useEffect(()=>{
+    fetchAppointment();
+ },[]);
+
+
+
+  const handleAccept = async(id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to accept this appointment?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Accept",
+      cancelButtonText: "No, Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.get(`http://localhost:5001/doctorprofile/acceptAppointment/${id}`);
+
+          if (response.data.ok) {
+            fetchAppointment();
+            Swal.fire("Accepted!", "The appointment has been accepted.", "success");
+          } else {
+            Swal.fire("Error!", "Something went wrong. Try again.", "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "Could not connect to the server.", "error");
+        }
+      }
+    });
   };
 
-  const handleReject = (id) => {
-    Swal.fire("Rejected!", "The appointment has been rejected.", "success");
-    setUpcoming((prev) =>
-      prev.map((a) => (a._id === id ? { ...a, status: "Rejected" } : a))
-    );
+
+  const handleReject = async(id) => {
+    Swal.fire({
+                  title:"Are you sure?",
+                  text:"Do you really want to reject this appointment?",
+                  icon:"warning",
+                  confirmButtonText:"Yes, Reject",
+                  cancelButtonText:"No, Cancel",
+          }).then(async(result)=>{
+            if(result.isConfirmed){
+              try{
+                    const response = await axios.get(`http://localhost:5001/doctorprofile/rejectAppointment/${id}`);
+      
+                    if(!response.data.ok)
+                    {
+                         fetchAppointment();
+                         Swal.fire("Rejected!","The appointment request has been rejected.","success");
+                    }else
+                    {
+                         Swal.fire("Error!","Something went wrong. Try again.","error");
+                    }
+              }catch(error)
+              {
+                Swal.fire("Error!","Could not connect to the server.","error");
+              }
+            }
+          });
   };
 
-  const handleCompleted = (id) => {
-    Swal.fire(
-      "Completed!",
-      "The appointment has been marked completed.",
-      "success"
-    );
-    const completedApp = upcoming.find((a) => a._id === id);
-    setUpcoming((prev) => prev.filter((a) => a._id !== id));
-    setCompleted((prev) => [...prev, { ...completedApp, status: "Completed" }]);
+  const handleCompleted = async(id) => {
+                 Swal.fire({
+            title:"Are you sure?",
+            text:"Do you really want to mark this as Completed?",
+            icon:"warning",
+            confirmButtonText:"Yes, Continue",
+            cancelButtonText:"No, Cancel",
+    }).then(async(result)=>{
+      if(result.isConfirmed){
+        try{
+              const response = await axios.get(`http://localhost:5001/doctorprofile/markCompleted/${id}`);
+
+              if(response.data.ok)
+              {    
+                fetchAppointment();
+                   Swal.fire("Marked Completed!","The appointment has been completed","success");
+              }else
+              {
+                   Swal.fire("Error!","Something went wrong. Try again.","error");
+              }
+        }catch(error)
+        {
+          Swal.fire("Error!","Could not connect to the server.","error");
+        }
+      }
+    });
   };
 
   const filteredAppointments = () => {
     if (select === "Upcoming")
-      return upcoming.filter((a) => a.status === "pending");
+      return upcoming;
     if (select === "Accepted")
-      return upcoming.filter((a) => a.status === "Approved");
+      return confirmed;
     if (select === "Rejected")
-      return upcoming.filter((a) => a.status === "Rejected");
-    if (select === "Completed") return completed;
+      return rejected;
+    if (select === "Completed") 
+      return completed;
     return [];
   };
 
+  console.log(filteredAppointments());
+
   const paginatedAppointments = () => {
-    const filtered = filteredAppointments();
+    const filtered = filteredAppointments()||[];
     const start = (currentPage - 1) * appointmentsPerPage;
     const end = start + appointmentsPerPage;
     return filtered.slice(start, end);
   };
 
-  const totalPages = Math.ceil(
-    filteredAppointments().length / appointmentsPerPage
-  );
-
+  const totalPages = Math.ceil(filteredAppointments()?.length || 0) / (appointmentsPerPage || 1)
   const renderCard = (app, index, isUpcoming = true) => (
     <div
       key={app._id}
       className="border border-gray-300 rounded-xl p-4 mb-4 shadow-sm"
     >
       <p>
-        <strong>Patient:</strong> {app.patientId}
+        <strong>Patient:</strong> {app.patientForm.patientname}
       </p>
       <p>
         <strong>Date:</strong> {new Date(app.date).toLocaleDateString()}
       </p>
       <p>
         <strong>Time:</strong>{" "}
-        {new Date(`1970-01-01T${app.time}`).toLocaleTimeString([], {
+        {new Date(`1970-01-01T${app.time.split("-")[0]}`).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         })}
       </p>
       <p>
-        <strong>Reason:</strong> {app.reason}
+        <strong>Reason:</strong> {app.patientForm.reason}
       </p>
       <p>
         <strong>Status:</strong>{" "}
         <span
           className={`font-semibold ${
-            app.status === "Approved"
+            app.status === "Confirmed"
               ? "text-green-600"
               : app.status === "Rejected"
               ? "text-red-600"
@@ -174,7 +194,7 @@ const BookedAppointment = () => {
           {app.status}
         </span>
       </p>
-      {isUpcoming && app.status === "pending" && (
+      {isUpcoming && app.status === "Pending" && (
         <div className="flex flex-wrap gap-2 mt-3">
           <button
             onClick={() => {
@@ -251,12 +271,12 @@ const BookedAppointment = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedAppointments().map((app, index) => (
+           {paginatedAppointments()?.map((app, index) => ( 
               <tr
                 key={app._id}
                 className="even:bg-gray-50 text-center border-t border-gray-200 hover:bg-gray-100"
               >
-                <td className="p-3 border-r">{app.patientId}</td>
+                <td className="p-3 border-r">{app.patientForm.patientname}</td>
                 <td className="p-3 border-r">
                   {new Date(app.date).toLocaleDateString()}
                 </td>
@@ -266,7 +286,7 @@ const BookedAppointment = () => {
                     minute: "2-digit",
                   })}
                 </td>
-                <td className="p-3 border-r">{app.reason}</td>
+                <td className="p-3 border-r">{app.patientForm.reason}</td>
                 <td
                   className={`p-3 border-r font-semibold ${
                     app.status === "Approved"
@@ -323,7 +343,7 @@ const BookedAppointment = () => {
 
       {/* Card View (Mobile) */}
       <div className="lg:hidden">
-        {paginatedAppointments().map((app, i) =>
+        {paginatedAppointments()?.map((app, i) =>
           renderCard(app, i, select === "Upcoming")
         )}
       </div>
