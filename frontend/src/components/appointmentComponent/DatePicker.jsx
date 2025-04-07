@@ -1,16 +1,7 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const CustomDatePicker = ({
-  selectedDate,
-  setSelectedDate,
-  selectedTime,
-  setSelectedTime,
-  selectedSlot,
-  setSlot,
-  onNext,
-  onPrev,
-}) => {
+const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) => {
   const staticTimeSlots = [
     { id: "1", start: "09:00 AM", end: "09:30 AM", status: "Available" },
     { id: "2", start: "10:00 PM", end: "10:30 PM", status: "Available" },
@@ -21,7 +12,20 @@ const CustomDatePicker = ({
     { id: "7", start: "11:00 PM", end: "11:30 PM", status: "Booked" },
     { id: "8", start: "02:00 PM", end: "02:30 PM", status: "Available" },
   ];
-
+ 
+  const handleDateChange = (date) => {
+    setAppointmentData((prev) => ({
+      ...prev,
+      date: date,
+    }));
+  };
+  const handleTimeSlotSelect = (time) => {
+    setAppointmentData((prev) => ({
+      ...prev,
+      time: `${time.start} - ${time.end}`,
+      slot: time.id,
+    }));
+  };
   return (
     <div className="flex flex-col items-center w-full p-6 bg-gray-100 min-h-screen">
       <h2 className="text-3xl font-bold text-indigo-700 mb-6 text-center">
@@ -33,8 +37,8 @@ const CustomDatePicker = ({
           <h3 className="text-lg font-semibold text-gray-700 mb-3">Pick a Date</h3>
           <div className="bg-white p-4  rounded-lg shadow-md border border-blue-500 ">
             <DatePicker
-              selected={selectedDate || new Date()}
-              onChange={(date) => setSelectedDate(date)}
+             selected={appointmentData.date || new Date()}
+              onChange={handleDateChange}
               minDate={new Date()}
               dateFormat="MMMM d, yyyy"
               className="w-full p-2 text-base text-center border border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -49,14 +53,14 @@ const CustomDatePicker = ({
             {staticTimeSlots.map((time) => (
               <button
                 key={time.id}
-                onClick={() => {
-                  setSelectedTime(`${time.start} - ${time.end}`);
-                  setSlot(time.id);
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleTimeSlotSelect(time);
                 }}
                 className={`py-2 px-4 text-sm font-medium rounded-md border transition-all shadow-md ${
                   time.status === "Booked"
                     ? "bg-red-100 text-gray-400 cursor-not-allowed border-red-400"
-                    : selectedSlot === time.id
+                    : appointmentData.slot === time.id
                     ? "bg-indigo-600 text-white border-indigo-700 shadow-lg scale-105"
                     : "bg-blue-50 hover:bg-indigo-100 border-gray-300"
                 }`}
@@ -79,7 +83,7 @@ const CustomDatePicker = ({
         </button>
         <button
           onClick={onNext}
-          disabled={!selectedDate || !selectedTime}
+          disabled={!appointmentData.date || !appointmentData.time}
           className="bg-indigo-600 text-white py-2 px-6 rounded-md font-semibold transition-all hover:bg-indigo-700 disabled:bg-indigo-300 shadow-md"
         >
           Next

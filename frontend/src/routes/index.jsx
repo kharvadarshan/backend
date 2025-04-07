@@ -14,7 +14,7 @@ import Doctor from "../components/Doctor";
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
 import DoctorDetails from '../components/Doctor/IndividualDoctor'
-import BookAppointment from '../components/BookAppointment'
+import BookAppointment from '../components/appointmentComponent/BookAppointment'
 import Profile from '../components/Profile'
 import DoctorProfile from '../components/DoctorProfile';
 import { useSelector } from 'react-redux';

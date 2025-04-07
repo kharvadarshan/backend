@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
+import {  } from "react-router-dom";
+import {toast} from "react-toastify";
+const PatientForm = ({appointmentData,setAppointmentData}) => {
 
-const PatientForm = () => {
   const fieldData = [
     { id: "name", label: "Your Name" },
     { id: "patientname", label: "Patient Name" },
@@ -13,36 +16,36 @@ const PatientForm = () => {
     { id: "address", label: "Address" },
   ];
 
-  const [formData, setFormData] = useState({
-    name: "",
-    patientname: "",
-    age: "",
-    gender: "",
-    email: "",
-    address: "",
-    reason: "",
-    city: "",
-    number: "",
-  });
+  
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Doctor Data:", formData);
-    alert("Doctor added successfully!");
-    setFormData({
-      name: "",
-      patientname: "",
-      age: "",
-      gender: "",
-      email: "",
-      address: "",
-      reason: "",
-      city: "",
-      number: "",
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setAppointmentData({
+      ...appointmentData,
+      patientForm: {
+        ...appointmentData.patientForm,
+        [id]: value,
+      },
     });
+  };
+
+  const handleSubmit = async (appointment) => {
+    console.log(appointment);
+    try {
+      
+      const response = await axios.post("http://localhost:5001/api/appointments", appointment);
+      
+      if (response.data.ok) { 
+        toast.success("Appointment booked successfully!", {
+          position: "top-right",
+          autoClose: 1000, 
+        });
+        // setTimeout(() => navigate("/all-doctors"), 2000); // Redirect after 2 sec
+      }
+    } catch (error) {
+      console.error("Error booking appointment:", error);
+    }
+    
   };
 
   return (
@@ -51,7 +54,7 @@ const PatientForm = () => {
         <h2 className="text-center text-blue-600 font-bold text-3xl mb-6">
           Appointment Form
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={()=>handleSubmit(appointmentData)}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {fieldData.map(({ id, label, type = "text" }) => (
               <div key={id}>
@@ -65,7 +68,7 @@ const PatientForm = () => {
                   <div className="relative">
                     <select
                       id={id}
-                      value={formData[id]}
+                      value={appointmentData.patientForm[id]}
                       onChange={handleChange}
                       className="w-full appearance-none p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none pr-10"
                       required
@@ -97,7 +100,7 @@ const PatientForm = () => {
                   <input
                     type={type}
                     id={id}
-                    value={formData[id]}
+                    value={appointmentData.patientForm[id]}
                     onChange={handleChange}
                     className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none"
                     placeholder={`Enter ${label}`}
@@ -117,7 +120,7 @@ const PatientForm = () => {
             </label>
             <textarea
               id="reason"
-              value={formData.reason}
+              value={appointmentData.patientForm.reason}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 transition outline-none"
               placeholder="Enter Your Reason For The Appointment"

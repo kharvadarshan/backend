@@ -1,33 +1,68 @@
 const mongoose = require("mongoose");
-
-
-// mongoose.connect("mongodb://127.0.0.1:27017/onlineAppointmentBooking")
-//   .then(() => console.log('Connected to MongoDB'))
-//   .catch(err => console.error('Failed to connect to MongoDB', err));
-
-
 const appointmentSchema = new mongoose.Schema({
     doctor: {
       type: String,
-    // Reference to the Doctor model
       required: true,
     },
     patientId:{
       type: String,
-     
       required:true,
     },
     date: {
       type: Date, // Can be changed to Date if needed
       required: true,
     },
+    slot:{
+      type:String,
+      required:true,
+    },
     time: {
       type: String, // Example: "10:30 AM"
+      required: true,
+    },
+    doctorId:{
+      type : mongoose.Schema.Types.ObjectId,
+      ref:"Doctor",
+      required: true
+    },
+    patientForm:{
+      name:{
+        type: String,
+        required: true,
+      },
+      patientname: {
+      type: String,
+      required: true,
+      },
+      age: {
+        type: String,
+        required: true
+      },
+      gender: {
+      type: String,
+      enum: ["male", "female", "other"], 
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
       required: true,
     },
     reason: {
       type: String,
       required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    number: {
+      type: String,
+      required: true,
+    }
     },
     status:{
       type: String,

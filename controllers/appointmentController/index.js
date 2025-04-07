@@ -4,27 +4,27 @@ const TimeSlot =require('../../model/timeSlot');
 // Create a new appointment
 exports.createAppointment = async (req, res) => {
   try {
-    const { doctor,patientId, date, time, reason ,slot,doctorId } = req.body;
+  const { doctor,patientId, date, time ,slot,doctorId ,patientForm} = req.body;
    console.log(req.body);
-    // Validate required fields
-    if (!doctor || !date || !time || !reason || !patientId || !mongoose.Types.ObjectId.isValid(slot)) {
+    if (!doctor || !date || !time || !slot|| !patientId || !patientForm ) {
       return res.status(400).json({ error: "All fields are required" });
     }
     
-    const [month,day,year]= date.split('/');
-    const parsedDate = new Date(`${year}-${month}-${day}`)
-    const newAppointment = new AppointmentModel({ doctor,patientId, date:parsedDate, time, reason });
-    const updateTimeSlot = await TimeSlot.updateOne(
-                            { doctorId:doctorId,'slot._id':slot },
-                            { $set:{'slot.$.status':"Booked"}}
-                          );
+    // const [month,day,year]= date.split('/');
+    // const parsedDate = new Date(`${year}-${month}-${day}`)
+    const newAppointment = new AppointmentModel({ doctor:doctor,patientId, date, time,slot,doctorId,patientForm });
+    // const updateTimeSlot = await TimeSlot.updateOne(
+    //                         { doctorId:doctorId,'slot._id':slot },
+    //                         { $set:{'slot.$.status':"Booked"}}
+    //                       );
     const savedAppointment = await newAppointment.save();
-    if(updateTimeSlot.modifiedCount > 0){
-      res.status(201).json(savedAppointment);
-    }else
-    {
-      res.status(400).json({ok:false,message:'No changes made to the slot status.'})
-    }
+    res.status(201).json({ok:true,appointment:savedAppointment});
+    // if(updateTimeSlot.modifiedCount > 0){
+    //   res.status(201).json(savedAppointment);
+    // }else
+    // {
+    //   res.status(400).json({ok:false,message:'No changes made to the slot status.'})
+    // }
   } catch (error) {
     console.error("Error creating appointment:", error);
     res.status(500).json({ error: "Server error. Please try again later." });

@@ -1,6 +1,6 @@
 
-import AddDoctor from "../AddDoctor";
-import Appointment from "../Appointment";
+import AddDoctor from "../Admin/AddDoctor";
+import Appointment from "../Admin/Appointment";
 import SideBar from "./SideBar";
 import { Route,Routes,Outlet } from "react-router-dom";
 import ContactList from "./AllContact/AllContact";

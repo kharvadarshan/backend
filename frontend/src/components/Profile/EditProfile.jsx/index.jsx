@@ -142,7 +142,7 @@ const EditProfile = () => {
             </label>
             <input
               type="text"
-              name="name"
+              name="userName"
               value={user.userName}
               onChange={handleInputChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -154,7 +154,7 @@ const EditProfile = () => {
             </label>
             <input
               type="tel"
-              name="contact"
+              name="email"
               value={user.email}
               onChange={handleInputChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

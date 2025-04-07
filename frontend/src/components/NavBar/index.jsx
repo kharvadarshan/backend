@@ -19,10 +19,10 @@ const NavBar = () => {
   const dispatch = useDispatch();
   // const activeUser = useSelector((state) => state.user.user);
   const isLogin = useSelector((state) => state.isLogin.isLogin);
-  console.log(isLogin);
+ 
 
   const logout = async () => {
-    console.log("logout event triggred.");
+
     try {
       const token = localStorage.getItem("token");
 

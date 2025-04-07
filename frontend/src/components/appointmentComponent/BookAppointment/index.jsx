@@ -182,112 +182,68 @@
 import { useState } from "react";
 import { useNavigate , useLocation  } from "react-router-dom";
 // import ReasonInput from "../appointmentComponent/ReasonInput";
-import Confirmation from "../appointmentComponent/Confirmation";
-import axios from "axios";
+// import Confirmation from "../../appointmentComponent/Confirmation";
+// import axios from "axios";
 import { useSelector } from "react-redux";
-import PatientForm from "../appointmentComponent/PatientForm";
-import CustomDatePicker from "../appointmentComponent/DatePicker";
+import PatientForm from "../../appointmentComponent/PatientForm";
+import CustomDatePicker from "../../appointmentComponent/DatePicker";
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
-  // const [selectedDoctor, setSelectedDoctor] = useState(null);
-
   const activeUser = useSelector((state)=>state.user.user);
-   console.log(activeUser);
   const { state } = useLocation();
   const selectedDoctor = state?.doctor;
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  // const [reason, setReason] = useState("");
-  const [slot,setSlot ]= useState("");
-  const [isConfirmed, setIsConfirmed] = useState(false);
+ 
+  // const [isConfirmed, setIsConfirmed] = useState(false);
   const navigate = useNavigate();
+ 
 
-  // console.log(selectedDoctor);
+  const [appointmentData,setAppointmentData] = useState({
+    doctor: selectedDoctor?.name || "",
+      patientId:activeUser?.email ||"",
+      date: "",
+      time:"",
+      slot:"",
+      doctorId:selectedDoctor?._id || "",
+      patientForm:{
+        name:"",
+        patientname:"",
+        age: "",
+          gender: "",
+          email: "",
+          address: "",
+          reason: "",
+          city: "",
+          number: "",
+      },
+  });
 
-  const handleSubmit = async () => {
-    const appointmentData = {
-      doctor: selectedDoctor.name,
-      patientId:activeUser.email,
-      date: selectedDate,
-      time: selectedTime,
-      slot,
-      doctorId:selectedDoctor._id
-    };
-    console.log(appointmentData);
-    try {
-      // console.log("Sending appointment data:", appointmentData);
-      const response = await axios.post("http://localhost:5001/api/appointments", appointmentData);
-      
-      if (response.status === 201) { // 201 means "Created"
-        setIsConfirmed(true);
-        setTimeout(() => navigate("/all-doctors"), 2000); // Redirect after 2 sec
-      }
-    } catch (error) {
-      console.error("Error booking appointment:", error);
-    }
-    
-  };
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6 w-full">
       {/* <div className="bg-white p-8 rounded-lg shadow-md  max-w-lg w-auto"> */}
-        {!isConfirmed ? (
+        {/* {!isConfirmed ? ( */}
           <>
-            {/* {step === 1 && (
-              <DoctorDetails
-                selectedDoctor={selectedDoctor}
-                setSelectedDoctor={setSelectedDoctor}
-                onNext={() => setStep(2)}
-              />
-            )} */}
             {step === 1 && (
               <CustomDatePicker
-                selectedDoctor={selectedDoctor}
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-                selectedTime={selectedTime}
-                setSelectedTime={setSelectedTime}
-                selectedSlot={slot}
-                setSlot={setSlot}
+                appointmentData={appointmentData}
+                setAppointmentData={setAppointmentData}
                 onNext={() => setStep(2)}
                 onPrev={() => navigate(`/all-doctors/${selectedDoctor._id}`)}
               />
             )}
-
-            {/* {step === 2 && (
-              <TimeSlots
-               
-                selectedTime={selectedTime}
-                setSelectedTime={setSelectedTime}
-                onNext={() => setStep(3)}
-                onPrev={() => setStep(1)}
-              />
-            )} */}
-
-
             {step === 2 && (
               <PatientForm
-                // onSubmit={handlePatientForm}
+                appointmentData={appointmentData}
+                setAppointmentData={setAppointmentData}
                 onPrev={() => setStep(1)}
               />
             )}
-
-            
-            {/* {step === 3 && (
-              <ReasonInput
-                reason={reason}
-                setReason={setReason}
-                onSubmit={handleSubmit}
-                onPrev={() => setStep(1)}
-              />
-            )} */}
-
-
           </>
-        ) : (
+        {/* ) : (
           <Confirmation />
-        )}
+        )} */}
       </div>
     // </div>
   );
