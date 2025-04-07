@@ -10,6 +10,7 @@ import { resetIsLogin, resetRole } from "../../slices/loginSlice.jsx";
 import { resetUser } from "../../slices/userAuthSlice.jsx";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import DeletedAppointments from "./DeletedAppointments/index.jsx";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -79,6 +80,13 @@ const Profile = () => {
             <FontAwesomeIcon icon={faCalendarWeek} className="text-blue-500 text-lg mr-3" />
             My Appointments
           </NavLink>
+          <NavLink
+            to="/profile/myappointment"
+            className="flex items-center p-3 text-gray-700 hover:bg-blue-100 rounded-lg"
+          >
+            <FontAwesomeIcon icon={faCalendarWeek} className="text-blue-500 text-lg mr-3" />
+            DeletedAppointments
+          </NavLink>
           <button
             onClick={logout}
             className="flex items-center p-3 text-gray-700 hover:bg-red-100 rounded-lg w-full"
@@ -94,6 +102,7 @@ const Profile = () => {
         <Routes>
           <Route path="/" element={<EditProfile />} />
           <Route path="myappointment" element={<Appointments />} />
+          <Route path="deletedappointments" element={<DeletedAppointments />} />
         </Routes>
         <Outlet />
       </div>
