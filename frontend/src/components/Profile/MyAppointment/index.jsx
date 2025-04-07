@@ -1,41 +1,56 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, ChevronDown, Info, FileText, Star } from "lucide-react";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const MyAppointments = () => {
-  const [appointments, setAppointments] = useState([
+  const activeUser = useSelector((state)=> state.user.user);
+  
+  const [appointments, setAppointments] = useState();
+
+  useEffect(()=>{
+       getAppointmentByPatientId();
+  },[]);
+
+  const getAppointmentByPatientId = async()=>{
+    try
     {
-      _id: "1",
-      doctor: "Dr. Smith",
-      date: "2025-04-15",
-      time: "10:00 AM",
-      status: "Confirmed",
-      detail: "",
-      report: "",
-      review: "",
-    },
+         const response = await axios.get(`http://localhost:5001/appointments/getAppointmentByPatientId/${activeUser.id}`);
+
+         if(response.data.ok)
+         {
+          setAppointments(response.data.result);
+         }
+
+    }catch(error)
     {
-      _id: "2",
-      doctor: "Dr. Watson",
-      date: "2025-03-10",
-      time: "2:30 PM",
-      status: "Pending",
-      detail: "",
-      report: "",
-      review: "",
-    },
-    {
-      _id: "3",
-      doctor: "Dr. John",
-      date: "2024-12-25",
-      time: "4:00 PM",
-      status: "Cancelled",
-      detail: "",
-      report: "",
-      review: "",
-    },
-  ]);
+          console.log(error);
+    }
+  };
+
+
+
+  const handleDelete = async(appointmentId)=>{
+        try{
+    
+          const response = await  axios.delete(`http://localhost:5001/appointments/deleteAppointment/${appointmentId}`);
+    
+          if(response.data.ok)
+          {
+              toast.success("Appointment deleted Successfully!",{positon:"top-right"});
+          }else
+          {
+              toast.failure("Something went wrong!");
+          }
+    
+        }catch(error)
+        {
+               console.log(error);
+        }
+    
+     }
 
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
@@ -44,10 +59,7 @@ const MyAppointments = () => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [selectedReview, setSelectedReview] = useState(null);
 
-  const handleDelete = (id) => {
-    setAppointments((prev) => prev.filter((a) => a._id !== id));
-    toast.success("Appointment deleted successfully!");
-  };
+ 
 
   const getStatusBadge = (status) => {
     const statusColors = {
@@ -65,17 +77,19 @@ const MyAppointments = () => {
   };
 
   const uniqueYears = useMemo(() => {
+    if(!appointments) return [];
     const years = [
-      ...new Set(appointments.map((appt) => appt.date.split("-")[0])),
+      ...new Set(appointments.map((appt) => new Date(appt.date.$date).getFullYear())),
     ];
     return years.sort();
   }, [appointments]);
 
   const uniqueMonths = useMemo(() => {
+    if(!appointments) return [];
     const months = [
       ...new Set(
         appointments.map((appt) =>
-          new Date(appt.date).toLocaleString("en-US", { month: "long" })
+          new Date(appt.date.$date).toLocaleString("en-US", { month: "long" })
         )
       ),
     ];
@@ -83,9 +97,11 @@ const MyAppointments = () => {
   }, [appointments]);
 
   const filteredAppointments = useMemo(() => {
+    if(!appointments) return [];
     return appointments.filter((appointment) => {
-      const [year] = appointment.date.split("-");
-      const appointmentMonth = new Date(appointment.date).toLocaleString(
+      const apptDate = new Date(appointment.date.$date);
+      const year = apptDate.getFullYear().toString();
+      const appointmentMonth = apptDate.toLocaleString(
         "en-US",
         { month: "long" }
       );
@@ -181,7 +197,7 @@ const MyAppointments = () => {
         <AnimatePresence>
           {filteredAppointments.map((appointment) => (
             <motion.div
-              key={appointment._id}
+              key={appointment._id.$oid}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -193,14 +209,14 @@ const MyAppointments = () => {
                 {getStatusBadge(appointment.status)}
               </div>
               <p className="text-sm text-gray-600">
-                <strong>Date:</strong> {appointment.date}
+                <strong>Date:</strong> { new Date(appointment.date.$date).toLocaleDateString()}
               </p>
               <p className="text-sm text-gray-600">
                 <strong>Time:</strong> {appointment.time}
               </p>
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {renderViewButton("Details", <Info size={16}/>,"bg-green-300", () =>
-                  setSelectedDetail(appointment.detail)
+                  setSelectedDetail(appointment.patientForm.reason)
                 )}
                 {renderViewButton("Report", <FileText size={16} />,"bg-blue-300", () =>
                   setSelectedReport(appointment.report)
@@ -209,7 +225,7 @@ const MyAppointments = () => {
                   setSelectedReview(appointment.review)
                 )}
                 <button
-                  onClick={() => handleDelete(appointment._id)}
+                  onClick={() => handleDelete(appointment._id.$oid)}
                   className="mt-1 bg-red-100 text-red-600 p-2 rounded-lg flex justify-center items-center gap-1 hover:bg-red-200 transition w-full sm:w-auto"
                 >
                   <Trash2 size={16} />
@@ -227,11 +243,12 @@ const MyAppointments = () => {
           No appointments found.
         </p>
       ) : (
-        <div className="hidden md:block p-4 shadow-lg bg-white rounded-xl">
+        <div className="hidden md:block  p-4 shadow-lg bg-white rounded-xl">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-blue-100 text-gray-700">
                 <th className="border p-3">Doctor</th>
+                <th className="border p-3">Patient</th>
                 <th className="border p-3">Date</th>
                 <th className="border p-3">Time</th>
                 <th className="border p-3 text-center">Status</th>
@@ -253,14 +270,15 @@ const MyAppointments = () => {
                     transition={{ duration: 0.2 }}
                   >
                     <td className="p-3 border">{appointment.doctor}</td>
-                    <td className="p-3 border">{appointment.date}</td>
+                    <td className="p-3 border">{appointment.patientForm.patientname}</td>
+                    <td className="p-3 border">{new Date(appointment.date).toLocaleDateString()}</td>
                     <td className="p-3 border">{appointment.time}</td>
                     <td className="p-3 border">
                       {getStatusBadge(appointment.status)}
                     </td>
                     <td className="p-3 border">
                       {renderViewButton("View", <Info size={16} />,"bg-green-300", () =>
-                        setSelectedDetail(appointment.reason)
+                        setSelectedDetail(appointment.patientForm.reason)
                       )}
                     </td>
                     <td className="p-3 border">

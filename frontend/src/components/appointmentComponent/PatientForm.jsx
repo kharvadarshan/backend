@@ -4,7 +4,6 @@ import axios from "axios";
 import {  } from "react-router-dom";
 import {toast} from "react-toastify";
 const PatientForm = ({appointmentData,setAppointmentData}) => {
-
   const fieldData = [
     { id: "name", label: "Your Name" },
     { id: "patientname", label: "Patient Name" },

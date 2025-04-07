@@ -200,7 +200,7 @@ const BookAppointment = () => {
 
   const [appointmentData,setAppointmentData] = useState({
     doctor: selectedDoctor?.name || "",
-      patientId:activeUser?.email ||"",
+      patientId:activeUser?.id,
       date: "",
       time:"",
       slot:"",

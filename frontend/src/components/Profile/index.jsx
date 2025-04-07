@@ -81,7 +81,7 @@ const Profile = () => {
             My Appointments
           </NavLink>
           <NavLink
-            to="/profile/myappointment"
+            to="/profile/deletedAppointments"
             className="flex items-center p-3 text-gray-700 hover:bg-blue-100 rounded-lg"
           >
             <FontAwesomeIcon icon={faCalendarWeek} className="text-blue-500 text-lg mr-3" />
@@ -102,7 +102,7 @@ const Profile = () => {
         <Routes>
           <Route path="/" element={<EditProfile />} />
           <Route path="myappointment" element={<Appointments />} />
-          <Route path="deletedappointments" element={<DeletedAppointments />} />
+          <Route path="deletedAppointments" element={<DeletedAppointments />} />
         </Routes>
         <Outlet />
       </div>

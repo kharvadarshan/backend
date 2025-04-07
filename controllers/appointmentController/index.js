@@ -88,8 +88,8 @@ exports.getAllAppointmentsByDoctorId= async(req,res)=>{
 exports.getAllAppointmentsByPatientId= async(req,res)=>{
   try
   {
-    const {email} = req.body;
-    const result = await AppointmentModel.find({patientId:email,isDeleted:false}).sort({ createdAt:-1});
+    const {id}=req.params;
+    const result = await AppointmentModel.find({patientId:id,isDeleted:false}).sort({ createdAt:-1});
     if (!result || result.length === 0) {
       return res.status(404).json({message : "Appointment not Found."})
     }
@@ -100,6 +100,23 @@ exports.getAllAppointmentsByPatientId= async(req,res)=>{
     res.status(500).json({ error: error.message });
   }
 }
+
+exports.getDeletedAppointmentsByPatientId= async(req,res)=>{
+  try
+  {
+    const {id}=req.params;
+    console.log(id);
+    const result = await AppointmentModel.find({patientId:id,isDeleted:true}).sort({ createdAt:-1});
+    if (!result || result.length === 0) {
+      return res.status(404).json({message : "Appointment not Found."})
+    }
+    res.status(201).json({ok: true,result:result});
+
+  }catch(error)
+  {
+    res.status(500).json({ error: error.message });
+  }
+} 
 
 exports.deleteAppointment = async(req,res)=>{
    try{
