@@ -62,23 +62,7 @@ const MyAppointments = () => {
             }
           }
         });
-        // try{
-    
-        //   const response = await  axios.delete(`http://localhost:5001/appointments/deleteAppointment/${appointmentId}`);
-    
-        //   if(response.data.ok)
-        //   {
-        //       toast.success("Appointment deleted Successfully!",{positon:"top-right"});
-        //   }else
-        //   {
-        //       toast.failure("Something went wrong!");
-        //   }
-    
-        // }catch(error)
-        // {
-        //        console.log(error);
-        // }
-    
+        
      }
 
   const [filterStatus, setFilterStatus] = useState("All");
