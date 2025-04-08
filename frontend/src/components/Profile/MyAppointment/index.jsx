@@ -8,13 +8,13 @@ import Swal from "sweetalert2";
 
 const MyAppointments = () => {
   const activeUser = useSelector((state)=> state.user.user);
-  
   const [appointments, setAppointments] = useState();
   const [modalData,setModalData] = useState();
 
   useEffect(()=>{
+    if(activeUser?.id)
        getAppointmentByPatientId();
-  },[]);
+  },[activeUser?.id]);
 
   const getAppointmentByPatientId = async()=>{
     try
@@ -49,8 +49,8 @@ const MyAppointments = () => {
     
                   if(response.data.ok)
                   {    
-                   
                        Swal.fire("Deleted Successfully!","The appointment has been deleted","success");
+                       await getAppointmentByPatientId();
                   }else
                   {
                        Swal.fire(response.data.message,"Something went wrong. Try again.","error");
@@ -68,7 +68,6 @@ const MyAppointments = () => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
   const [filterYear, setFilterYear] = useState("All");
-  const [selectedDetail, setSelectedDetail] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
   const [selectedReview, setSelectedReview] = useState(null);
 

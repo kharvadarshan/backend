@@ -46,11 +46,10 @@ const BookedAppointment = ({doctor}) => {
     }
   }
  
-  
-
   useEffect(()=>{
+    if(doctor?._id)
     fetchAppointment();
- },[]);
+ },[doctor?._id]);
 
 
 
@@ -68,8 +67,9 @@ const BookedAppointment = ({doctor}) => {
           const response = await axios.get(`http://localhost:5001/doctorprofile/acceptAppointment/${id}`);
 
           if (response.data.ok) {
-            fetchAppointment();
+            
             Swal.fire("Accepted!", "The appointment has been accepted.", "success");
+            await fetchAppointment();
           } else {
             Swal.fire("Error!", "Something went wrong. Try again.", "error");
           }
@@ -95,7 +95,7 @@ const BookedAppointment = ({doctor}) => {
       
                     if(!response.data.ok)
                     {
-                         fetchAppointment();
+                         await fetchAppointment();
                          Swal.fire("Rejected!","The appointment request has been rejected.","success");
                     }else
                     {
@@ -125,7 +125,7 @@ const BookedAppointment = ({doctor}) => {
 
               if(response.data.ok)
               {    
-                fetchAppointment();
+                await fetchAppointment();
                    Swal.fire("Marked Completed!","The appointment has been completed","success");
               }else
               {
