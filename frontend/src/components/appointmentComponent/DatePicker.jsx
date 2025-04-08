@@ -20,9 +20,12 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
     }));
   };
   const handleTimeSlotSelect = (time) => {
+    
+
+
     setAppointmentData((prev) => ({
       ...prev,
-      time: `${time.start} - ${time.end}`,
+     time: `${time.start} - ${time.end}`,
       slot: time.id,
     }));
   };

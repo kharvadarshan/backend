@@ -151,14 +151,14 @@ exports.deleteAppointment = async(req,res)=>{
         res.status(404).json({ok:flase,message:"Appointmnet not found."});
        }
 
-       const result = await AppointmentModel.updateOne({_id:appointmentId},{$set:{isDeleted:true}});
+       const result = await AppointmentModel.updateOne({_id:appointmentId,status:"Completed"},{$set:{isDeleted:true}});
 
        if(result.modifiedCount>0)
        {
            res.status(201).json({ok:true,message:"Appointment deleted successfully!"});
        }else
        {
-           res.status(400).json({ok:false,message:"No changes  made."});
+           res.status(400).json({ok:false,message:"Appoinment is incomplete"});
        }
    }catch(error)
    {

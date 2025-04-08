@@ -66,6 +66,8 @@ exports.acceptAppointment = async(req,res)=>{
             $set:{status:"Confirmed"}
         });
 
+        console.log(result);
+
         if(result.modifiedCount > 0)
         {
             res.status(201).json({ok:true,message:"Requeste accepted successfully."});

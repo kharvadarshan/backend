@@ -35,7 +35,6 @@ const DoctorProfile = () => {
       setPhoto(`http://localhost:5001${activeUser?.doctor?.image}`);
     }
   },[photo]);
-  console.log(photo);
 
   const handlePhotoUpdate = (newPhotoUrl) => {
     setPhoto(newPhotoUrl);

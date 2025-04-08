@@ -5,7 +5,7 @@ import Appointments from "./MyAppointment/index.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faCalendarWeek, faPenToSquare, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { resetIsLogin, resetRole } from "../../slices/loginSlice.jsx";
 import { resetUser } from "../../slices/userAuthSlice.jsx";
 import { toast } from "react-toastify";
@@ -16,7 +16,8 @@ const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const user = useSelector((state)=>state.user.user);
+   console.log(user);
   const logout = async (e) => {
     e.preventDefault();
     try {
@@ -57,7 +58,7 @@ const Profile = () => {
       {/* Sidebar */}
       <div className={`absolute min-h-[650px] md:relative w-64 bg-cyan-300 shadow-md flex flex-col items-center text-center p-6 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition-transform duration-300 ease-in-out`}> 
         <img
-          src="https://randomuser.me/api/portraits/men/94.jpg"
+          src={`http://localhost:5001${user.image}`}
           className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-gray-300 mb-4"
           alt="User Avatar"
         />
