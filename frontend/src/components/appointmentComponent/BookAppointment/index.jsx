@@ -235,9 +235,9 @@ const BookAppointment = () => {
             )}
             {step === 2 && (
               <PatientForm
+
                 appointmentData={appointmentData}
                 setAppointmentData={setAppointmentData}
-                onPrev={() => setStep(1)}
               />
             )}
           </>
