@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const AppointmentModel = require("../../model/appointment");
 const TimeSlot =require('../../model/timeSlot');
+const Feedback = require('../../model/feedback');
 // Create a new appointment
 exports.createAppointment = async (req, res) => {
   try {
@@ -164,3 +165,21 @@ exports.deleteAppointment = async(req,res)=>{
     res.status(500).json({ error: error.message });
    }
 };
+
+
+exports.giveFeedback = async(req,res)=>{
+  try
+  {
+
+    const {doctorId,userId,rating,feedback} = req.body;
+    const newFeedback = new Feedback({doctorId,useId,rating,feedback});
+
+    const savedFeedback = await newFeedback.save();
+
+    res.status(201).json({ok:true,savedFeedback:savedFeedback});
+ 
+  }catch(error)
+  {
+      res.status(500).json({error:error.message});
+  }
+}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import {toast } from 'react-toastify';
 
-const EditProfile = ({doctor}) => {
+const EditProfile = ({doctor,onPhotoUpdate}) => {
   
   const [formData,setFormData] = useState("");
   
@@ -59,7 +59,8 @@ const EditProfile = ({doctor}) => {
                 toast.success("Profile updated Successfully...!",{
                            position:"top-right"
                       });
-               
+             const newPhotoUrl = `http://localhost:5001${doctor?.image}`;
+             onPhotoUpdate(newPhotoUrl);
            }
 
      }catch(error)
