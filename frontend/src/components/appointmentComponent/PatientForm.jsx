@@ -1,9 +1,11 @@
-import { } from "react";
+import {} from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import {  } from "react-router-dom";
-import {toast} from "react-toastify";
-const PatientForm = ({appointmentData,setAppointmentData}) => {
+import {} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+const PatientForm = ({ appointmentData, setAppointmentData }) => {
+  const navigate = useNavigate();
   const fieldData = [
     { id: "name", label: "Your Name" },
     { id: "patientname", label: "Patient Name" },
@@ -14,8 +16,6 @@ const PatientForm = ({appointmentData,setAppointmentData}) => {
     { id: "number", label: "Mobile Number", type: "tel" },
     { id: "address", label: "Address" },
   ];
-
-  
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -31,20 +31,22 @@ const PatientForm = ({appointmentData,setAppointmentData}) => {
   const handleSubmit = async (appointment) => {
     console.log(appointment);
     try {
-      
-      const response = await axios.post("http://localhost:5001/api/appointments", appointment);
-      
-      if (response.data.ok) { 
+      const response = await axios.post(
+        "http://localhost:5001/api/appointments",
+        appointment
+      );
+
+      if (response.data.ok) {
         toast.success("Appointment booked successfully!", {
           position: "top-right",
-          autoClose: 1000, 
+          autoClose: 1000,
         });
+        navigate("/all-doctors");
         // setTimeout(() => navigate("/all-doctors"), 2000); // Redirect after 2 sec
       }
     } catch (error) {
       console.error("Error booking appointment:", error);
     }
-    
   };
 
   return (
@@ -53,7 +55,12 @@ const PatientForm = ({appointmentData,setAppointmentData}) => {
         <h2 className="text-center text-blue-600 font-bold text-3xl mb-6">
           Appointment Form
         </h2>
-        <form onSubmit={()=>handleSubmit(appointmentData)}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(appointmentData);
+          }}
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {fieldData.map(({ id, label, type = "text" }) => (
               <div key={id}>
