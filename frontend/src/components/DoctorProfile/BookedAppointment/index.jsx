@@ -7,16 +7,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
+import { ChevronDown, Trash2 } from "lucide-react";
 
-const BookedAppointment = ({doctor}) => {
+const BookedAppointment = ({ doctor }) => {
   const [select, setSelect] = useState("Upcoming");
   const [actionDisabled, setActionDisabled] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const appointmentsPerPage = 8;
   const [upcoming, setUpcoming] = useState(null);
   const [completed, setCompleted] = useState(null);
-  const [rejected,setRejected] = useState(null);
-  const [confirmed,setConfirmed] = useState(null);
+  const [rejected, setRejected] = useState(null);
+  const [confirmed, setConfirmed] = useState(null);
+  const [filterMonth, setFilterMonth] = useState("All");
+  const [filterYear, setFilterYear] = useState("All");
 
   const disableButtons = (index) => {
     setActionDisabled((prev) => {
@@ -25,35 +28,59 @@ const BookedAppointment = ({doctor}) => {
       return updated;
     });
   };
- 
-  
 
-  const fetchAppointment = async()=>{
-    try
-    {
-         const response = await axios.get(`http://localhost:5001/appointments/getAppointmentByDoctorId/${doctor._id}`);
-         if(response.data.ok)
-         {
-              // console.log(response.data);
-             setUpcoming(response.data.upcomingAppointments);
-             setConfirmed(response.data.confirmedAppointment);
-             setRejected(response.data.rejectedAppointments);
-             setCompleted(response.data.completedAppointments);
-         }
-    }catch(error)
-    {
+  const getMonth = (date) =>
+    new Date(date).toLocaleString("default", { month: "long" });
+  const getYear = (date) => new Date(date).getFullYear();
+
+  const getAllAppointments = () => {
+    return [
+      ...(upcoming || []),
+      ...(confirmed || []),
+      ...(rejected || []),
+      ...(completed || []),
+    ];
+  };
+
+  const uniqueMonths = Array.from(
+    new Set(getAllAppointments().map((a) => getMonth(a.date)))
+  );
+  const uniqueYears = Array.from(
+    new Set(getAllAppointments().map((a) => getYear(a.date)))
+  );
+
+  const applyFilters = (appointments) => {
+    return appointments.filter((app) => {
+      const monthMatch =
+        filterMonth === "All" || getMonth(app.date) === filterMonth;
+      const yearMatch =
+        filterYear === "All" || getYear(app.date) === Number(filterYear);
+      return monthMatch && yearMatch;
+    });
+  };
+
+  const fetchAppointment = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5001/appointments/getAppointmentByDoctorId/${doctor._id}`
+      );
+      if (response.data.ok) {
+        // console.log(response.data);
+        setUpcoming(response.data.upcomingAppointments);
+        setConfirmed(response.data.confirmedAppointment);
+        setRejected(response.data.rejectedAppointments);
+        setCompleted(response.data.completedAppointments);
+      }
+    } catch (error) {
       console.log(error);
     }
-  }
- 
-  useEffect(()=>{
-    if(doctor?._id)
-    fetchAppointment();
- },[doctor?._id]);
+  };
 
+  useEffect(() => {
+    if (doctor?._id) fetchAppointment();
+  }, [doctor?._id]);
 
-
-  const handleAccept = async(id) => {
+  const handleAccept = async (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "Do you really want to accept this appointment?",
@@ -64,11 +91,16 @@ const BookedAppointment = ({doctor}) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.get(`http://localhost:5001/doctorprofile/acceptAppointment/${id}`);
+          const response = await axios.get(
+            `http://localhost:5001/doctorprofile/acceptAppointment/${id}`
+          );
 
           if (response.data.ok) {
-            
-            Swal.fire("Accepted!", "The appointment has been accepted.", "success");
+            Swal.fire(
+              "Accepted!",
+              "The appointment has been accepted.",
+              "success"
+            );
             await fetchAppointment();
           } else {
             Swal.fire("Error!", "Something went wrong. Try again.", "error");
@@ -80,88 +112,86 @@ const BookedAppointment = ({doctor}) => {
     });
   };
 
-
-  const handleReject = async(id) => {
+  const handleReject = async (id) => {
     Swal.fire({
-                  title:"Are you sure?",
-                  text:"Do you really want to reject this appointment?",
-                  icon:"warning",
-                  confirmButtonText:"Yes, Reject",
-                  cancelButtonText:"No, Cancel",
-          }).then(async(result)=>{
-            if(result.isConfirmed){
-              try{
-                    const response = await axios.get(`http://localhost:5001/doctorprofile/rejectAppointment/${id}`);
-      
-                    if(!response.data.ok)
-                    {
-                         await fetchAppointment();
-                         Swal.fire("Rejected!","The appointment request has been rejected.","success");
-                    }else
-                    {
-                         Swal.fire("Error!","Something went wrong. Try again.","error");
-                    }
-              }catch(error)
-              {
-                Swal.fire("Error!","Could not connect to the server.","error");
-              }
-            }
-          });
+      title: "Are you sure?",
+      text: "Do you really want to reject this appointment?",
+      icon: "warning",
+      confirmButtonText: "Yes, Reject",
+      cancelButtonText: "No, Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.get(
+            `http://localhost:5001/doctorprofile/rejectAppointment/${id}`
+          );
+
+          if (!response.data.ok) {
+            await fetchAppointment();
+            Swal.fire(
+              "Rejected!",
+              "The appointment request has been rejected.",
+              "success"
+            );
+          } else {
+            Swal.fire("Error!", "Something went wrong. Try again.", "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "Could not connect to the server.", "error");
+        }
+      }
+    });
   };
 
+  const handleCompleted = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to mark this as Completed?",
+      icon: "warning",
+      confirmButtonText: "Yes, Continue",
+      cancelButtonText: "No, Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.get(
+            `http://localhost:5001/doctorprofile/markCompleted/${id}`
+          );
 
-  
-  const handleCompleted = async(id) => {
-                 Swal.fire({
-            title:"Are you sure?",
-            text:"Do you really want to mark this as Completed?",
-            icon:"warning",
-            confirmButtonText:"Yes, Continue",
-            cancelButtonText:"No, Cancel",
-    }).then(async(result)=>{
-      if(result.isConfirmed){
-        try{
-              const response = await axios.get(`http://localhost:5001/doctorprofile/markCompleted/${id}`);
-
-              if(response.data.ok)
-              {    
-                await fetchAppointment();
-                   Swal.fire("Marked Completed!","The appointment has been completed","success");
-              }else
-              {
-                   Swal.fire("Error!","Something went wrong. Try again.","error");
-              }
-        }
-        catch(error)
-        {
-          Swal.fire("Error!","Could not connect to the server.","error");
+          if (response.data.ok) {
+            await fetchAppointment();
+            Swal.fire(
+              "Marked Completed!",
+              "The appointment has been completed",
+              "success"
+            );
+          } else {
+            Swal.fire("Error!", "Something went wrong. Try again.", "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "Could not connect to the server.", "error");
         }
       }
     });
   };
 
   const filteredAppointments = () => {
-    if (select === "Upcoming")
-      return upcoming;
-    if (select === "Accepted")
-      return confirmed;
-    if (select === "Rejected")
-      return rejected;
-    if (select === "Completed") 
-      return completed;
+    if (select === "Upcoming") return applyFilters(upcoming || []);
+    if (select === "Accepted") return applyFilters(confirmed || []);
+    if (select === "Rejected") return applyFilters(rejected || []);
+    if (select === "Completed") return applyFilters(completed || []);
     return [];
   };
-
-
   const paginatedAppointments = () => {
-    const filtered = filteredAppointments()||[];
-    // console.log(filtered);
+    const filtered = filteredAppointments() || [];
     const start = (currentPage - 1) * appointmentsPerPage;
     const end = start + appointmentsPerPage;
     return filtered.slice(start, end);
   };
 
-  const totalPages = Math.ceil(filteredAppointments()?.length || 0) / (appointmentsPerPage || 1)
+  const totalPages = Math.ceil(
+    (filteredAppointments()?.length || 0) / (appointmentsPerPage || 1)
+  );
+
   const renderCard = (app, index, isUpcoming = true) => (
     <div
       key={app._id}
@@ -175,9 +205,10 @@ const BookedAppointment = ({doctor}) => {
       </p>
       <p>
         <strong>Time:</strong>{" "}
-        {new Date(`1970-01-01T${app.time.split("-")[0]}`).toLocaleTimeString([], {
+        {new Date(app.date).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
+          hour12: true,
         })}
       </p>
       <p>
@@ -188,7 +219,7 @@ const BookedAppointment = ({doctor}) => {
         <span
           className={`font-semibold ${
             app.status === "Confirmed"
-              ? "text-green-600"
+              ? "text-yellow-800"
               : app.status === "Rejected"
               ? "text-red-600"
               : app.status === "Completed"
@@ -199,6 +230,15 @@ const BookedAppointment = ({doctor}) => {
           {app.status}
         </span>
       </p>
+      {select === "Completed" && (
+        <p className="p-3 mt-2 flex flex-wrap justify-center gap-2">
+        <button  className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
+        // onClick={() => handleDelete(app._id)} 
+        >
+          <Trash2 size={18} />
+        </button>
+      </p>
+      )}
       {isUpcoming && app.status === "Pending" && (
         <div className="flex flex-wrap gap-2 mt-3">
           <button
@@ -236,11 +276,85 @@ const BookedAppointment = ({doctor}) => {
     </div>
   );
 
+
+  // const handleDelete = async (appointmentId) => {
+  //   const confirm = await Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "This appointment will be permanently deleted!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#d33",
+  //     cancelButtonColor: "#3085d6",
+  //     confirmButtonText: "Yes, delete it!",
+  //   });
+  
+  //   if (confirm.isConfirmed) {
+  //     try {
+  //       const res = await axios.delete(
+  //         `http://localhost:5001/appointments/delete/${appointmentId}`
+  //       );
+  //       if (res.data.ok) {
+  //         Swal.fire("Deleted!", "Appointment has been removed.", "success");
+  //         fetchAppointment(); // Refresh the list
+  //       }
+  //     } catch (error) {
+  //       Swal.fire("Error!", "Something went wrong.", "error");
+  //       console.error(error);
+  //     }
+  //   }
+  // };
+  
+
   return (
     <div className="bg-white p-4 m-4 mb-4 border border-blue-400 rounded-lg shadow-lg">
-      <h3 className="text-2xl font-bold mb-6 text-indigo-700">
+      <h3 className="text-2xl lg:text-4xl  text-center font-bold mb-10 text-indigo-700">
         Appointment Requests
       </h3>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-4 justify-center mb-5">
+        {/* Month Filter */}
+        <div className="relative">
+          <select
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            value={filterMonth}
+            onChange={(e) => setFilterMonth(e.target.value)}
+          >
+            <option value="All">All Months</option>
+            {uniqueMonths.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            size={20}
+          />
+        </div>
+
+        {/* Year Filter */}
+        <div className="relative">
+          <select
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            value={filterYear}
+            onChange={(e) => setFilterYear(e.target.value)}
+          >
+            <option value="All">All Years</option>
+            {uniqueYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            size={20}
+          />
+        </div>
+      </div>
+
+      {/* Continue with the rest of your component... */}
 
       {/* Tabs */}
       <div className="flex flex-wrap gap-3 mb-6">
@@ -273,10 +387,12 @@ const BookedAppointment = ({doctor}) => {
               <th className="p-3 border-r">Reason</th>
               <th className="p-3 border-r">Status</th>
               {select === "Upcoming" && <th className="p-3">Actions</th>}
+              {select === "Accepted" && <th className="p-3">Actions</th>}
+              {select === "Completed" && <th className="p-3">Actions</th>}
             </tr>
           </thead>
           <tbody>
-           {paginatedAppointments()?.map((app, index) => ( 
+            {paginatedAppointments()?.map((app, index) => (
               <tr
                 key={app._id}
                 className="even:bg-gray-50 text-center border-t border-gray-200 hover:bg-gray-100"
@@ -286,11 +402,13 @@ const BookedAppointment = ({doctor}) => {
                   {new Date(app.date).toLocaleDateString()}
                 </td>
                 <td className="p-3 border-r">
-                  {new Date(`1970-01-01T${app.time}`).toLocaleTimeString([], {
+                  {new Date(app.date).toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
+                    hour12: true,
                   })}
                 </td>
+
                 <td className="p-3 border-r">{app.patientForm.reason}</td>
                 <td
                   className={`p-3 border-r font-semibold ${
@@ -340,6 +458,42 @@ const BookedAppointment = ({doctor}) => {
                     </button> */}
                   </td>
                 )}
+
+                {select === "Accepted" && (
+                  <td className="p-3 flex flex-wrap justify-center gap-2">
+                    <button
+                      onClick={() => {
+                        disableButtons(index);
+                        handleReject(app._id);
+                      }}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:opacity-50"
+                      disabled={actionDisabled[index]}
+                    >
+                      <FontAwesomeIcon icon={faXmark} className="mr-1" /> Reject
+                    </button>
+                    <button
+                      onClick={() => {
+                        disableButtons(index);
+                        handleCompleted(app._id);
+                      }}
+                      className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+                      disabled={actionDisabled[index]}
+                    >
+                      <FontAwesomeIcon icon={faCheckCircle} className="mr-1" />{" "}
+                      Complete
+                    </button>
+                  </td>
+                )}
+
+                {select === "Completed" && (
+                  <td className="p-3 flex flex-wrap justify-center gap-2">
+                    <button className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
+                    //  onClick={() => handleDelete(app._id)}
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -357,17 +511,17 @@ const BookedAppointment = ({doctor}) => {
       <div className="flex justify-center mt-8">
         <div className="flex items-center justify-center space-x-3 border border-gray-300 rounded-lg px-6 py-3 shadow-lg bg-white w-full max-w-sm sm:max-w-md">
           <button
-            className="px-4 py-2 rounded-full text-base sm:text-lg font-semibold transition-all bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            className="px-4 py-2 rounded-full text-sm sm:text-lg font-semibold transition-all bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
             ◀ Prev
           </button>
-          <span className="px-4 py-2 rounded-full bg-indigo-500 text-white text-base sm:text-lg font-semibold">
+          <span className="px-4 py-2 rounded-full bg-indigo-500 text-white text-sm sm:text-lg font-semibold ">
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className="px-4 py-2 rounded-full text-base sm:text-lg font-semibold transition-all bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            className="px-4 py-2 rounded-full text-sm sm:text-lg font-semibold transition-all bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
