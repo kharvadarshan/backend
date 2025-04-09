@@ -183,3 +183,35 @@ exports.giveFeedback = async(req,res)=>{
       res.status(500).json({error:error.message});
   }
 }
+
+
+
+
+exports.bookAppointment = async (req, res) => {
+  const appointmentData = req.body;
+
+  try {
+    // Check if the slot is available
+    const slot = await TimeSlot.findById(appointmentData.slotId);
+    if (!slot || slot.status === "Booked") {
+      return res.status(400).json({ ok: false, message: "Selected slot is not available" });
+    }
+
+    // Create the appointment
+    const appointment = new Appointment({
+      ...appointmentData,
+      slotId: slot._id, // Link to TimeSlot
+    });
+    const savedAppointment = await appointment.save();
+
+    // Mark the slot as booked
+    slot.status = "Booked";
+    slot.appointmentId = savedAppointment._id;
+    await slot.save();
+
+    res.status(201).json({ ok: true, message: "Appointment booked successfully", appointment: savedAppointment });
+  } catch (error) {
+    console.error("Error booking appointment:", error);
+    res.status(500).json({ ok: false, message: "Server error" });
+  }
+};

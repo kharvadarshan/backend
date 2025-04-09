@@ -1,4 +1,4 @@
-const TimeSlot = require('../../model/timeSlot');
+// const TimeSlot = require('../../model/timeSlot');
 const Doctor = require('../../model/doctor');
 const Appointment = require('../../model/appointment');
 
