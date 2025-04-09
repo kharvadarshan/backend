@@ -22,6 +22,8 @@ function LoginPage() {
     role: "",
   });
 
+  const [message,setMessage]=useState("");
+
   // const isLogin = useSelector((state) => state.isLogin.isLogin);
 
   const login = async (e) => {
@@ -34,6 +36,7 @@ function LoginPage() {
       );
 
       if (result.data.ok) {
+        setMessage(result.data.message);
         localStorage.setItem("token", result.data.token);
         dispatch(setIsLogin());
         dispatch(setRole(result.data.user.role));
@@ -45,13 +48,24 @@ function LoginPage() {
           dispatch(setDoctor(result.data.user.doctor));
           navigate("/doctorprofile");
         } else {
+          setMessage(result.data.message);
           navigate("/");
         }
-      } else {
-        navigate("/login");
+      } 
+      if(!result.data.ok){
+        setMessage(result.data.message);
+        navigate("/login"); 
       }
     } catch (err) {
-      console.error(err);
+      if(err.response){
+      setMessage(err.response.data.message);
+      }else if (err.request)
+      {
+        setMessage('No response from server');
+      }else
+      {
+        setMessage('Request error:'+err.message);
+      }
     }
   };
 
@@ -62,6 +76,9 @@ function LoginPage() {
   return (
     <div className="min-h-screen mx-3 flex flex-col items-center justify-center ">
       <div className="w-full  max-w-lg  p-6 bg-white border border-blue-300 rounded-lg shadow-md my-10 mx-7">
+        <div className="p-2">
+          {message}
+        </div>
         <div className="items-start mb-5 ">
           <button
             onClick={goToHome}
