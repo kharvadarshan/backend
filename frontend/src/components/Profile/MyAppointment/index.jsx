@@ -243,8 +243,8 @@ const MyAppointments = () => {
           No appointments found.
         </p>
       ) : (
-        <div className="hidden md:block  p-4 shadow-lg bg-white rounded-xl">
-          <table className="w-full border-collapse">
+        <div className="hidden md:block overflow-y-auto p-4 shadow-lg bg-white rounded-xl">
+          <table className="w-full  border-collapse">
             <thead>
               <tr className="bg-blue-100 text-gray-700">
                 <th className="border p-3">Doctor</th>
