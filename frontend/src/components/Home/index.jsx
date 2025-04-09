@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStethoscope } from "@fortawesome/free-solid-svg-icons";
 // Animation variants
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -70,9 +71,9 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate("/all-doctors")}
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold mt-8 hover:bg-blue-100 transition"
+            className="bg-white text-blue-600 text-2xl px-8 py-3 rounded-lg font-semibold mt-8 hover:bg-blue-100 transition"
           >
-            Get Started
+            Find Your Doctor  <span className="mx-2"><FontAwesomeIcon icon={faStethoscope} /></span>
           </motion.button>
         </div>
       </div>

@@ -1,22 +1,24 @@
 import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
-// import axios from "axios";
+import axios from "axios";
 
 const FeedbackForm = () => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [feedback, setFeedback] = useState("");
+  
+  const [feedbackForm,setFeedbackForm] =useState({
+    userId:"",
+    doctorId:"",
+    rating:0,
+    feedback:""
+  });
 
   const handleSubmit = async (e) => {
-    console.log("Neel");
     e.preventDefault();
-    if (rating === 0 || feedback.trim() === "") return;
     try {
-    //   await axios.post("http://localhost:5000/api/feedback", {
-    //     rating,
-    //     feedback,
-    //   });
+      await axios.post("http://localhost:5001/appointments/giveFeedback",feedbackForm);
       toast.success("Feedback submitted successfully!",{
         position:"top-center"
       });

@@ -32,10 +32,13 @@ const DoctorProfile = () => {
   useEffect(()=>{
     if(activeUser?.doctor?.image)
     {
-      setPhoto(`http://localhost:5001${activeUser.doctor?.image}`);
+      setPhoto(`http://localhost:5001${activeUser?.doctor?.image}`);
     }
   },[photo]);
-  console.log(photo);
+
+  const handlePhotoUpdate = (newPhotoUrl) => {
+    setPhoto(newPhotoUrl);
+  };
 
   const logout = async (e) => {
     e.preventDefault();
@@ -144,7 +147,7 @@ const DoctorProfile = () => {
       {/* Main Content */}
       <div className="flex-1 p-4  mt-16 md:mt-0">
         <Routes>
-          <Route path="editprofile"   element={<EditProfile doctor={activeUser.doctor}  />} />
+          <Route path="editprofile"   element={<EditProfile doctor={activeUser.doctor}  onPhotoUpdate={handlePhotoUpdate}  />} />
           <Route path="bookings" element={<BookedAppointment doctor={activeUser.doctor}/>} />
           <Route path="manageschedule" element={<ManageSchedule />} />
           <Route path="reports" element={<Reports />} />

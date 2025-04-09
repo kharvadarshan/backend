@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const AppointmentModel = require("../../model/appointment");
 const TimeSlot =require('../../model/timeSlot');
+const Feedback = require('../../model/feedback');
 // Create a new appointment
 exports.createAppointment = async (req, res) => {
   try {
@@ -150,17 +151,67 @@ exports.deleteAppointment = async(req,res)=>{
         res.status(404).json({ok:flase,message:"Appointmnet not found."});
        }
 
-       const result = await AppointmentModel.updateOne({_id:appointmentId},{$set:{isDeleted:true}});
+       const result = await AppointmentModel.updateOne({_id:appointmentId,status:"Completed"},{$set:{isDeleted:true}});
 
        if(result.modifiedCount>0)
        {
            res.status(201).json({ok:true,message:"Appointment deleted successfully!"});
        }else
        {
-           res.status(400).json({ok:false,message:"No changes  made."});
+           res.status(400).json({ok:false,message:"Appoinment is incomplete"});
        }
    }catch(error)
    {
     res.status(500).json({ error: error.message });
    }
+};
+
+
+exports.giveFeedback = async(req,res)=>{
+  try
+  {
+
+    const {doctorId,userId,rating,feedback} = req.body;
+    const newFeedback = new Feedback({doctorId,useId,rating,feedback});
+
+    const savedFeedback = await newFeedback.save();
+
+    res.status(201).json({ok:true,savedFeedback:savedFeedback});
+ 
+  }catch(error)
+  {
+      res.status(500).json({error:error.message});
+  }
+}
+
+
+
+
+exports.bookAppointment = async (req, res) => {
+  const appointmentData = req.body;
+
+  try {
+    // Check if the slot is available
+    const slot = await TimeSlot.findById(appointmentData.slotId);
+    if (!slot || slot.status === "Booked") {
+      return res.status(400).json({ ok: false, message: "Selected slot is not available" });
+    }
+
+    // Create the appointment
+    const appointment = new Appointment({
+      ...appointmentData,
+      slotId: slot._id, // Link to TimeSlot
+    });
+    const savedAppointment = await appointment.save();
+
+    // Mark the slot as booked
+    slot.status = "Booked";
+    slot.appointmentId = savedAppointment._id;
+    await slot.save();
+
+    res.status(201).json({ ok: true, message: "Appointment booked successfully", appointment: savedAppointment });
+  } catch (error) {
+    console.error("Error booking appointment:", error);
+    res.status(500).json({ ok: false, message: "Server error" });
+  }
 };

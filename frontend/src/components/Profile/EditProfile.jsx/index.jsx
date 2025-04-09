@@ -27,8 +27,9 @@ const EditProfile = () => {
 
 
   useEffect(()=>{
+    if(activeUser?.id)
      fetchUser();
-  },[]);
+  },[activeUser?.id]);
 
 
    const fetchUser = async ()=>{

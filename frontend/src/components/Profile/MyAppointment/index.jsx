@@ -1,18 +1,20 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, ChevronDown, Info, FileText, Star } from "lucide-react";
-import { toast } from "react-toastify";
+import { Trash2, ChevronDown, Info, FileText, Star, X } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+
 
 const MyAppointments = () => {
   const activeUser = useSelector((state)=> state.user.user);
-  
   const [appointments, setAppointments] = useState();
+  const [modalData,setModalData] = useState();
 
   useEffect(()=>{
+    if(activeUser?.id)
        getAppointmentByPatientId();
-  },[]);
+  },[activeUser?.id]);
 
   const getAppointmentByPatientId = async()=>{
     try
@@ -33,29 +35,39 @@ const MyAppointments = () => {
 
 
   const handleDelete = async(appointmentId)=>{
-        try{
+
+       Swal.fire({
+                title:"Are you sure?",
+                text:"Do you really want to delete this completed appointment ?",
+                icon:"warning",
+                confirmButtonText:"Yes, Continue",
+                cancelButtonText:"No, Cancel",
+        }).then(async(result)=>{
+          if(result.isConfirmed){
+            try{
+              const response = await  axios.delete(`http://localhost:5001/appointments/deleteAppointment/${appointmentId}`);
     
-          const response = await  axios.delete(`http://localhost:5001/appointments/deleteAppointment/${appointmentId}`);
-    
-          if(response.data.ok)
-          {
-              toast.success("Appointment deleted Successfully!",{positon:"top-right"});
-          }else
-          {
-              toast.failure("Something went wrong!");
+                  if(response.data.ok)
+                  {    
+                       Swal.fire("Deleted Successfully!","The appointment has been deleted","success");
+                       await getAppointmentByPatientId();
+                  }else
+                  {
+                       Swal.fire(response.data.message,"Something went wrong. Try again.","error");
+                  }
+            }
+            catch(error)
+            {
+              Swal.fire("Error!","Could not connect to the server.","error");
+            }
           }
-    
-        }catch(error)
-        {
-               console.log(error);
-        }
-    
+        });
+        
      }
 
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
   const [filterYear, setFilterYear] = useState("All");
-  const [selectedDetail, setSelectedDetail] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
   const [selectedReview, setSelectedReview] = useState(null);
 
@@ -125,6 +137,45 @@ const MyAppointments = () => {
     </motion.button>
   );
 
+  const Modal = ({ isOpen, onClose, data }) => {
+    if (!isOpen || !data) return null;
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl border border-gray-200"
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Patient Details</h2>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+              <X size={24} />
+            </button>
+          </div>
+          <div className="space-y-3">
+            <p><strong>Name:</strong> {data.name}</p>
+            <p><strong>Patient Name:</strong> {data.patientname}</p>
+            <p><strong>Age:</strong> {data.age}</p>
+            <p><strong>Gender:</strong> {data.gender}</p>
+            <p><strong>Email:</strong> {data.email}</p>
+            <p><strong>Address:</strong> {data.address}</p>
+            <p><strong>Reason:</strong> {data.reason}</p>
+            <p><strong>City:</strong> {data.city}</p>
+            <p><strong>Number:</strong> {data.number}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+          >
+            Close
+          </button>
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
     <div className="p-6 mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
@@ -143,7 +194,7 @@ const MyAppointments = () => {
             <option value="All">All Status</option>
             <option value="Confirmed">Confirmed</option>
             <option value="Pending">Pending</option>
-            <option value="Cancelled">Cancelled</option>
+            <option value="Rejected">Cancelled</option>
           </select>
           <ChevronDown
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
@@ -216,7 +267,7 @@ const MyAppointments = () => {
               </p>
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {renderViewButton("Details", <Info size={16}/>,"bg-green-300", () =>
-                  setSelectedDetail(appointment.patientForm.reason)
+                  setModalData(appointment.patientForm)
                 )}
                 {renderViewButton("Report", <FileText size={16} />,"bg-blue-300", () =>
                   setSelectedReport(appointment.report)
@@ -262,7 +313,7 @@ const MyAppointments = () => {
               <AnimatePresence>
                 {filteredAppointments.map((appointment) => (
                   <motion.tr
-                    key={appointment._id}
+                    key={appointment._id.$oid}
                     className="border text-center"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -278,7 +329,7 @@ const MyAppointments = () => {
                     </td>
                     <td className="p-3 border">
                       {renderViewButton("View", <Info size={16} />,"bg-green-300", () =>
-                        setSelectedDetail(appointment.patientForm.reason)
+                        setModalData(appointment.patientForm)
                       )}
                     </td>
                     <td className="p-3 border">
@@ -309,6 +360,12 @@ const MyAppointments = () => {
           </table>
         </div>
       )}
+
+      <Modal
+        isOpen={!!modalData}
+        onClose={() => setModalData(null)}
+        data={modalData}
+      />
     </div>
   );
 };

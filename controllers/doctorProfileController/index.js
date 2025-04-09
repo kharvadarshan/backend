@@ -1,4 +1,4 @@
-const TimeSlot = require('../../model/timeSlot');
+// const TimeSlot = require('../../model/timeSlot');
 const Doctor = require('../../model/doctor');
 const Appointment = require('../../model/appointment');
 
@@ -65,6 +65,8 @@ exports.acceptAppointment = async(req,res)=>{
         },{
             $set:{status:"Confirmed"}
         });
+
+        console.log(result);
 
         if(result.modifiedCount > 0)
         {

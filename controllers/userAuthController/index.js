@@ -145,20 +145,25 @@ exports.validateLogin = async (req,res)=>{
    const {email,password}=req.body;
    try{
       const userCredential = await User.findOne( {email });
-      console.log(userCredential);
-      if(userCredential)
-      {
-            const isMatch = await bcrypt.compare(password,userCredential.password);
 
-            if(isMatch)
+      if(!userCredential)
+      {
+         return res.status(400).json({ok:false, message: 'User Not Found.' });
+      }
+      
+            const isMatch = await bcrypt.compare(password,userCredential.password);
+          
+            if(!isMatch)
             {
+               return res.status(401).json({ok:false,message:'Invalid Credentials.'});
+            }
+          
                const token = JWT.sign(
                   { id: userCredential._id, email: userCredential.email, role: userCredential.role },
                   tokenSignature,
                   { expiresIn: '1d' }
               );
-              console.log(token);
-              // console.log(await Doctor.findOne({contact:email}));
+             
               req.session.user = {
                id: userCredential._id,
                email: userCredential.email,
@@ -167,21 +172,11 @@ exports.validateLogin = async (req,res)=>{
                doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
               };
              
-              res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user})
-            
-            }
-            else{
-               res.status(500).json({message:'Password is wrong.'})
-              
-            }
-      }
-      else{
-          res.status(400).json({ message: 'User Not Found.' }).redirect('/login');
-     }
+   return  res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user});   
+     
    }catch(error)
    {
-      console.error(error);
-      res.status(500).json({message:'Internal server error.'})
+      return  res.status(500).json({ok:false, message:'Internal server error.',error:error.message});
    }
    
 }

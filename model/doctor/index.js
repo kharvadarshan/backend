@@ -18,7 +18,6 @@ const doctorSchema = new mongoose.Schema({
   field: { type: String, required: true, allowNull: false },
   contact: { type: String, required: true, allowNull: false },
   image: { type: String, required: false },
-  
 });
 
 // Set auto-increment for the `id` field

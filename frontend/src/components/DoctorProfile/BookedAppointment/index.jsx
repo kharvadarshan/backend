@@ -34,9 +34,9 @@ const BookedAppointment = ({doctor}) => {
          const response = await axios.get(`http://localhost:5001/appointments/getAppointmentByDoctorId/${doctor._id}`);
          if(response.data.ok)
          {
-           
+              // console.log(response.data);
              setUpcoming(response.data.upcomingAppointments);
-             setConfirmed(response.data.confirmedAppintments);
+             setConfirmed(response.data.confirmedAppointment);
              setRejected(response.data.rejectedAppointments);
              setCompleted(response.data.completedAppointments);
          }
@@ -45,10 +45,11 @@ const BookedAppointment = ({doctor}) => {
       console.log(error);
     }
   }
-
+ 
   useEffect(()=>{
+    if(doctor?._id)
     fetchAppointment();
- },[]);
+ },[doctor?._id]);
 
 
 
@@ -66,8 +67,9 @@ const BookedAppointment = ({doctor}) => {
           const response = await axios.get(`http://localhost:5001/doctorprofile/acceptAppointment/${id}`);
 
           if (response.data.ok) {
-            fetchAppointment();
+            
             Swal.fire("Accepted!", "The appointment has been accepted.", "success");
+            await fetchAppointment();
           } else {
             Swal.fire("Error!", "Something went wrong. Try again.", "error");
           }
@@ -93,7 +95,7 @@ const BookedAppointment = ({doctor}) => {
       
                     if(!response.data.ok)
                     {
-                         fetchAppointment();
+                         await fetchAppointment();
                          Swal.fire("Rejected!","The appointment request has been rejected.","success");
                     }else
                     {
@@ -107,6 +109,8 @@ const BookedAppointment = ({doctor}) => {
           });
   };
 
+
+  
   const handleCompleted = async(id) => {
                  Swal.fire({
             title:"Are you sure?",
@@ -121,7 +125,7 @@ const BookedAppointment = ({doctor}) => {
 
               if(response.data.ok)
               {    
-                fetchAppointment();
+                await fetchAppointment();
                    Swal.fire("Marked Completed!","The appointment has been completed","success");
               }else
               {
@@ -148,10 +152,10 @@ const BookedAppointment = ({doctor}) => {
     return [];
   };
 
-  console.log(filteredAppointments());
 
   const paginatedAppointments = () => {
     const filtered = filteredAppointments()||[];
+    // console.log(filtered);
     const start = (currentPage - 1) * appointmentsPerPage;
     const end = start + appointmentsPerPage;
     return filtered.slice(start, end);
@@ -323,7 +327,7 @@ const BookedAppointment = ({doctor}) => {
                     >
                       <FontAwesomeIcon icon={faXmark} className="mr-1" /> Reject
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => {
                         disableButtons(index);
                         handleCompleted(app._id);
@@ -333,7 +337,7 @@ const BookedAppointment = ({doctor}) => {
                     >
                       <FontAwesomeIcon icon={faCheckCircle} className="mr-1" />{" "}
                       Complete
-                    </button>
+                    </button> */}
                   </td>
                 )}
               </tr>
