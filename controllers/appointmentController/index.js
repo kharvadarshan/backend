@@ -171,18 +171,46 @@ exports.giveFeedback = async(req,res)=>{
   try
   {
 
-    const {doctorId,userId,rating,feedback} = req.body;
-    const newFeedback = new Feedback({doctorId,useId,rating,feedback});
+    const {appointmentId,rating,feedback} = req.body;
+     console.log(req.body);
+    
+     if (!mongoose.Types.ObjectId.isValid(appointmentId) || !rating || !feedback) {
+      return res.status(400).json({ ok: false, message: "Missing required fields" });
+    }
 
-    const savedFeedback = await newFeedback.save();
 
-    res.status(201).json({ok:true,savedFeedback:savedFeedback});
- 
+     const appointment = await AppointmentModel.findById(appointmentId);
+    if (!appointment) {
+      return res.status(404).json({ ok: false, message: "Appointment not found" });
+    }
+
+    if (appointment.feedbackForm?.rating) {
+      return res.status(403).json({ ok: false, message: "Feedback already submitted" });
+    }
+
+    const updateAppointment = await AppointmentModel.updateOne(
+      {  _id:appointmentId },
+      { $set:{
+          "feedbackForm.rating": rating,
+          "feedbackForm.feedback": feedback,
+          "feedbackForm.createdAt": new Date(),
+         } 
+       });
+
+       if(updateAppointment.modifiedCount>0)
+       {
+        return res.status(201).json({ok:true,message:"feed given successfully."});
+       }else{
+        return res.status(400).json({ok:false,message:"No changes were made."});
+       }
   }catch(error)
   {
-      res.status(500).json({error:error.message});
+      return res.status(500).json({error:error.message});
   }
 }
+
+
+
 
 
 

@@ -4,18 +4,21 @@ import { Trash2, ChevronDown, Info, FileText, Star, X } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-
+import FeedBackForm from "../../FeedBackForm/FeedBack";
 
 const MyAppointments = () => {
   const activeUser = useSelector((state)=> state.user.user);
   const [appointments, setAppointments] = useState();
   const [modalData,setModalData] = useState();
+  const [showFeedbackForm,setShowFeedbackForm]=useState(false);
 
   useEffect(()=>{
     if(activeUser?.id)
        getAppointmentByPatientId();
   },[activeUser?.id]);
 
+
+  // get all apointment of patient 
   const getAppointmentByPatientId = async()=>{
     try
     {
@@ -33,7 +36,7 @@ const MyAppointments = () => {
   };
 
 
-
+  // delete appointment which is  completed
   const handleDelete = async(appointmentId)=>{
 
        Swal.fire({
@@ -65,11 +68,13 @@ const MyAppointments = () => {
         
      }
 
+
+
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
   const [filterYear, setFilterYear] = useState("All");
   const [selectedReport, setSelectedReport] = useState(null);
-  const [selectedReview, setSelectedReview] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
  
 
@@ -77,7 +82,8 @@ const MyAppointments = () => {
     const statusColors = {
       Confirmed: "bg-green-100 text-green-700 border border-green-400",
       Pending: "bg-yellow-100 text-yellow-700 border border-yellow-400",
-      Cancelled: "bg-red-100 text-red-700 border border-red-400",
+      Rejected: "bg-red-100 text-red-700 border border-red-400",
+      Completed:"bg-blue-100 text-blue-700 border border-blue-400"
     };
     return (
       <span
@@ -137,6 +143,22 @@ const MyAppointments = () => {
     </motion.button>
   );
 
+
+  // New function to render rating stars
+  const renderRating = (rating) => (
+    <div className="flex items-center justify-center gap-1">
+      {[...Array(5)].map((_, index) => (
+        <Star
+          key={index}
+          size={16}
+          className={index < rating ? "text-yellow-500" : "text-gray-300"}
+          fill={index < rating ? "currentColor" : "none"}
+        />
+      ))}
+    </div>
+  );
+
+  // appointment form details popup
   const Modal = ({ isOpen, onClose, data }) => {
     if (!isOpen || !data) return null;
 
@@ -176,6 +198,35 @@ const MyAppointments = () => {
     );
   };
 
+  // feedback popup
+  const FeedbackModal = ({ isOpen, onClose, appointment }) => {
+    if (!isOpen || !appointment) return null;
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl border border-gray-200"
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Submit Feedback</h2>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+              <X size={24} />
+            </button>
+          </div>
+          <FeedBackForm
+            appointmentId={appointment._id} // Assuming doctorId exists in appointment
+            onSubmitSuccess={()=>{
+              onClose();
+              getAppointmentByPatientId();
+              } }// Close modal on success
+          />
+        </motion.div>
+      </div>
+    );
+  };
   return (
     <div className="p-6 mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
@@ -266,15 +317,33 @@ const MyAppointments = () => {
                 <strong>Time:</strong> {appointment.time}
               </p>
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+
+                 {/* patient details button */}
                 {renderViewButton("Details", <Info size={16}/>,"bg-green-300", () =>
                   setModalData(appointment.patientForm)
                 )}
+                
+
+                {/* patient can get report */}
                 {renderViewButton("Report", <FileText size={16} />,"bg-blue-300", () =>
                   setSelectedReport(appointment.report)
                 )}
-                {renderViewButton("Review", <Star size={16} />,"bg-yellow-300", () =>
-                  setSelectedReview(appointment.review)
+
+                  {/* give feedback & display rating */}
+                { appointment.status === "Completed" &&  
+                ( 
+                  !appointment.feedbackForm?.rating ? 
+                  (
+                             renderViewButton("Give Feedback", <Star size={16} />,"bg-yellow-300", () =>{
+                             setSelectedAppointment(appointment);
+                              setShowFeedbackForm(true);})
+                  ):(  
+                         renderRating(appointment.feedbackForm.rating)
+                       )
                 )}
+
+
+
                 <button
                   onClick={() => handleDelete(appointment._id.$oid)}
                   className="mt-1 bg-red-100 text-red-600 p-2 rounded-lg flex justify-center items-center gap-1 hover:bg-red-200 transition w-full sm:w-auto"
@@ -327,11 +396,15 @@ const MyAppointments = () => {
                     <td className="p-3 border">
                       {getStatusBadge(appointment.status)}
                     </td>
+
+                     {/* patient details button */}
                     <td className="p-3 border">
                       {renderViewButton("View", <Info size={16} />,"bg-green-300", () =>
                         setModalData(appointment.patientForm)
                       )}
                     </td>
+
+                     {/* patient can get report */}
                     <td className="p-3 border">
                       {renderViewButton(
                         "Report",
@@ -340,9 +413,24 @@ const MyAppointments = () => {
                         () => setSelectedReport(appointment.report)
                       )}
                     </td>
+
+
+                     {/* give feedback & display rating */}
                     <td className="p-3 border">
-                      {renderViewButton("Review", <Star size={16} />,"bg-yellow-300", () =>
-                        setSelectedReview(appointment.review)
+
+                      { 
+                        appointment.status==="Completed" && (   
+                         !appointment.feedbackForm?.rating ? 
+                          (
+                                
+                                    (renderViewButton("Give Feedback", <Star size={16} />,"bg-yellow-300", () =>{
+                                                   setSelectedAppointment(appointment);
+                                                    setShowFeedbackForm(true);})
+                                    )
+                          ): (
+                            renderRating(appointment.feedbackForm.rating)
+                          )
+
                       )}
                     </td>
                     <td className="p-3 border">
@@ -366,6 +454,11 @@ const MyAppointments = () => {
         onClose={() => setModalData(null)}
         data={modalData}
       />
+      <FeedbackModal
+      isOpen={showFeedbackForm}
+      onClose={()=>setShowFeedbackForm(false)} 
+      appointment={selectedAppointment}>
+      </FeedbackModal>
     </div>
   );
 };

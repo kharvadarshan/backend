@@ -98,7 +98,6 @@ exports.registerUser = async (req,res)=>{
    try{
        const {userName,email,password,confirmPassword,role}=req.body;
        const hashedPassword = await bcrypt.hash(password,10);
-       console.log(req.body);
        if(password == confirmPassword){
          const user = new User({userName,email,password:hashedPassword,role});
          await user.save();
