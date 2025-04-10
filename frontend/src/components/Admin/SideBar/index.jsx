@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
-  const menu = [  "Doctors List", "Add Doctor", "All Contacts"];
+  const menu = [  "Doctors List", "Add Doctor", "All Contacts" , "All Patient"];
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
