@@ -1,40 +1,118 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { format, eachDayOfInterval, parseISO } from "date-fns";
 import { Trash2, Plus, Calendar, Clock, ChevronRight } from "lucide-react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function DoctorSlotScheduler() {
-  const [selectedDate, setSelectedDate] = useState("");
+  // const [selectedDate, setSelectedDate] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [singleDayStartTime, setSingleDayStartTime] = useState(""); // Changed
-  const [singleDayEndTime, setSingleDayEndTime] = useState(""); // Changed
+  // const [singleDayStartTime, setSingleDayStartTime] = useState(""); // Changed
+  // const [singleDayEndTime, setSingleDayEndTime] = useState(""); // Changed
   const [recurringStartTime, setRecurringStartTime] = useState(""); // Changed
   const [recurringEndTime, setRecurringEndTime] = useState(""); // Changed
-  const [slots, setSlots] = useState([]);
+  const [slots, setSlots] = useState(
+    {
+       date:"",
+       startTime:"",
+       endTime:"",
+    }
+  );
+
+  useEffect(()=>{
+     getAvailableTimeSlots();
+  },[]);
+
+  const [timeSlots,setTimeSlots]=useState([]);
+
+  
+
+  const getAvailableTimeSlots = async()=>{
+    try
+    {
+            const response = await axios.get(`http://localhost:5001/doctorprofile/getTimeSlots/${activeUser._id}`);
+
+            if(response.data.ok)
+            {
+              setTimeSlots(response.data.result);
+            }
+    }catch(error)
+    {
+      console.log(error);
+    }
+  }
+
+
+
+  
+
+
   const [error, setError] = useState("");
 
   const isValidTime = (start, end) => start < end;
 
-  const handleAddSingleSlot = () => {
-    setError("");
-    if (!selectedDate || !singleDayStartTime || !singleDayEndTime) {
-      return setError("Please fill in all fields.");
-    }
-    if (!isValidTime(singleDayStartTime, singleDayEndTime)) {
-      return setError("Start time must be before end time.");
-    }
-    const exists = slots.some(
-      (slot) => slot.date === selectedDate && slot.startTime === singleDayStartTime
-    );
-    if (exists) {
-      return setError("This slot already exists.");
-    }
-    const newSlot = { date: selectedDate, startTime: singleDayStartTime, endTime: singleDayEndTime };
-    setSlots([...slots, newSlot]);
-    setSelectedDate("");
-    setSingleDayStartTime("");
-    setSingleDayEndTime("");
-  };
+  const activeUser = useSelector((state)=>state.user.user.doctor);
+  
+
+  const addTimeSlot = async()=>{
+    Swal.fire({
+          title: "Are you sure?",
+          text: "Do you really want to add Time slot ?",
+          icon: "warning",
+          confirmButtonText: "Yes, Add",
+          cancelButtonText: "No, Cancel",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              
+              const response = await axios.post("http://localhost:5001/doctorprofile/addSlot",
+                {doctorId:activeUser._id,slot:slots}
+              );
+
+              if (response.data.ok) {
+                getAvailableTimeSlots();
+                Swal.fire(
+                  "Success",
+                  "The time slot  has been added.",
+                  "success"
+                );
+              } else {
+                Swal.fire("Error!", "Something went wrong. Try again.", "error");
+              }
+            } catch (error) {
+              Swal.fire("Error!", "Could not connect to the server.", "error");
+            }
+          }
+        });
+  }
+
+
+  // const handleAddSingleSlot = () => {
+  //   setError("");
+  //   if (!selectedDate || !singleDayStartTime || !singleDayEndTime) {
+  //     return setError("Please fill in all fields.");
+  //   }
+  //   if (!isValidTime(singleDayStartTime, singleDayEndTime)) {
+  //     return setError("Start time must be before end time.");
+  //   }
+  //   // const exists = slots.some(
+  //   //   (slot) => slot.date === selectedDate && slot.startTime === singleDayStartTime
+  //   // );
+  //   // if (exists) {
+  //   //   return setError("This slot already exists.");
+  //   // }
+  //   // const newSlot = { date: selectedDate, startTime: singleDayStartTime, endTime: singleDayEndTime };
+  //   // setSlots(newSlot);
+  //   setSelectedDate("");
+  //   setSingleDayStartTime("");
+  //   setSingleDayEndTime("");
+  // };
+
+ 
+
+
 
   const handleApplySlotToAllDays = () => {
     setError("");
@@ -64,23 +142,23 @@ export default function DoctorSlotScheduler() {
     );
 
     setSlots([...slots, ...uniqueNewSlots]);
-    setRecurringStartTime("");
-    setRecurringEndTime("");
-    setStartDate("");
-    setEndDate("");
+    // setRecurringStartTime("");
+    // setRecurringEndTime("");
+    // setStartDate("");
+    // setEndDate("");
   };
 
-  const handleDeleteSlot = (index) => {
-    const updatedSlots = [...slots];
-    updatedSlots.splice(index, 1);
-    setSlots(updatedSlots);
-  };
+  // const handleDeleteSlot = (index) => {
+  //   const updatedSlots = [...slots];
+  //   updatedSlots.splice(index, 1);
+  //   setSlots(updatedSlots);
+  // };
 
-  const handleClearAll = () => {
-    if (confirm("Are you sure you want to clear all slots?")) {
-      setSlots([]);
-    }
-  };
+  // const handleClearAll = () => {
+  //   if (confirm("Are you sure you want to clear all slots?")) {
+  //     setSlots([]);
+  //   }
+  // };
 
   return (
     <div className="max-w-4xl mx-auto p-4 font-sans text-gray-800">
@@ -115,8 +193,8 @@ export default function DoctorSlotScheduler() {
                 <input
                   type="date"
                   className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
+                  value={slots.date}
+                  onChange={(e) => setSlots({...slots,date:e.target.value})}
                 />
               </div>
             </div>
@@ -128,8 +206,8 @@ export default function DoctorSlotScheduler() {
                   <input
                     type="time"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                    value={singleDayStartTime}
-                    onChange={(e) => setSingleDayStartTime(e.target.value)}
+                    value={slots.startTime}
+                    onChange={(e) => setSlots({...slots,startTime:e.target.value})}
                   />
                 </div>
               </div>
@@ -139,15 +217,16 @@ export default function DoctorSlotScheduler() {
                   <input
                     type="time"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                    value={singleDayEndTime}
-                    onChange={(e) => setSingleDayEndTime(e.target.value)}
+                    value={slots.endTime}
+                    onChange={(e) => setSlots({...slots,endTime:e.target.value})}
                   />
                 </div>
               </div>
             </div>
             
             <button
-              onClick={handleAddSingleSlot}
+              onClick={()=>{
+                addTimeSlot()}}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center transition-colors"
             >
               <Plus size={18} className="mr-2" />
@@ -228,9 +307,9 @@ export default function DoctorSlotScheduler() {
               {slots.length}
             </span>
           </div>
-          {slots.length > 0 && (
+          {timeSlots?.length > 0 && (
             <button
-              onClick={handleClearAll}
+              // onClick={}
               className="text-sm bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 flex items-center transition-colors"
             >
               <Trash2 size={16} className="mr-1" />
@@ -239,7 +318,7 @@ export default function DoctorSlotScheduler() {
           )}
         </div>
 
-        {slots.length === 0 ? (
+        {timeSlots?.length === 0 ? (
           <div className="text-center py-8">
             <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <Calendar className="text-gray-400" size={24} />
@@ -249,7 +328,7 @@ export default function DoctorSlotScheduler() {
           </div>
         ) : (
           <ul className="divide-y divide-gray-100">
-            {slots.map((slot, index) => (
+            {timeSlots?.map((timeSlot, index) => (
               <li
                 key={index}
                 className="py-4 px-3 hover:bg-gray-50 rounded-lg transition-colors"
@@ -260,17 +339,22 @@ export default function DoctorSlotScheduler() {
                       <Calendar className="text-indigo-600" size={18} />
                     </div>
                     <div>
+                      {timeSlot?.slot?.map((range,index)=>(
+                        <>
                       <div className="font-medium text-gray-900">
-                        {format(parseISO(slot.date), "EEEE, MMMM d, yyyy")}
+                        {format(parseISO(timeSlot.date), "EEEE, MMMM d, yyyy")}
                       </div>
-                      <div className="text-gray-500 text-sm flex items-center">
+                      <div key={index} className="text-gray-500 text-sm flex items-center">
                         <Clock size={14} className="mr-1" />
-                        {slot.startTime} - {slot.endTime}
+                        {range.start} - {range.end}
                       </div>
+                       </>
+                        ))
+                      }
                     </div>
                   </div>
                   <button
-                    onClick={() => handleDeleteSlot(index)}
+                    // onClick={() => handleDeleteSlot(index)}
                     className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
                     aria-label="Delete slot"
                   >

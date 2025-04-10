@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post('/addSlot',addTimeSlot);
-router.post('/getTimeSlots',getAvailableTimeSlots);
+router.get('/getTimeSlots/:id',getAvailableTimeSlots);
 router.post('/getDoctorById',getDoctorById);
 router.get('/acceptAppointment/:id',acceptAppointment);
 router.get('/rejectAppointment/:id',rejectAppointment);
