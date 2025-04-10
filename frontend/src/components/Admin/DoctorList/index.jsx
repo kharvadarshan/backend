@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 
 const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const doctorsPerPage = 3;
 
   useEffect(() => {
     fetchDoctors();
@@ -23,6 +25,12 @@ const DoctorList = () => {
     return text.slice(0, maxLength) + '...';
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(doctors.length / doctorsPerPage);
+  const indexOfLastDoctor = currentPage * doctorsPerPage;
+  const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
+  const currentDoctors = doctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
+
   return (
     <div className="max-w-7xl mx-auto p-4 bg-gray-100 min-h-[650px]">
       <motion.h1
@@ -34,37 +42,33 @@ const DoctorList = () => {
         Doctor List
       </motion.h1>
 
-      <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+      <div className="overflow-x-auto scroll-smooth bg-white rounded-lg shadow-lg">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-800 text-white">
             <tr>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">ID</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Name</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Specialty</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Specialization</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Experience</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Degree</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Fees</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Address</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">About</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Field</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Contact</th>
-              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">Image</th>
+              {[
+                "ID", "Name", "Specialty", "Specialization", "Experience",
+                "Degree", "Fees", "Address", "About", "Field", "Contact", "Image"
+              ].map((header, i) => (
+                <th key={i} className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider">
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {doctors.length > 0 ? (
-              doctors.map((doctor, index) => (
+            {currentDoctors.length > 0 ? (
+              currentDoctors.map((doctor, index) => (
                 <motion.tr
-                  key={doctor.id || index} // Use doctor.id if available, fallback to index
+                  key={doctor.id || index}
                   className="hover:bg-gray-50 transition"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.3 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
                 >
                   <td className="py-3 px-4 text-gray-700">{doctor.id}</td>
                   <td className="py-3 px-4 text-gray-700">{doctor.name}</td>
-                  <td className="py-3 px-4 text-gray-700">{doctor.specialty || doctor.speciality}</td> {/* Handle typo */}
+                  <td className="py-3 px-4 text-gray-700">{doctor.specialty || doctor.speciality}</td>
                   <td className="py-3 px-4 text-gray-700">{doctor.specialization}</td>
                   <td className="py-3 px-4 text-gray-700">{doctor.experience}</td>
                   <td className="py-3 px-4 text-gray-700">{doctor.degree}</td>
@@ -75,10 +79,10 @@ const DoctorList = () => {
                   <td className="py-3 px-4 text-gray-700">{doctor.contact}</td>
                   <td className="py-3 px-4">
                     <img
-                      src={doctor.image || "/assets/doctor.png"} // Use doctor.image if available
+                      src={doctor.image || "/assets/doctor.png"}
                       alt={doctor.name}
                       className="w-16 h-16 object-cover rounded-full"
-                      onError={(e) => (e.target.src = "/assets/doctor.png")} // Fallback image
+                      onError={(e) => (e.target.src = "/assets/doctor.png")}
                     />
                   </td>
                 </motion.tr>
@@ -93,11 +97,37 @@ const DoctorList = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8">
+          <div className="flex items-center justify-center space-x-3 border border-gray-300 rounded-lg px-6 py-3 shadow-lg bg-white w-full max-w-md">
+            <button
+              className="px-4 py-2 rounded-full text-sm md:text-xl font-semibold bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              ◀ Prev
+            </button>
+            <span className="px-4 py-2 md:text-xl rounded-full bg-indigo-500 text-white text-sm font-semibold">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 hover:bg-gray-300 md:text-xl disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next ▶
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default DoctorList;
+
 
 
 
