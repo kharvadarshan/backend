@@ -72,7 +72,7 @@ const DoctorProfile = () => {
     <div className="flex flex-col md:flex-row  min-h-screen">
       {/* Sidebar Toggle Button for Mobile */}
       <button
-        className={`md:hidden p-4 absolute ${isSidebarOpen ? "left-[230px] text-blue-500" : "left-0  top-6 "} z-50  rounded`}
+        className={`md:hidden p-4 absolute ${isSidebarOpen ? "left-[230px] text-blue-500" : "left-0  top-16 "} z-50  rounded`}
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         <FontAwesomeIcon icon={faBars} className="text-2xl" />

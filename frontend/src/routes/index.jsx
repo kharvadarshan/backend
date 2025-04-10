@@ -27,14 +27,22 @@ const AllRoute = () => {
     const location = useLocation();
     const role = useSelector((state)=>state.isLogin.role);
    const navigate=useNavigate();
-    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup" || role === 'doctor' ;
+    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup" // || role === 'doctor' ;
      const publicRoutes = ['/login','/signup','/','/chatbot'];
-    useEffect(()=>{
-        if(role==='' && !publicRoutes.includes(location.pathname))
-        {
-            navigate('/login');
+     useEffect(() => {
+        const path = location.pathname;
+      
+        // If no role and not in public routes => redirect to login
+        if (role === '' && !publicRoutes.includes(path)) {
+          navigate('/login');
         }
-    },[role,location.pathname,navigate])
+      
+        // If role is doctor and trying to access anything other than /all-doctors
+        // if (role === 'doctor' && path !== '/doctorprofile') {
+        //   navigate('/doctorprofile');
+        // }
+      }, [role, location.pathname, navigate]);
+      
 
     return (
         <>
@@ -45,7 +53,6 @@ const AllRoute = () => {
                         <div className="d-flex justify-content-center">
                             <div className='h-auto w-auto'>
             <Routes>  
-                       
                            
                         <Route path="/doctorprofile/*" element={ <DoctorProfile/>}></Route>
                         <Route path="/login"  element={<Login  />} />
