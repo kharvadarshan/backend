@@ -27,7 +27,7 @@ const AllRoute = () => {
     const location = useLocation();
     const role = useSelector((state)=>state.isLogin.role);
    const navigate=useNavigate();
-    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup" // || role === 'doctor' ;
+    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup"  || role === 'doctor' ;
      const publicRoutes = ['/login','/signup','/','/chatbot'];
      useEffect(() => {
         const path = location.pathname;

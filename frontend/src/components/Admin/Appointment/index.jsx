@@ -7,9 +7,6 @@ const Appointment = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Set items per page
 
-  const contact = {
-    message: "Reason Here Reason HereReason Here",
-  };
 
   const [appointment,setAppointment]=useState([]);
     useEffect(()=>{
@@ -38,21 +35,21 @@ const Appointment = () => {
     "Action",
   ];
 
-  const appointments = Array.from({ length: 15 }, (_, i) => ({
-    id: i + 1,
-    name: "John Doe",
-    contact: "1234567890",
-    doctor: "Dr. ABC",
-    date: "12/03/2025",
-    time: "12:30",
-    status: i % 2 === 0 ? "Confirmed" : "Inactive",
-  }));
+  // const appointments = Array.from({ length: 15 }, (_, i) => ({
+  //   id: i + 1,
+  //   name: "John Doe",
+  //   contact: "1234567890",
+  //   doctor: "Dr. ABC",
+  //   date: "12/03/2025",
+  //   time: "12:30",
+  //   status: i % 2 === 0 ? "Confirmed" : "Inactive",
+  // }));
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = appointment.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(appointments.length / itemsPerPage);
+  const totalPages = Math.ceil(appointment.length / itemsPerPage);
 
   const nextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -60,6 +57,58 @@ const Appointment = () => {
 
   const prevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+    const reasonPopUp = () => {
+    if (!selectedReason) return null; // Prevents rendering when no reason is selected
+  
+    return (
+      <>
+        {/* Overlay */}
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-40"
+          onClick={() => setSelectedReason(null)}
+        ></div>
+  
+        {/* Popup Box */}
+        <motion.div
+          className="fixed bg-white shadow-2xl p-6 rounded-lg w-[90%] md:max-w-[90%] sm:w-[500px] max-w-[78%] z-50 md:left-32 left-9 lg:left-96 xl:left-[40%]"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 20 }}
+          exit={{ opacity: 0, y: -50 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            top: "10vh",
+            transform: "translate(-50%, 0%)",
+            position: "fixed",
+            minHeight: "150px",
+            maxHeight: "80vh",
+            overflowY: "auto",
+          }}
+        >
+          {/* Close Button */}
+          <button
+            onClick={() => setSelectedReason(null)}
+            className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-xl"
+          >
+            ✖
+          </button>
+  
+          {/* Title */}
+          <h2 className="text-2xl font-semibold mb-4 text-center">Reason</h2>
+  
+          {/* Content */}
+          <div
+            className="overflow-y-auto px-2"
+            style={{ maxHeight: "65vh", wordBreak: "break-word" }}
+          >
+            <p className="text-gray-700 text-center">
+              {selectedReason || "No Reason Provided"}
+            </p>
+          </div>
+        </motion.div>
+      </>
+    );
   };
   
 
@@ -76,10 +125,10 @@ const Appointment = () => {
         Latest Appointments
       </motion.h2>
       <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="p-4 bg-blue-500 text-white rounded">Total: {appointments.length}</div>
-            <div className="p-4 bg-yellow-500 text-white rounded">Pending: {appointments.filter(app => app.status === "Pending").length}</div>
-            <div className="p-4 bg-green-500 text-white rounded">Approved: {appointments.filter(app => app.status === "Approved").length}</div>
-            <div className="p-4 bg-red-500 text-white rounded">Rejected: {appointments.filter(app => app.status === "Rejected").length}</div>
+            <div className="p-4 bg-blue-500 text-black text-2xl rounded">Total: {appointment.length}</div>
+            <div className="p-4 bg-yellow-500 text-black text-2xl rounded">Pending: {appointment.filter(app => app.status === "Pending").length}</div>
+            <div className="p-4 bg-green-500 text-black text-2xl rounded">Approved: {appointment.filter(app => app.status === "Approved").length}</div>
+            <div className="p-4 bg-red-500 text-black text-2xl rounded">Rejected: {appointment.filter(app => app.status === "Rejected").length}</div>
           </div>
 
       <div className="overflow-x-auto bg-gray-300 rounded-lg shadow-lg">
@@ -106,10 +155,10 @@ const Appointment = () => {
                 className="hover:bg-gray-50 transition"
               >
                 <td className="px-4 py-4">{item.doctor}</td>
-                <td className="px-4 py-4">{item.patientId}</td>
+                <td className="px-4 py-4">{item.patientForm.patientname}</td>
                 <td className="px-4 py-4">{item.date}</td>
                 <td className="px-4 py-4">{item.time}</td>
-                <td className="px-4 py-4">{item.reason}</td>
+                <td className="px-4 py-4">{item.patientForm.reason}</td>
                 <td className="px-4 py-4">
                   <span
                     className={`px-2 py-1 text-xs font-semibold rounded-full ${
@@ -123,7 +172,7 @@ const Appointment = () => {
                 </td>
                 <td className="px-4 py-4 flex space-x-3">
                   <motion.button
-                    onClick={() => setSelectedReason(contact)}
+                    onClick={() => setSelectedReason(item.patientForm.reason)}
                     whileHover={{ scale: 0.9 }}
                     whileTap={{ scale: 1.4 }}
                     className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
@@ -149,6 +198,7 @@ const Appointment = () => {
             ))}
           </tbody>
         </table>
+        {reasonPopUp()}
 
         {/* Pagination Controls */}
         <div className="flex justify-between mt-4 p-4">

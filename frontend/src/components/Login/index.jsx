@@ -76,9 +76,20 @@ function LoginPage() {
   return (
     <div className="min-h-screen mx-3 flex flex-col items-center justify-center ">
       <div className="w-full  max-w-lg  p-6 bg-white border border-blue-300 rounded-lg shadow-md my-10 mx-7">
-        <div className="p-2">
+        {/* <div className="p-2">
           {message}
-        </div>
+        </div> */}
+        {message && (
+          <div
+            className={`p-3 rounded-md text-center mb-4 ${
+              message.includes("success") || message.includes("Successfully")
+                ? "bg-green-100 text-green-800 border border-green-300"
+                : "bg-red-100 text-red-800 border border-red-300"
+            }`}
+          >
+            {message}
+          </div>
+        )}
         <div className="items-start mb-5 ">
           <button
             onClick={goToHome}
