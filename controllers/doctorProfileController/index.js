@@ -6,7 +6,7 @@ const Appointment = require('../../model/appointment');
 exports.addTimeSlot = async (req,res)=>{
     try{
       const {doctorId,slot}= req.body;
-      console.log(req.body);
+     
 
        const isoDate = `${slot.date}T00:00:00.000Z`;
        const transformedSlots =  {
@@ -23,12 +23,35 @@ exports.addTimeSlot = async (req,res)=>{
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+exports.addManyTimeSlot = async(req,res)=>{
+    try
+    {
+        const {doctorId,dates,slot}=req.body;
+
+        if (!doctorId || !dates || !slot || !slot.start || !slot.end) {
+            return res.status(400).json({ ok: false, message: "Missing required fields" });
+          }
+
+          const timeSlots = dates.map((date) => ({
+            doctorId,
+            date: new Date(`${date}T00:00:00.000Z`),
+            slot: [{ start: slot.start, end: slot.end }],
+          }));
+
+          const result = await TimeSlot.insertMany(timeSlots, { ordered: false });
+    
+          return res.status(201).json({message:'Time Slot added successfully..', ok:true});
+
+    }catch(error)
+    {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 exports.getAvailableTimeSlots = async(req,res)=>{
      try{
         const {id}=req.params;
         const results = await TimeSlot.find({doctorId:id});
-        console.log(results);
         if (!results || results.length === 0) {
             return res.status(404).json({ ok: false, message: 'No time slots found for the given doctor ID.' });
         }

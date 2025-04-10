@@ -1,7 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 const multer = require('multer');
-const  {addTimeSlot,getAvailableTimeSlots,getDoctorById,acceptAppointment,rejectAppointment, editProfile ,markCompleted}  =require('../../controllers/doctorProfileController');
+const  {addTimeSlot,getAvailableTimeSlots,getDoctorById,acceptAppointment,rejectAppointment, editProfile ,markCompleted,addManyTimeSlot}  =require('../../controllers/doctorProfileController');
 const storage = multer.diskStorage({
     destination: './uploads/',
     filename: (req,file,cb) =>{
@@ -12,6 +12,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post('/addSlot',addTimeSlot);
+router.post('/addManySlot',addManyTimeSlot);
 router.get('/getTimeSlots/:id',getAvailableTimeSlots);
 router.post('/getDoctorById',getDoctorById);
 router.get('/acceptAppointment/:id',acceptAppointment);

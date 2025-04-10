@@ -21,6 +21,13 @@ export default function DoctorSlotScheduler() {
     }
   );
 
+  const [manySlots,setManySlots]=useState({
+    startDate:"",
+    endDate:"",
+    startTime:"",
+    endTime:""
+  });
+
   useEffect(()=>{
      getAvailableTimeSlots();
   },[]);
@@ -88,6 +95,59 @@ export default function DoctorSlotScheduler() {
         });
   }
 
+  const addManyTimeSlot = async()=>{
+
+    setError("");
+    const { startDate, endDate, startTime, endTime } = manySlots;
+    if (!startDate || !endDate || !startTime || !endTime) {
+      return setError("Please fill in all fields for recurring slots.");
+    }
+    if (!isValidTime(startTime, endTime)) {
+      return setError("Start time must be before end time.");
+    }
+
+    if (!isValidTime(startTime, endTime)) {
+      return setError("Start time must be before end time.");
+    }
+
+    Swal.fire({
+          title: "Are you sure?",
+          text: "Do you really want to add Time slot ?",
+          icon: "warning",
+          confirmButtonText: "Yes, Add",
+          cancelButtonText: "No, Cancel",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+                 
+
+              const allDates = eachDayOfInterval({
+                start: parseISO(startDate),
+                end: parseISO(endDate),
+              }).map((day) => format(day, "yyyy-MM-dd"));
+
+              
+              const response = await axios.post("http://localhost:5001/doctorprofile/addManySlot",
+                {doctorId:activeUser._id,dates:allDates,slot:{start:startTime,end:endTime}}
+              );
+
+              if (response.data.ok) {
+                getAvailableTimeSlots();
+                Swal.fire(
+                  "Success",
+                  "The time slot  has been added.",
+                  "success"
+                );
+              } else {
+                Swal.fire("Error!", "Something went wrong. Try again.", "error");
+              }
+            } catch (error) {
+              Swal.fire("Error!", "Could not connect to the server.", "error");
+            }
+          }
+        });
+  }
+
 
   // const handleAddSingleSlot = () => {
   //   setError("");
@@ -114,39 +174,39 @@ export default function DoctorSlotScheduler() {
 
 
 
-  const handleApplySlotToAllDays = () => {
-    setError("");
-    if (!startDate || !endDate || !recurringStartTime || !recurringEndTime) {
-      return setError("Please fill in all fields.");
-    }
-    if (!isValidTime(recurringStartTime, recurringEndTime)) {
-      return setError("Start time must be before end time.");
-    }
-    const allDates = eachDayOfInterval({
-      start: parseISO(startDate),
-      end: parseISO(endDate),
-    });
-    const newSlots = allDates.map((day) => ({
-      date: format(day, "yyyy-MM-dd"),
-      startTime: recurringStartTime,
-      endTime: recurringEndTime,
-    }));
+  // const handleApplySlotToAllDays = () => {
+  //   setError("");
+  //   if (!startDate || !endDate || !recurringStartTime || !recurringEndTime) {
+  //     return setError("Please fill in all fields.");
+  //   }
+  //   if (!isValidTime(recurringStartTime, recurringEndTime)) {
+  //     return setError("Start time must be before end time.");
+  //   }
+  //   const allDates = eachDayOfInterval({
+  //     start: parseISO(startDate),
+  //     end: parseISO(endDate),
+  //   });
+  //   const newSlots = allDates.map((day) => ({
+  //     date: format(day, "yyyy-MM-dd"),
+  //     startTime: recurringStartTime,
+  //     endTime: recurringEndTime,
+  //   }));
 
-    const uniqueNewSlots = newSlots.filter(
-      (newSlot) =>
-        !slots.some(
-          (existing) =>
-            existing.date === newSlot.date &&
-            existing.startTime === newSlot.startTime
-        )
-    );
+    // const uniqueNewSlots = newSlots.filter(
+    //   (newSlot) =>
+    //     !slots.some(
+    //       (existing) =>
+    //         existing.date === newSlot.date &&
+    //         existing.startTime === newSlot.startTime
+    //     )
+    // );
 
-    setSlots([...slots, ...uniqueNewSlots]);
+   // setSlots([...slots, ...uniqueNewSlots]);
     // setRecurringStartTime("");
     // setRecurringEndTime("");
     // setStartDate("");
     // setEndDate("");
-  };
+  //};
 
   // const handleDeleteSlot = (index) => {
   //   const updatedSlots = [...slots];
@@ -251,8 +311,8 @@ export default function DoctorSlotScheduler() {
                 <input
                   type="date"
                   className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-green-500"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  value={manySlots.startDate}
+                  onChange={(e) => setManySlots({...manySlots,startDate:e.target.value})}
                 />
               </div>
               <div>
@@ -260,8 +320,8 @@ export default function DoctorSlotScheduler() {
                 <input
                   type="date"
                   className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-green-500"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  value={manySlots.endDate}
+                  onChange={(e) => setManySlots({...manySlots,endDate:e.target.value})}
                 />
               </div>
             </div>
@@ -272,8 +332,8 @@ export default function DoctorSlotScheduler() {
                 <input
                   type="time"
                   className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-green-500"
-                  value={recurringStartTime}
-                  onChange={(e) => setRecurringStartTime(e.target.value)}
+                  value={manySlots.startTime}
+                  onChange={(e) => setManySlots({...manySlots,startTime:e.target.value})}
                 />
               </div>
               <div>
@@ -281,14 +341,14 @@ export default function DoctorSlotScheduler() {
                 <input
                   type="time"
                   className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-green-500"
-                  value={recurringEndTime}
-                  onChange={(e) => setRecurringEndTime(e.target.value)}
+                  value={manySlots.endTime}
+                  onChange={(e) => setManySlots({...manySlots,endTime:e.target.value})}
                 />
               </div>
             </div>
             
             <button
-              onClick={handleApplySlotToAllDays}
+              onClick={addManyTimeSlot}
               className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center transition-colors"
             >
               <Clock size={18} className="mr-2" />
@@ -346,7 +406,7 @@ export default function DoctorSlotScheduler() {
                       </div>
                       <div key={index} className="text-gray-500 text-sm flex items-center">
                         <Clock size={14} className="mr-1" />
-                        {range.start} - {range.end}
+                        {range.start} - {range.end} ({range.status})
                       </div>
                        </>
                         ))
