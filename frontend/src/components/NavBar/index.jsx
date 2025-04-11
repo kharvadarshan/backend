@@ -107,12 +107,12 @@ const NavBar = () => {
           >
             About
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/admin"
             className="text-white hover:text-gray-400 text-lg no-underline"
           >
             Admin
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to="/contact"
             className="text-white hover:text-gray-400 text-lg no-underline"

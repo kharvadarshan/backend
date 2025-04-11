@@ -1,4 +1,5 @@
 import {
+  Navigate,
 //   useNavigate,
   Route,
   Routes,
@@ -60,13 +61,15 @@ const AllRoute = () => {
                         <Route path="/" element={<Home />} />
                         <Route path="/about" element={<About />}/>
                         <Route path="/all-doctors" element={<Doctor />} />
-                        <Route path="/admin/*" element={<Admin />} />
+                        { role === "admin" && <Route path="/admin/*" element={<Admin />} />}
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/all-doctors/:id" element={<DoctorDetails />} />
                         <Route path="/appointment/:id" element={<BookAppointment/>}/>
                         <Route path="/profile/*" element={<Profile/>}></Route>
                         <Route path="/feedbackform" element={<FeedbackForm/>}></Route>
                         <Route path="/chatbot" element={<Chatbot/>}></Route>
+
+                        <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
        
                             </div>
@@ -80,6 +83,10 @@ const AllRoute = () => {
 };
 
 export default AllRoute;
+
+
+
+
 
 
 // import {   Route, Routes, useLocation } from 'react-router-dom';
