@@ -54,7 +54,7 @@ const appointmentSchema = new mongoose.Schema({
       required: true,
     },
     slot:{
-      type:String,
+      type:mongoose.Schema.Types.ObjectId,
       required:true,
     },
     time: {
@@ -108,13 +108,11 @@ const appointmentSchema = new mongoose.Schema({
     feedbackForm:{
       rating:{
         type:Number,
-        required:true,
         min:1,
         max:5
     },
     feedback:{
         type:String,
-        required:true
     },
     createdAt:{
         type:Date,

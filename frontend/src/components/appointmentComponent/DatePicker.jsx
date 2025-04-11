@@ -1,37 +1,81 @@
-
-
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
 const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) => {
-  const staticTimeSlots = [
-    { id: "1", start: "09:00 AM", end: "09:30 AM", status: "Available" },
-    { id: "2", start: "10:00 PM", end: "10:30 PM", status: "Available" },
-    { id: "3", start: "10:00 PM", end: "10:30 PM", status: "Available" },
-    { id: "4", start: "10:00 PM", end: "10:30 PM", status: "Available" },
-    { id: "5", start: "10:00 PM", end: "10:30 PM", status: "Available" },
-    { id: "6", start: "10:00 PM", end: "10:30 PM", status: "Available" },
-    { id: "7", start: "11:00 PM", end: "11:30 PM", status: "Booked" },
-    { id: "8", start: "02:00 PM", end: "02:30 PM", status: "Available" },
-  ];
- 
-  const handleDateChange = (date) => {
+  // const staticTimeSlots = [
+  //   { id: "1", start: "09:00 AM", end: "09:30 AM", status: "Available" },
+  //   { id: "2", start: "10:00 PM", end: "10:30 PM", status: "Available" },
+  //   { id: "3", start: "10:00 PM", end: "10:30 PM", status: "Available" },
+  //   { id: "4", start: "10:00 PM", end: "10:30 PM", status: "Available" },
+  //   { id: "5", start: "10:00 PM", end: "10:30 PM", status: "Available" },
+  //   { id: "6", start: "10:00 PM", end: "10:30 PM", status: "Available" },
+  //   { id: "7", start: "11:00 PM", end: "11:30 PM", status: "Booked" },
+  //   { id: "8", start: "02:00 PM", end: "02:30 PM", status: "Available" },
+  // ];
+
+  const [timeSlots,setTimeSlots]=useState([]);
+
+
+  const handleDateChange=(date)=>{
+
+    const jsDate = new Date(date);
+    const isoDate= jsDate.toISOString();
     setAppointmentData((prev) => ({
       ...prev,
-      date: date,
+      date: isoDate,
     }));
-  };
-  const handleTimeSlotSelect = (time) => {
+  }
+ 
+ 
+
+  const getTimeSlots = async(date)=>{
     
+    const jsDate = new Date(date);
+    const formattedDate = jsDate.toISOString().split('T')[0];
+
+    try
+    {
+          const response = await axios.post('http://localhost:5001/doctorprofile/getTimeSlot',{
+                doctorId:appointmentData?.doctorId,
+                date:formattedDate,
+          });
+
+          if(response.data.ok)
+          {
+            setTimeSlots(response.data.result);
+          }
+          if(!response.data.ok){
+            setTimeSlots(response.data.result);
+          }
+    }catch(error)
+    {
+          console.log(error);
+          setTimeSlots([]);
+    }
+  }
 
 
+
+  useEffect(()=>{
+    if(appointmentData?.date)
+    {
+      getTimeSlots(appointmentData.date);
+      console.log(timeSlots);
+    }
+  },[appointmentData?.date]);
+
+
+  const handleTimeSlotSelect = (time) => {
     setAppointmentData((prev) => ({
       ...prev,
      time: `${time.start} - ${time.end}`,
-      slot: time.id,
+      slot: time._id,
     }));
   };
+
+
   return (
     <div className="flex flex-col items-center w-full p-6 bg-gray-100 min-h-screen">
       <h2 className="text-3xl font-bold text-indigo-700 mb-6 text-center">
@@ -44,7 +88,9 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
           <div className="bg-white p-4  rounded-lg shadow-md border border-blue-500 ">
             <DatePicker
              selected={appointmentData.date || new Date()}
-              onChange={handleDateChange}
+              onChange={(e)=>{
+                handleDateChange(e);
+              }}
               minDate={new Date()}
               dateFormat="MMMM d, yyyy"
               className="w-full p-2 text-base text-center border border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -55,27 +101,43 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
         {/* Time Slots */}
         <div className="w-full md:w-1/2">
           <h3 className="text-lg font-semibold text-center  text-gray-700 mb-5">Available Slots</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
-            {staticTimeSlots.map((time) => (
-              <button
-                key={time.id}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleTimeSlotSelect(time);
-                }}
-                className={`py-2 px-4 text-sm font-medium rounded-md border transition-all shadow-md ${
-                  time.status === "Booked"
-                    ? "bg-red-100 text-gray-400 cursor-not-allowed border-red-400"
-                    : appointmentData.slot === time.id
-                    ? "bg-indigo-600 text-white border-indigo-700 shadow-lg scale-105"
-                    : "bg-blue-50 hover:bg-indigo-100 border-gray-300"
-                }`}
-                disabled={time.status === "Booked"}
-              >
-                {time.start} - {time.end} ({time.status})
-              </button>
-            ))}
+
+          {timeSlots?.length === 0 && (
+            <p className="text-gray-500 text-center">
+               No time slots available.
+            </p>
+          )}
+
+          {timeSlots?.length > 0 && timeSlots?.map((time,index) => (
+            <>
+          <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
+              {
+                time?.slot?.map((slot1,index)=>(
+                  <>
+                            <button
+                                   key={index}
+                                   onClick={(e) => {
+                                     e.preventDefault();
+                                     handleTimeSlotSelect(slot1);
+                                   }}
+                                   className={`m-2 py-2 px-4 text-sm font-medium rounded-md border transition-all shadow-md ${
+                                     time.status === "Booked"
+                                       ? "bg-red-100 text-gray-400 cursor-not-allowed border-red-400"
+                                       : appointmentData.slot === slot1._id
+                                       ? "bg-indigo-600 text-white border-indigo-700 shadow-lg scale-105"
+                                       : "bg-blue-50 hover:bg-indigo-100 border-gray-300"
+                                   }`}
+                                   disabled={slot1.status === "Booked"}
+                                 >
+                                   {slot1.start} - {slot1.end} ({slot1.status})
+                                 </button>
+                  </>
+                ))
+              }
+           
           </div>
+          </>
+        ))}
         </div>
       </div>
 

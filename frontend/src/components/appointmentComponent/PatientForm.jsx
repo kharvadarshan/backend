@@ -29,6 +29,7 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
   };
 
   const handleSubmit = async (appointment) => {
+
     try {
       const response = await axios.post(
         "http://localhost:5001/api/appointments",

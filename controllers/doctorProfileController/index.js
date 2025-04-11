@@ -1,6 +1,7 @@
 const TimeSlot = require('../../model/timeSlot');
 const Doctor = require('../../model/doctor');
 const Appointment = require('../../model/appointment');
+const { default: mongoose } = require('mongoose');
 
 
 exports.addTimeSlot = async (req,res)=>{
@@ -14,7 +15,7 @@ exports.addTimeSlot = async (req,res)=>{
           end: slot.endTime,
         }
       
-       const timeSlots = new TimeSlot({doctorId:doctorId,date:isoDate,slot:[transformedSlots]});
+       const timeSlots = new TimeSlot({doctorId:doctorId,date:isoDate,slot:transformedSlots});
        await timeSlots.save();
        res.status(201).json({message:'Time Slot added successfully..', ok:true});
 
@@ -42,6 +43,32 @@ exports.addManyTimeSlot = async(req,res)=>{
     
           return res.status(201).json({message:'Time Slot added successfully..', ok:true});
 
+    }catch(error)
+    {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+
+exports.getTimeSlots = async(req,res)=>{
+    try
+    {
+
+        const { doctorId,date }=req.body;
+       
+       if(!mongoose.Types.ObjectId.isValid(doctorId) || !date)
+       {
+           return res.status(400).json({ok:false,message:"Doctor id and date field is required"});
+       }
+
+       const isoDate = `${date}T00:00:00.000Z`;
+        const results = await TimeSlot.find({doctorId,date:isoDate});
+        if (!results || results.length === 0) {
+            return res.status(404).json({ ok: false, message: 'No time slots found for the given doctor ID.',result:results });
+        }
+        
+        return res.status(201).json({ok:true,result:results});
+             
     }catch(error)
     {
         return res.status(500).json({ message: 'Internal server error' });
