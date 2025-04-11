@@ -20,7 +20,7 @@ const Appointment = () => {
   const getAllAppointments = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5001/api/getAllAppointment"
+        "http://localhost:5001/admin/getAllAppointment"
       );
       if (response.data.Ok) {
         setAppointments(response.data.result);

@@ -1,10 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from "axios";
+import {toast} from "react-toastify";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { resetIsLogin,resetRole } from '../../../slices/loginSlice';
+import { resetUser } from '../../../slices/userAuthSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+
 
 const Sidebar = () => {
   const menu = [  "Doctors List", "Add Doctor", "All Contacts" , "All Patient"];
   const [isOpen, setIsOpen] = useState(false);
-
+   
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -13,13 +24,39 @@ const Sidebar = () => {
     setIsOpen(false);
   };
 
+  const logout = async () => {
+  
+      try {
+       
+        const result = await axios.post(
+          "http://localhost:5001/user/logout",
+          null,
+          {
+            withCredentials: true,
+          }
+        );
+        if (result.data.ok) {
+          toast.success("Logout Successfully...!", {
+            position: "top-right",
+          });
+          // localStorage.removeItem("token");
+          dispatch(resetIsLogin());
+          dispatch(resetUser());
+          dispatch(resetRole());
+          navigate("/");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
   const style1 = " left-[150px] bg-transparent text-2xl md:top-[94px] md:left-[200px]";
   const style2 = " left-4  bg-blue-500 text-2xl p-[6px]";
   const btnStyle = `${isOpen ? style1 : style2}`
 
   return (
     
-      <div>
+      <div className='min-h-screen'>
         
       {/* Hamburger Button for Mobile */}
       <button
@@ -57,6 +94,13 @@ const Sidebar = () => {
                 )
               )
             }
+            <button
+                        onClick={logout}
+                        className="flex items-center p-3 text-gray-700 hover:bg-red-100 rounded-lg w-full"
+                      >
+                        <FontAwesomeIcon icon={faRightFromBracket} className="text-red-500 text-lg mr-3" />
+                        Logout
+                      </button>
           </ul>
         </div>
       </div>

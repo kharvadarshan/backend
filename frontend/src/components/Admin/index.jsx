@@ -9,8 +9,8 @@ import ALLPatient from "./AllPatient";
 const Admin = () => {
   return (
     <>
-      <div className="flex flex-row justify-start ">
-        <div className="w-0 lg:w-64 z-50">
+      <div className="flex flex-row justify-start h-full min-h-screen">
+        <div className="w-0 lg:w-64 z-50 ">
           <SideBar />
         </div>
 

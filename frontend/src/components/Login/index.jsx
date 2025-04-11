@@ -37,7 +37,7 @@ function LoginPage() {
 
       if (result.data.ok) {
         setMessage(result.data.message);
-        localStorage.setItem("token", result.data.token);
+        // localStorage.setItem("token", result.data.token);
         dispatch(setIsLogin());
         dispatch(setRole(result.data.user.role));
         dispatch(setUser(result.data.user));
@@ -47,6 +47,10 @@ function LoginPage() {
         if (result.data.user.role === "doctor") {
           dispatch(setDoctor(result.data.user.doctor));
           navigate("/doctorprofile");
+        }else if(result.data.user.role==="admin"){
+
+          navigate('/admin');
+
         } else {
           setMessage(result.data.message);
           navigate("/");

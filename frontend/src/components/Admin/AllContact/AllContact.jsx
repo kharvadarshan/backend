@@ -15,7 +15,7 @@ const ContactList = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/api/allcontacts");
+      const response = await axios.get("http://localhost:5001/admin/allcontacts");
       const sortedContacts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setContacts(sortedContacts);
     } catch (error) {

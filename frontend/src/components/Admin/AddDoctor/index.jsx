@@ -27,7 +27,6 @@ const AddDoctor = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Doctor Data:", formData);
-    alert("Doctor added successfully!");
     setFormData({
       name: "",
       specialization: "",

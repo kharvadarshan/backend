@@ -20,24 +20,22 @@ const Profile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const user = useSelector((state)=>state.user.user);
    console.log(user);
+   
   const logout = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
+     
       const result = await axios.post(
         "http://localhost:5001/user/logout",
         null,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           withCredentials: true,
         }
       );
       if (result.data.ok) {
         // toast.success("Logout Successfully...!", { position: "top-right" });
         toast("success","Logout Successfully...!");
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetRole());

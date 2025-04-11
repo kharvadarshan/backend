@@ -21,7 +21,7 @@ const DoctorList = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/api/doctors");
+      const response = await axios.get("http://localhost:5001/admin/doctors");
       setDoctors(response.data);
     } catch (error) {
       console.error("Error fetching doctors:", error);
