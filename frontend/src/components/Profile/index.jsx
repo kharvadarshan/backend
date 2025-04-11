@@ -8,12 +8,14 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { resetIsLogin, resetRole } from "../../slices/loginSlice.jsx";
 import { resetUser } from "../../slices/userAuthSlice.jsx";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { useState } from "react";
 import DeletedAppointments from "./DeletedAppointments/index.jsx";
+import { useToast } from "../Notification/ToastProvider.jsx";
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const toast = useToast();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const user = useSelector((state)=>state.user.user);
@@ -33,7 +35,8 @@ const Profile = () => {
         }
       );
       if (result.data.ok) {
-        toast.success("Logout Successfully...!", { position: "top-right" });
+        // toast.success("Logout Successfully...!", { position: "top-right" });
+        toast("success","Logout Successfully...!");
         localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());

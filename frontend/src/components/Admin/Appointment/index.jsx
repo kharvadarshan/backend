@@ -1,29 +1,28 @@
 import { motion } from "framer-motion";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Appointment = () => {
   const [selectedReason, setSelectedReason] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Set items per page
+  const itemsPerPage = 3; // Set items per page
 
-
-  const [appointment,setAppointment]=useState([]);
-    useEffect(()=>{
-      getAllAppointment();
-    },[])
-    const getAllAppointment = async()=>{
-      try{
-        const response = await axios.get("http://localhost:5001/api/getAllAppointment");
-        if(response.data.Ok){
+  const [appointment, setAppointment] = useState([]);
+  useEffect(() => {
+    getAllAppointment();
+  }, []);
+  const getAllAppointment = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/api/getAllAppointment"
+      );
+      if (response.data.Ok) {
         setAppointment(response.data.result);
-        }
-      }catch(error)
-      {
-        console.log(error);
       }
+    } catch (error) {
+      console.log(error);
     }
-
+  };
 
   const tableData = [
     "Doctor",
@@ -51,17 +50,9 @@ const Appointment = () => {
 
   const totalPages = Math.ceil(appointment.length / itemsPerPage);
 
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-    const reasonPopUp = () => {
+  const reasonPopUp = () => {
     if (!selectedReason) return null; // Prevents rendering when no reason is selected
-  
+
     return (
       <>
         {/* Overlay */}
@@ -69,7 +60,7 @@ const Appointment = () => {
           className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-40"
           onClick={() => setSelectedReason(null)}
         ></div>
-  
+
         {/* Popup Box */}
         <motion.div
           className="fixed bg-white shadow-2xl p-6 rounded-lg w-[90%] md:max-w-[90%] sm:w-[500px] max-w-[78%] z-50 md:left-32 left-9 lg:left-96 xl:left-[40%]"
@@ -93,10 +84,10 @@ const Appointment = () => {
           >
             ✖
           </button>
-  
+
           {/* Title */}
           <h2 className="text-2xl font-semibold mb-4 text-center">Reason</h2>
-  
+
           {/* Content */}
           <div
             className="overflow-y-auto px-2"
@@ -110,13 +101,9 @@ const Appointment = () => {
       </>
     );
   };
-  
-
-  
 
   return (
     <div className="max-w-7xl  mx-auto p-4">
-    
       <motion.h2
         className="text-red-600 pt-14 md:pt-7 lg:p-3 text-center text-2xl md:text-4xl font-bold mb-6"
         initial={{ opacity: 0, y: -20 }}
@@ -125,11 +112,22 @@ const Appointment = () => {
         Latest Appointments
       </motion.h2>
       <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="p-4 bg-blue-500 text-black text-2xl rounded">Total: {appointment.length}</div>
-            <div className="p-4 bg-yellow-500 text-black text-2xl rounded">Pending: {appointment.filter(app => app.status === "Pending").length}</div>
-            <div className="p-4 bg-green-500 text-black text-2xl rounded">Approved: {appointment.filter(app => app.status === "Approved").length}</div>
-            <div className="p-4 bg-red-500 text-black text-2xl rounded">Rejected: {appointment.filter(app => app.status === "Rejected").length}</div>
-          </div>
+        <div className="p-4 bg-blue-500 text-black text-2xl rounded">
+          Total: {appointment.length}
+        </div>
+        <div className="p-4 bg-yellow-500 text-black text-2xl rounded">
+          Pending:{" "}
+          {appointment.filter((app) => app.status === "Pending").length}
+        </div>
+        <div className="p-4 bg-green-500 text-black text-2xl rounded">
+          Approved:{" "}
+          {appointment.filter((app) => app.status === "Approved").length}
+        </div>
+        <div className="p-4 bg-red-500 text-black text-2xl rounded">
+          Rejected:{" "}
+          {appointment.filter((app) => app.status === "Rejected").length}
+        </div>
+      </div>
 
       <div className="overflow-x-auto bg-gray-300 rounded-lg shadow-lg">
         <table className="min-w-full divide-y divide-gray-300">
@@ -199,25 +197,29 @@ const Appointment = () => {
           </tbody>
         </table>
         {reasonPopUp()}
+      </div>
 
-        {/* Pagination Controls */}
-        <div className="flex justify-between mt-4 p-4">
+      {/* Pagination */}
+      <div className="flex justify-center mt-8">
+        <div className="flex items-center justify-center space-x-3 border border-gray-300 rounded-lg px-6 py-3 shadow-lg bg-white w-full max-w-md">
           <button
-            onClick={prevPage}
+            className="px-4 py-2 rounded-full text-sm md:text-xl font-semibold bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-500 text-white rounded disabled:opacity-50"
           >
-            Previous
+            ◀ Prev
           </button>
-          <span className="text-lg font-semibold">
+          <span className="px-4 py-2 md:text-xl  rounded-full bg-indigo-500 text-white text-sm font-semibold">
             Page {currentPage} of {totalPages}
           </span>
           <button
-            onClick={nextPage}
+            className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 hover:bg-gray-300 md:text-xl  disabled:opacity-50"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-gray-500 text-white rounded disabled:opacity-50"
           >
-            Next
+            Next ▶
           </button>
         </div>
       </div>
@@ -226,13 +228,6 @@ const Appointment = () => {
 };
 
 export default Appointment;
-
-
-
-
-
-
-
 
 // import { motion } from "framer-motion";
 // import { useState,useEffect } from "react";
@@ -247,7 +242,7 @@ export default Appointment;
 //     "Patient",
 //     "Date",
 //     "Time",
-//     "Reason", 
+//     "Reason",
 //     "Status",
 //     "Action",
 //   ];
@@ -271,7 +266,7 @@ export default Appointment;
 
 //   const reasonPopUp = () => {
 //     if (!selectedReason) return null; // Prevents rendering when no reason is selected
-  
+
 //     return (
 //       <>
 //         {/* Overlay */}
@@ -279,7 +274,7 @@ export default Appointment;
 //           className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-40"
 //           onClick={() => setSelectedReason(null)}
 //         ></div>
-  
+
 //         {/* Popup Box */}
 //         <motion.div
 //           className="fixed bg-white shadow-2xl p-6 rounded-lg w-[90%] md:max-w-[90%] sm:w-[500px] max-w-[78%] z-50 md:left-32 left-9 lg:left-96 xl:left-[40%]"
@@ -303,10 +298,10 @@ export default Appointment;
 //           >
 //             ✖
 //           </button>
-  
+
 //           {/* Title */}
 //           <h2 className="text-2xl font-semibold mb-4 text-center">Reason</h2>
-  
+
 //           {/* Content */}
 //           <div
 //             className="overflow-y-auto px-2"
@@ -320,8 +315,6 @@ export default Appointment;
 //       </>
 //     );
 //   };
-  
-  
 
 //   return (
 //     <div className="max-w-7xl mx-auto p-4">
@@ -392,7 +385,7 @@ export default Appointment;
 //                     }`}
 //                   >
 //                    {app.status}
-//                   </span> 
+//                   </span>
 //                 </td>
 //                 <td className="px-4 py-4 flex space-x-3">
 //                   <motion.button
