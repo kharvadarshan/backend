@@ -202,7 +202,7 @@ const Appointment = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-indigo-100">
             <tr>
-              {["Doctor", "Patient", "Date", "Time", "Reason", "Status", "Reason", "Edit", "Delete"].map((heading, index) => (
+              {["Doctor", "Patient", "Date", "Time", "Reason", "Status", "Reason", "Delete"].map((heading, index) => (
                 <th
                   key={index}
                   className="px-4 py-3 text-center text-xs font-semibold text-indigo-700 uppercase tracking-wider"
@@ -249,15 +249,6 @@ const Appointment = () => {
                     className="bg-yellow-500 text-white px-4 py-2 rounded-xl hover:bg-yellow-600 transition"
                   >
                     Reason
-                  </motion.button>
-                </td>
-                <td className="px-4">
-                  <motion.button
-                    whileHover={{ scale: 0.9 }}
-                    whileTap={{ scale: 1.1 }}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition"
-                  >
-                    Edit
                   </motion.button>
                 </td>
                 <td className="px-4">
