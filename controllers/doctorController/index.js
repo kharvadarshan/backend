@@ -3,7 +3,6 @@
 const mongoose = require('mongoose');
 const Doctor = require('../../model/doctor'); // Adjust the path as needed
 
-// Get all doctors
 exports.getAllDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find({});

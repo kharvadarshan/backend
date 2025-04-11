@@ -43,20 +43,16 @@ const DoctorProfile = () => {
   const logout = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
       const result = await axios.post(
         "http://localhost:5001/user/logout",
         null,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           withCredentials: true,
         }
       );
       if (result.data.ok) {
         toast.success("Logout Successfully...!", { position: "top-right" });
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetDoctor());

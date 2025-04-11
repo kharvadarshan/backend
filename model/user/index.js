@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, allowNull: false },
     password: { type: String, required: true, allowNull: false },
     role : { type: String, enum : ['user','doctor','admin'],required:true},
-    image: { type: String, required: false,default:""}
+    image: { type: String, required: false,default:""},
+    isBloked: { type:Boolean,required:false,default:false}
 });
 
 userSchema.plugin(AutoIncrement, { inc_field: 'userId' });

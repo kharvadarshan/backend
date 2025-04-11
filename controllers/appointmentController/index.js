@@ -33,21 +33,7 @@ exports.createAppointment = async (req, res) => {
 };
 
 
-exports.getAllAppointments= async(req,res)=>{
-  try
-  {
-    const result = await AppointmentModel.find({}).sort({ createdAt:-1});
 
-    if (!result || result.length === 0) {
-      return res.status(404).json({message : "Appointment not Found."})
-    }
-    res.status(201).json({Ok: true,result:result});
-
-  }catch(error)
-  {
-    res.status(500).json({ error: error.message });
-  }
-}
 
 
 exports.getAllAppointmentsByDoctorId= async(req,res)=>{

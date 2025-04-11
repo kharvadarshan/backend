@@ -35,9 +35,9 @@ const MyAppointments = () => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
   const [filterYear, setFilterYear] = useState("All");
-  const [selectedDetail, setSelectedDetail] = useState(null);
-  const [selectedReport, setSelectedReport] = useState(null);
-  const [selectedReview, setSelectedReview] = useState(null);
+  // const [selectedDetail, setSelectedDetail] = useState(null);
+  // const [selectedReport, setSelectedReport] = useState(null);
+  // const [selectedReview, setSelectedReview] = useState(null);
 
  
 

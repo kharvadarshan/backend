@@ -49,7 +49,6 @@ exports.sendOTP = async(req,res) =>{
    try{
 
       const {email } = req.body;
-      console.log(email);
 
    if(!email) {
       return res.status(400).json({message:"Email is required"});
@@ -66,11 +65,11 @@ exports.sendOTP = async(req,res) =>{
    };
     
    await transporter.sendMail(mailOptions);
-   res.json({message:"OTP sent successfully!",ok:true});
+   return res.json({message:"OTP sent successfully!",ok:true});
 
    }catch(error)
    {
-      res.status(500).json({message:"Error sending OTP",error});
+      return res.status(500).json({message:"Error sending OTP",error});
    }
 };
 
@@ -83,14 +82,14 @@ exports.verifyOTP = async(req,res)=>{
         
         if(!storedOtp || storedOtp !== otp)
         {
-          res.status(400).json({message:"Invalid or expired OTP."});
+          return res.status(400).json({message:"Invalid or expired OTP."});
         }
 
         await redisClient.del(email);
-        res.json({message:"OTP verified successfully!",ok:true});
+        return res.json({message:"OTP verified successfully!",ok:true});
    }catch(error)
    {
-      res.status(500).json({message:"Error during OTP verification!"});
+      return res.status(500).json({message:"Error during OTP verification!"});
    }
 }
 
@@ -122,9 +121,8 @@ exports.registerUser = async (req,res)=>{
 
 
 exports.logout = (req,res)=>{
-  // console.log(req.session);
-   if (req.session.user) {
-      req.session.destroy((err) => {
+      res.clearCookie('token');
+      req.session?.destroy?.((err) => {
          if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error logging out' });
@@ -132,10 +130,7 @@ exports.logout = (req,res)=>{
          res.clearCookie('connect.sid'); // Clear session cookie
          res.status(200).json({ message: 'Logged out successfully', ok: true });
       });
-   } else {
-
-      res.status(400).json({ message: 'No active session found' });
-   }
+   
 }
 
 
@@ -143,11 +138,16 @@ exports.logout = (req,res)=>{
 exports.validateLogin = async (req,res)=>{
    const {email,password}=req.body;
    try{
-      const userCredential = await User.findOne( {email });
+      const userCredential = await User.findOne( {email});
 
       if(!userCredential)
       {
          return res.status(400).json({ok:false, message: 'User Not Found.' });
+      }
+
+      if(userCredential.isBloked)
+      {
+         return res.status(403).json({ok:false, message: 'User is Blocked.' });
       }
       
             const isMatch = await bcrypt.compare(password,userCredential.password);
@@ -157,11 +157,24 @@ exports.validateLogin = async (req,res)=>{
                return res.status(401).json({ok:false,message:'Invalid Credentials.'});
             }
           
+            const payload = {
+               id:userCredential._id,
+               email:userCredential.email,
+               role:userCredential.role,
+            };
+
                const token = JWT.sign(
-                  { id: userCredential._id, email: userCredential.email, role: userCredential.role },
+                  payload,
                   tokenSignature,
                   { expiresIn: '1d' }
               );
+
+              res.cookie('token',token,{
+               httpOnly:true,
+               secure:process.env.NODE_ENV === 'production',
+               sameSite:'strict',
+               maxAge: 24*60*60*1000,
+              });
              
               req.session.user = {
                id: userCredential._id,
@@ -170,8 +183,8 @@ exports.validateLogin = async (req,res)=>{
                role: userCredential.role,
                doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
               };
-             
-   return  res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user});   
+       
+    return  res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user});   
      
    }catch(error)
    {

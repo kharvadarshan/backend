@@ -24,16 +24,12 @@ const NavBar = () => {
   const logout = async () => {
 
     try {
-      const token = localStorage.getItem("token");
-
-      console.log(token);
+     
       const result = await axios.post(
         "http://localhost:5001/user/logout",
         null,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          
           withCredentials: true,
         }
       );
@@ -41,7 +37,7 @@ const NavBar = () => {
         toast.success("Logout Successfully...!", {
           position: "top-right",
         });
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetRole());

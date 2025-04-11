@@ -5,7 +5,10 @@ const doctorProfileRoutes = require('./routes/doctorProfileRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const userAuth = require('./routes/userAuth');
 const profile = require('./routes/profileRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const app = express();
+
+const cookieParser=require('cookie-parser');
 const MongoStore = require('connect-mongo');
 const cors=require('cors');
 const multer=require('multer');
@@ -20,6 +23,7 @@ app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded form
 
 
 
+app.use(cookieParser());
 
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 
@@ -31,9 +35,14 @@ mongoose.connect(process.env.MONGODB_URL)
       session({
           secret: 'dash', // Replace with a secure key
           resave: false,
-          saveUninitialized: true,
+          saveUninitialized: false,
+          cookie:{
+            httpOnly:true,
+            secure:process.env.NODE_ENV === 'production',
+            sameSite:'strict',
+            maxAge: 24 * 60 * 60 * 1000
+          },
           store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/session_db' }),
-          cookie: { secure: false,httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }, // Set to true if using HTTPS
       })
     )
     
@@ -43,6 +52,9 @@ app.use('/user',userAuth);
 app.use('/doctorprofile',doctorProfileRoutes);
 app.use('/appointments',appointmentRoutes)
 app.use('/profile',profile);
+
+app.use('/admin',adminRoutes);
+
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
 });
