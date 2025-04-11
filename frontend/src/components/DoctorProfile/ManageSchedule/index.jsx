@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { format, eachDayOfInterval, parseISO } from "date-fns";
-import { Trash2, Plus, Calendar, Clock, ChevronRight } from "lucide-react";
+import { Trash2, Plus, Calendar, Clock } from "lucide-react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 export default function DoctorSlotScheduler() {
   // const [selectedDate, setSelectedDate] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  //const [startDate, setStartDate] = useState("");
+ // const [endDate, setEndDate] = useState("");
   // const [singleDayStartTime, setSingleDayStartTime] = useState(""); // Changed
   // const [singleDayEndTime, setSingleDayEndTime] = useState(""); // Changed
-  const [recurringStartTime, setRecurringStartTime] = useState(""); // Changed
-  const [recurringEndTime, setRecurringEndTime] = useState(""); // Changed
+  //const [recurringStartTime, setRecurringStartTime] = useState(""); // Changed
+ // const [recurringEndTime, setRecurringEndTime] = useState(""); // Changed
   const [slots, setSlots] = useState(
     {
        date:"",
@@ -89,7 +89,7 @@ export default function DoctorSlotScheduler() {
                 Swal.fire("Error!", "Something went wrong. Try again.", "error");
               }
             } catch (error) {
-              Swal.fire("Error!", "Could not connect to the server.", "error");
+              Swal.fire("Error!", "Could not connect to the server.", error);
             }
           }
         });
@@ -142,7 +142,7 @@ export default function DoctorSlotScheduler() {
                 Swal.fire("Error!", "Something went wrong. Try again.", "error");
               }
             } catch (error) {
-              Swal.fire("Error!", "Could not connect to the server.", "error");
+              Swal.fire("Error!", "Could not connect to the server.", error);
             }
           }
         });
@@ -208,17 +208,42 @@ export default function DoctorSlotScheduler() {
     // setEndDate("");
   //};
 
-  // const handleDeleteSlot = (index) => {
-  //   const updatedSlots = [...slots];
-  //   updatedSlots.splice(index, 1);
-  //   setSlots(updatedSlots);
-  // };
+  const handleDeleteSlot = async(id) => {
 
-  // const handleClearAll = () => {
-  //   if (confirm("Are you sure you want to clear all slots?")) {
-  //     setSlots([]);
-  //   }
-  // };
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete Time slot ?",
+      icon: "warning",
+      confirmButtonText: "Yes, Add",
+      cancelButtonText: "No, Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+ 
+          const response = await  axios.get('http://localhost:5001/doctorprofile/deleteTimeSlot',
+                    {params:
+                      {
+                        id:id,
+                        doctorId:activeUser._id
+                      }});
+
+          if (response.data.ok) {
+            getAvailableTimeSlots();
+            Swal.fire(
+              "Success",
+              "The time slot  has been deleted.",
+              "success"
+            );
+          } else {
+            Swal.fire("Error!", "Something went wrong. Try again.", "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "Could not connect to the server.", error);
+        }
+      }
+    });
+  };
+
 
   return (
     <div className="max-w-4xl mx-auto p-4 font-sans text-gray-800">
@@ -393,14 +418,16 @@ export default function DoctorSlotScheduler() {
                 key={index}
                 className="py-4 px-3 hover:bg-gray-50 rounded-lg transition-colors"
               >
+               {
+                timeSlot?.slot?.map((range,index)=>(
+                <>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="bg-indigo-100 p-2 rounded-lg mr-4">
                       <Calendar className="text-indigo-600" size={18} />
                     </div>
                     <div>
-                      {timeSlot?.slot?.map((range,index)=>(
-                        <>
+                     
                       <div className="font-medium text-gray-900">
                         {format(parseISO(timeSlot.date), "EEEE, MMMM d, yyyy")}
                       </div>
@@ -408,19 +435,20 @@ export default function DoctorSlotScheduler() {
                         <Clock size={14} className="mr-1" />
                         {range.start} - {range.end} ({range.status})
                       </div>
-                       </>
-                        ))
-                      }
+                      
                     </div>
                   </div>
                   <button
-                    // onClick={() => handleDeleteSlot(index)}
+                    onClick={() => handleDeleteSlot(range._id)}
                     className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
                     aria-label="Delete slot"
                   >
                     <Trash2 size={18} />
                   </button>
                 </div>
+                </>
+                        ))
+                      }
               </li>
             ))}
           </ul>

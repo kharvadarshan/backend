@@ -47,6 +47,7 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
             setTimeSlots(response.data.result);
           }
           if(!response.data.ok){
+            setTimeSlots([]);
             setTimeSlots(response.data.result);
           }
     }catch(error)
@@ -112,10 +113,10 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
             <>
           <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
               {
-                time?.slot?.map((slot1,index)=>(
+                time?.slot?.map((slot1,index1)=>(
                   <>
                             <button
-                                   key={index}
+                                   key={index1}
                                    onClick={(e) => {
                                      e.preventDefault();
                                      handleTimeSlotSelect(slot1);

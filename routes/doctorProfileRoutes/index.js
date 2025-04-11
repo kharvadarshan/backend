@@ -10,7 +10,8 @@ const  {
      editProfile ,
      markCompleted,
      addManyTimeSlot, 
-     getTimeSlots}  =require('../../controllers/doctorProfileController');
+     getTimeSlots,
+     deleteTimeSlot}  =require('../../controllers/doctorProfileController');
 
 const storage = multer.diskStorage({
     destination: './uploads/',
@@ -30,6 +31,6 @@ router.get('/acceptAppointment/:id',acceptAppointment);
 router.get('/rejectAppointment/:id',rejectAppointment);
 router.get('/markCompleted/:id',markCompleted);
 router.post('/editProfile',upload.single('image'),editProfile);
-
+router.get('/deleteTimeSlot',deleteTimeSlot);
 
 module.exports = router;

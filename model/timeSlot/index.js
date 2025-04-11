@@ -18,6 +18,11 @@ const timeRangeSchema = new mongoose.Schema({
       type:mongoose.Schema.Types.ObjectId,
       required:false,
       default:null
+    },
+    isDelete:{
+        type:Boolean,
+        required:false,
+        default:false
     }
 });
 

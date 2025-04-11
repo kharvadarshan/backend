@@ -96,7 +96,7 @@ const DoctorProfile = () => {
         <nav className="flex flex-col space-y-3">
           <NavLink
             to="/doctorprofile/editprofile"
-            className="flex items-center p-2 rounded-lg hover:bg-gray-700"
+            className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"
           >
             <FontAwesomeIcon
               icon={faPenToSquare}
@@ -106,7 +106,7 @@ const DoctorProfile = () => {
           </NavLink>
           <NavLink
             to="/doctorprofile/bookings"
-            className="flex items-center p-2 rounded-lg hover:bg-gray-700"
+            className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"
           >
             <FontAwesomeIcon
               icon={faCalendarWeek}
@@ -116,14 +116,14 @@ const DoctorProfile = () => {
           </NavLink>
           <NavLink
             to="/doctorprofile/manageschedule"
-            className="flex items-center p-2 rounded-lg hover:bg-gray-700"
+            className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"
           >
             <FontAwesomeIcon icon={faBell} className="text-blue-400 mr-2" />{" "}
-            Notifications
+            Scheduler
           </NavLink>
           <NavLink
             to="/doctorprofile/reports"
-            className="flex items-center p-2 rounded-lg hover:bg-gray-700"
+            className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"
           >
             <FontAwesomeIcon
               icon={faFileMedical}
@@ -133,7 +133,7 @@ const DoctorProfile = () => {
           </NavLink>
           <button
             onClick={logout}
-            className="flex items-center p-2 rounded-lg hover:bg-gray-700"
+            className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"
           >
             <FontAwesomeIcon
               icon={faRightFromBracket}

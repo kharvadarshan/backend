@@ -36,7 +36,7 @@ exports.addManyTimeSlot = async(req,res)=>{
           const timeSlots = dates.map((date) => ({
             doctorId,
             date: new Date(`${date}T00:00:00.000Z`),
-            slot: [{ start: slot.start, end: slot.end }],
+            slot: { start: slot.start, end: slot.end },
           }));
 
           const result = await TimeSlot.insertMany(timeSlots, { ordered: false });
@@ -62,9 +62,10 @@ exports.getTimeSlots = async(req,res)=>{
        }
 
        const isoDate = `${date}T00:00:00.000Z`;
-        const results = await TimeSlot.find({doctorId,date:isoDate});
+        const results = await TimeSlot.find({doctorId,date:isoDate,"slot.isDelete":false});
+
         if (!results || results.length === 0) {
-            return res.status(404).json({ ok: false, message: 'No time slots found for the given doctor ID.',result:results });
+            return res.status(201).json({ ok: false, message: 'No time slots found for the given doctor ID.',result:results });
         }
         
         return res.status(201).json({ok:true,result:results});
@@ -75,10 +76,42 @@ exports.getTimeSlots = async(req,res)=>{
     }
 }
 
+
+exports.deleteTimeSlot = async(req,res)=>{
+    try
+    {
+          const {doctorId,id} = req.query;
+             console.log(req.query);
+
+          const results = await TimeSlot.updateOne( 
+            { 
+                doctorId:doctorId,
+                "slot._id":id,
+            },
+            {
+               $set:{
+                "slot.$.isDelete":true
+               }
+            }
+          );
+
+          if(results.modifiedCount>0)
+          {
+            return res.status(201).json({ok:true,message:"Time slot deleted successfully."});
+          }
+
+    }catch(error)
+    {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+
+
 exports.getAvailableTimeSlots = async(req,res)=>{
      try{
         const {id}=req.params;
-        const results = await TimeSlot.find({doctorId:id});
+        const results = await TimeSlot.find({doctorId:id,"slot.isDelete":false});
         if (!results || results.length === 0) {
             return res.status(404).json({ ok: false, message: 'No time slots found for the given doctor ID.' });
         }
@@ -110,7 +143,6 @@ exports.acceptAppointment = async(req,res)=>{
             $set:{status:"Confirmed"}
         });
 
-        console.log(result);
 
         if(result.modifiedCount > 0)
         {
