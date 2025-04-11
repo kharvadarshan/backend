@@ -136,7 +136,7 @@ const MyAppointments = () => {
     <motion.button
       onClick={onClick}
       whileHover={{ scale: 1.1 }}
-      className= {`${className} mt-1  text-black px-4 py-2 rounded-lg shadow-md transition w-full sm:w-36 flex items-center justify-center gap-2 `}
+      className= {`${className} mt-1 text-black px-4 py-2 rounded-lg shadow-md transition w-full sm:w-36 flex items-center justify-center gap-2 `}
     >
       {icon}
       {label}
@@ -419,7 +419,7 @@ const MyAppointments = () => {
                     <td className="p-3 border">
 
                       { 
-                        appointment.status==="Completed" && (   
+                        appointment.status==="Completed" ? (   
                          !appointment.feedbackForm?.rating ? 
                           (
                                 
@@ -431,6 +431,12 @@ const MyAppointments = () => {
                             renderRating(appointment.feedbackForm.rating)
                           )
 
+                      ):(
+                       
+                        (renderViewButton("Give Feedback", <Star size={16} />,"bg-yellow-300 ", () =>{
+                                                   setSelectedAppointment(appointment);
+                                                    setShowFeedbackForm(true);})
+                                    )
                       )}
                     </td>
                     <td className="p-3 border">

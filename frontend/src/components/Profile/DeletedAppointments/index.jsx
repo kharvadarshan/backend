@@ -201,6 +201,7 @@ const MyAppointments = () => {
                 {renderViewButton("Report", <FileText size={16} />,"bg-blue-300", () =>
                   setSelectedReport(appointment.report)
                 )}
+                
                 {renderViewButton("Review", <Star size={16} />,"bg-yellow-300", () =>
                   setSelectedReview(appointment.review)
                 )}
