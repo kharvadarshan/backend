@@ -28,6 +28,11 @@ const DoctorList = () => {
     }
   };
 
+  const toggleBlock = (id) =>
+    setDoctors((prev) =>
+      prev.map((d) => (d.id === id ? { ...d, blocked: !d.blocked } : d))
+    );
+
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5001/api/doctors/${id}`);
@@ -38,7 +43,9 @@ const DoctorList = () => {
   };
 
   const uniqueYears = useMemo(() => {
-    return [...new Set(doctors.map((doc) => new Date(doc.createdAt).getFullYear()))];
+    return [
+      ...new Set(doctors.map((doc) => new Date(doc.createdAt).getFullYear())),
+    ];
   }, [doctors]);
 
   const uniqueMonths = useMemo(() => {
@@ -47,7 +54,7 @@ const DoctorList = () => {
         doctors.map((doc) =>
           new Date(doc.createdAt).toLocaleString("en-US", { month: "long" })
         )
-      )
+      ),
     ];
   }, [doctors]);
   const filteredDoctors = useMemo(() => {
@@ -57,8 +64,13 @@ const DoctorList = () => {
         doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase());
 
       const doctorDate = new Date(doctor.createdAt);
-      const matchesYear = selectedYear ? doctorDate.getFullYear().toString() === selectedYear : true;
-      const matchesMonth = selectedMonth ? doctorDate.toLocaleString("en-US", { month: "long" }) === selectedMonth : true;
+      const matchesYear = selectedYear
+        ? doctorDate.getFullYear().toString() === selectedYear
+        : true;
+      const matchesMonth = selectedMonth
+        ? doctorDate.toLocaleString("en-US", { month: "long" }) ===
+          selectedMonth
+        : true;
       const matchesBlocked = showBlocked ? doctor.isBlocked : true;
 
       return matchesSearch && matchesYear && matchesMonth && matchesBlocked;
@@ -70,8 +82,6 @@ const DoctorList = () => {
     (currentPage - 1) * doctorsPerPage,
     currentPage * doctorsPerPage
   );
-
- 
 
   return (
     <div className="max-w-7xl mx-auto p-4 bg-gray-100 min-h-[650px]">
@@ -87,12 +97,12 @@ const DoctorList = () => {
       <div className="flex flex-wrap gap-4 mb-6 items-center justify-between">
         <input
           type="text"
-         placeholder="Search by name or specialization"
+          placeholder="Search by name or specialization"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="px-4 py-2 outline-none focus:ring-2 ring-indigo-400 border border-gray-300 rounded-md w-full max-w-md"
         />
-         <div className="relative w-full md:max-w-xs">
+        <div className="relative w-full md:max-w-xs">
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
@@ -100,10 +110,15 @@ const DoctorList = () => {
           >
             <option value="">Filter by Year</option>
             {uniqueYears.map((year, i) => (
-              <option key={i} value={year}>{year}</option>
+              <option key={i} value={year}>
+                {year}
+              </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-3 top-3.5 text-gray-600 pointer-events-none" size={20} />
+          <ChevronDown
+            className="absolute right-3 top-3.5 text-gray-600 pointer-events-none"
+            size={20}
+          />
         </div>
 
         <div className="relative w-full md:max-w-xs">
@@ -114,10 +129,15 @@ const DoctorList = () => {
           >
             <option value="">Filter by Month</option>
             {uniqueMonths.map((month, i) => (
-              <option key={i} value={month}>{month}</option>
+              <option key={i} value={month}>
+                {month}
+              </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-3 top-3.5 text-gray-600 pointer-events-none" size={20} />
+          <ChevronDown
+            className="absolute right-3 top-3.5 text-gray-600 pointer-events-none"
+            size={20}
+          />
         </div>
         <button
           onClick={() => setShowBlocked((prev) => !prev)}
@@ -135,7 +155,7 @@ const DoctorList = () => {
               <th className="px-4 py-3 text-left">Specialization</th>
               <th className="px-4 py-3 text-left">Image</th>
               <th className="px-4 py-3 text-center">More</th>
-              <th className="px-4 py-3 text-center">Status</th>
+              <th className="px-4 py-3 text-center">Block</th>
               <th className="px-4 py-3 text-center">Delete</th>
               <th className="px-4 py-3 text-left">Joined</th>
             </tr>
@@ -166,17 +186,26 @@ const DoctorList = () => {
                     </button>
                   </td>
                   <td className="px-4 py-3 text-center">
-                    {doctor.isBlocked ? (
-                      <Ban className="w-5 h-5 text-red-600 mx-auto" />
-                    ) : (
-                      <Unlock className="w-5 h-5 text-green-600 mx-auto" />
-                    )}
+                    <button
+                      onClick={() => toggleBlock(doctor.id)}
+                      // title={doctor.blocked ? "Unblock" : "Block"}
+                      className="text-indigo-600 hover:text-indigo-800"
+                    >
+                      {doctor.blocked ? (
+                        <Unlock size={20} />
+                      ) : (
+                        <Ban size={20} />
+                      )}
+                    </button>
                   </td>
-                  <td className="px-4 py-3 text-center">
-                    <Trash2
-                      className="w-5 h-5 text-red-500 cursor-pointer mx-auto"
+                  <td className="px-6 py-4">
+                    <button
                       onClick={() => handleDelete(doctor.id)}
-                    />
+                      title="Delete Doctor"
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 size={20} />
+                    </button>
                   </td>
                   <td className="px-4 py-3">
                     {new Date(doctor.createdAt).toLocaleDateString()}
@@ -209,7 +238,9 @@ const DoctorList = () => {
           </span>
           <button
             className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 hover:bg-gray-300 md:text-xl  disabled:opacity-50"
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
           >
             Next ▶
@@ -221,20 +252,36 @@ const DoctorList = () => {
       {isModalOpen && selectedDoctor && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Doctor Details</h2>
+            <h2 className="text-xl font-bold mb-4 text-gray-800">
+              Doctor Details
+            </h2>
             <div className="space-y-2">
-              <p><strong>Experience:</strong> {selectedDoctor.experience}</p>
-              <p><strong>Degree:</strong> {selectedDoctor.degree}</p>
-              <p><strong>Fees:</strong> ₹{selectedDoctor.fees}</p>
-              <p><strong>Address:</strong> {selectedDoctor.address}</p>
-              <p><strong>About:</strong> {selectedDoctor.about}</p>
-              <p><strong>Field:</strong> {selectedDoctor.field}</p>
-              <p><strong>Contact:</strong> {selectedDoctor.contact}</p>
+              <p>
+                <strong>Experience:</strong> {selectedDoctor.experience}
+              </p>
+              <p>
+                <strong>Degree:</strong> {selectedDoctor.degree}
+              </p>
+              <p>
+                <strong>Fees:</strong> ₹{selectedDoctor.fees}
+              </p>
+              <p>
+                <strong>Address:</strong> {selectedDoctor.address}
+              </p>
+              <p>
+                <strong>About:</strong> {selectedDoctor.about}
+              </p>
+              <p>
+                <strong>Field:</strong> {selectedDoctor.field}
+              </p>
+              <p>
+                <strong>Contact:</strong> {selectedDoctor.contact}
+              </p>
             </div>
-            <div className="mt-6 text-right">
+            <div className="mt-6 text-center">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                className="px-4 py-2 bg-blue-300 text-lg font-bold text-blue-900 rounded hover:bg-blue-400"
               >
                 Close
               </button>
@@ -248,15 +295,8 @@ const DoctorList = () => {
 
 export default DoctorList;
 
-
-
-
-
-
-
 // import { useEffect, useState } from "react";
 // import axios from 'axios';
-
 
 // const DoctorList=()=>{
 //     const [doctors,setDoctors] = useState();
