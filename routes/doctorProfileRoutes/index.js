@@ -27,7 +27,10 @@ const  {
     markCompleted,
     addManyTimeSlot, 
     getTimeSlots,
-    deleteTimeSlot,uploadReport }  = require('../../controllers/doctorProfileController');
+    deleteTimeSlot,
+    uploadReport,
+    viewReport
+ }  = require('../../controllers/doctorProfileController');
 
 
 
@@ -41,7 +44,7 @@ router.get('/rejectAppointment/:id',rejectAppointment);
 router.get('/markCompleted/:id',markCompleted);
 router.post('/editProfile',upload.single('image'),editProfile);
 router.post('/uploadReport/:appointmentId',upload.array('reports',5),uploadReport);
-
+router.get('/viewReport/:appointmentId',viewReport);
 router.get('/deleteTimeSlot',deleteTimeSlot);
 
 module.exports = router;

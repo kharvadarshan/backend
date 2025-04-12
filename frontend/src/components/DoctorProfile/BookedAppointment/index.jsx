@@ -227,12 +227,13 @@ const BookedAppointment = ({ doctor }) => {
       </p>
       <p>
         <strong>Report:</strong>{" "}
-        {app.report ? (
+        {app.report?.length>0 ? (
           <button
             onClick={() => handleViewReport(app._id)}
-            className="text-blue-600 hover:underline"
+            className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition duration-200"
           >
-            View Report
+            <span className="text-xl">☁️</span> {/* Cloud icon (replace with proper icon if available) */}
+            <span>Download</span>
           </button>
         ) : (
           "No report uploaded"
@@ -325,13 +326,47 @@ const BookedAppointment = ({ doctor }) => {
   const handleViewReport = async (appointmentId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5001/reports/${appointmentId}`,
+        `http://localhost:5001/doctorprofile/viewReport/${appointmentId}`,
         { withCredentials: true }
       );
+
       if (response.data.ok) {
-        window.open(response.data.url, "_blank");
+        const reports = response.data.reports;
+        if (reports.length === 0) {
+          Swal.fire('Info', 'No reports available.', 'info');
+          return;
+        }
+
+        const html = reports
+        .map(
+          (report) => `
+            <div style="margin: 10px 0;">
+              <a href="${report.url}" target="_blank" style="color: #1e90ff;">
+                ${report.fileName} (Uploaded: ${new Date(
+                  report.uploadedAt
+                ).toLocaleDateString()})
+              </a>
+            </div>
+          `
+        )
+        .join('');
+        // reports.forEach((report) => {
+        //   const link = document.createElement('a');
+        //   link.href = report.url;
+        //   link.download = report.fileName; // Suggest filename for download
+        //   document.body.appendChild(link);
+        //   link.click();
+        //   document.body.removeChild(link);
+        // });
+
+        Swal.fire({
+          title: 'Reports',
+          html,
+          icon: 'info',
+          confirmButtonText: 'Close',
+        });
       } else {
-        Swal.fire("Error!", response.data.message || "Failed to view report", "error");
+        Swal.fire('Error!', response.data.message || 'Failed to view reports', 'error');
       }
     } catch (error) {
       Swal.fire("Error!", "Failed to view report", "error");
@@ -516,12 +551,13 @@ const BookedAppointment = ({ doctor }) => {
                 {
                   select==="Completed" && (
                 <td className="p-3 border-r">
-                  {app.report.length ? (
+                  {app.report?.length>0  ? (
                     <button
-                      onClick={() => handleViewReport(app._id)}
-                      className="text-blue-600 hover:underline mr-2"
-                    >
-                      View Report
+                       onClick={() => handleViewReport(app._id)}
+                       className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition duration-200"
+                      >
+                              <span className="text-xl">☁️</span> {/* Cloud icon (replace with proper icon if available) */}
+                              <span>Download</span>
                     </button>
                   ) : (
                     <button

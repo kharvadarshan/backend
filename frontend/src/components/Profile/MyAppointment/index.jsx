@@ -69,11 +69,62 @@ const MyAppointments = () => {
      }
 
 
+      const handleViewReport = async (appointmentId) => {
+         try {
+           const response = await axios.get(
+             `http://localhost:5001/doctorprofile/viewReport/${appointmentId}`,
+             { withCredentials: true }
+           );
+     
+           if (response.data.ok) {
+             const reports = response.data.reports;
+             if (reports.length === 0) {
+               Swal.fire('Info', 'No reports available.', 'info');
+               return;
+             }
+     
+             const html = reports
+             .map(
+               (report) => `
+                 <div style="margin: 10px 0;">
+                   <a href="${report.url}" target="_blank" style="color: #1e90ff;">
+                     ${report.fileName} (Uploaded: ${new Date(
+                       report.uploadedAt
+                     ).toLocaleDateString()})
+                   </a>
+                 </div>
+               `
+             )
+             .join('');
+             // reports.forEach((report) => {
+             //   const link = document.createElement('a');
+             //   link.href = report.url;
+             //   link.download = report.fileName; // Suggest filename for download
+             //   document.body.appendChild(link);
+             //   link.click();
+             //   document.body.removeChild(link);
+             // });
+     
+             Swal.fire({
+               title: 'Reports',
+               html,
+               icon: 'info',
+               confirmButtonText: 'Close',
+             });
+           } else {
+             Swal.fire('Error!', response.data.message || 'Failed to view reports', 'error');
+           }
+         } catch (error) {
+           Swal.fire("Error!", "Failed to view report", "error");
+         }
+       };
+
+
 
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
   const [filterYear, setFilterYear] = useState("All");
-  const [selectedReport, setSelectedReport] = useState(null);
+ 
   const [selectedAppointment, setSelectedAppointment] = useState(null);
 
  
@@ -325,9 +376,17 @@ const MyAppointments = () => {
                 
 
                 {/* patient can get report */}
-                {renderViewButton("Report", <FileText size={16} />,"bg-blue-300", () =>
-                  setSelectedReport(appointment.report)
-                )}
+                { appointment.status=== "Completed" && (
+                 
+                 appointment.report.length > 0 ?
+                (
+                  renderViewButton("Download Report", <FileText size={16} />,"bg-blue-300", () =>
+                    handleViewReport(appointment._id)
+                )):(
+                   "No reports uploaded."
+                )
+                )
+                }
 
                   {/* give feedback & display rating */}
                 { appointment.status === "Completed" &&  
@@ -407,10 +466,10 @@ const MyAppointments = () => {
                      {/* patient can get report */}
                     <td className="p-3 border">
                       {renderViewButton(
-                        "Report",
+                        "Download  Report",
                         <FileText size={16} />,
                         "bg-blue-300",
-                        () => setSelectedReport(appointment.report)
+                        () => handleViewReport(appointment._id)
                       )}
                     </td>
 

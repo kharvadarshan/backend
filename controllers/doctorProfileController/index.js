@@ -197,6 +197,35 @@ exports.acceptAppointment = async(req,res)=>{
     {   
         return res.status(500).json({ message: 'Error while fetching available time slots.',error });  
     }
+};
+
+
+exports.viewReport = async(req,res)=>{
+    try
+    {
+        const {appointmentId}=req.params;
+
+        const appointment = await AppointmentModel.findOne({
+            _id:appointmentId
+        });
+
+        if(!appointment)
+        {
+            return res.status(400).json({ok:false,message:'Appointment not found.'});
+        }
+
+        const reports = (appointment.report).map((report)=>({
+            fileName:report.fileName,
+            uploadAt:report.uploadAt,
+            url:`${req.protocol}://${req.get('host')}${report.filePath}`,
+        }))
+       
+       return res.status(201).json({ok:true,reports:reports});
+
+    }catch(error)
+    {
+        res.status(500).json({ error: error.message });
+    }
 }
 
 exports.rejectAppointment = async(req,res)=>{
@@ -239,7 +268,7 @@ exports.markCompleted = async(req,res)=>{
            }
     }catch(error)
     {
-
+        res.status(500).json({ error: error.message });
     }
 }
 
