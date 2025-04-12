@@ -203,6 +203,7 @@ const BookAppointment = () => {
       patientId:activeUser?.id,
       date: "",
       time:"",
+      timeSlot:"",
       slot:"",
       doctorId:selectedDoctor?._id || "",
       patientForm:{

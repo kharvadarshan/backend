@@ -76,6 +76,13 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
     }));
   };
 
+  const handleTimeSlotId = (timeSlot)=>{
+    setAppointmentData((prev)=>({
+       ...prev,
+       timeSlot:timeSlot._id
+    }))
+  }
+
 
   return (
     <div className="flex flex-col items-center w-full p-6 bg-gray-100 min-h-screen">
@@ -119,10 +126,11 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
                                    key={index1}
                                    onClick={(e) => {
                                      e.preventDefault();
+                                     handleTimeSlotId(time);
                                      handleTimeSlotSelect(slot1);
                                    }}
                                    className={`m-2 py-2 px-4 text-sm font-medium rounded-md border transition-all shadow-md ${
-                                     time.status === "Booked"
+                                     slot1.status === "Booked"
                                        ? "bg-red-100 text-gray-400 cursor-not-allowed border-red-400"
                                        : appointmentData.slot === slot1._id
                                        ? "bg-indigo-600 text-white border-indigo-700 shadow-lg scale-105"

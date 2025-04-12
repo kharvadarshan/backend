@@ -53,6 +53,10 @@ const appointmentSchema = new mongoose.Schema({
       type: Date, 
       required: true,
     },
+    timeSlot:{
+      type:mongoose.Schema.Types.ObjectId,
+      required:true,
+    },
     slot:{
       type:mongoose.Schema.Types.ObjectId,
       required:true,

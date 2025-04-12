@@ -5,7 +5,7 @@ const Feedback = require('../../model/feedback');
 // Create a new appointment
 exports.createAppointment = async (req, res) => {
   try {
-  const { doctor,patientId, date, time ,slot,doctorId ,patientForm} = req.body;
+  const { doctor,patientId, date, time ,timeSlot,slot,doctorId ,patientForm} = req.body;
    console.log(req.body);
     if (!doctor || !date || !time || !slot|| !patientId || !patientForm ) {
       return res.status(400).json({ error: "All fields are required" });
@@ -13,7 +13,7 @@ exports.createAppointment = async (req, res) => {
     
     // const [month,day,year]= date.split('/');
     // const parsedDate = new Date(`${year}-${month}-${day}`)
-    const newAppointment = new AppointmentModel({ doctor:doctor,patientId, date, time,slot,doctorId,patientForm });
+    const newAppointment = new AppointmentModel({ doctor:doctor,patientId, date,timeSlot, time,slot,doctorId,patientForm });
     // const updateTimeSlot = await TimeSlot.updateOne(
     //                         { doctorId:doctorId,'slot._id':slot },
     //                         { $set:{'slot.$.status':"Booked"}}

@@ -136,26 +136,66 @@ exports.getDoctorById = async(req,res)=>{
 }
 
 exports.acceptAppointment = async(req,res)=>{
+   
     try{
+
+
         const {id}=req.params;
+        
+
+
+        const existingAppointment = await Appointment.findOne({_id:id});
+
+        if(!existingAppointment)
+        {
+           
+            return res
+              .status(403)
+              .json({ ok: false, message: "Appointment not found or unauthorized" });
+        }
+
+
+        const result1 = await TimeSlot.updateOne(
+            {
+                _id:existingAppointment.timeSlot,
+                 doctorId:existingAppointment.doctorId,
+                "slot._id":existingAppointment.slot
+             },{
+                
+             $set:{
+                "slot.$.status":"Booked",
+                "slot.$.appointmentId":id
+             }
+            },
+           
+       );
+
+
+        if(result1.modifiedCount <= 0)
+            {
+               return res.status(200).json({ok:false,message:"Time slot status is not changed."});
+            }
+
         const result = await  Appointment.updateOne({
             _id:id
         },{
             $set:{status:"Confirmed"}
-        });
+        },
+    );
 
 
         if(result.modifiedCount > 0)
         {
-            res.status(201).json({ok:true,message:"Requeste accepted successfully."});
+           return res.status(201).json({ok:true,message:"Requeste accepted successfully."});
         }
         else
         {
-            res.status(200).json({ok:false,message:"No chnaes were made."});
+
+           return  res.status(200).json({ok:false,message:"No chnaes were made."});
         }
     }catch(error)
-    {
-        res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+    {   
+        return res.status(500).json({ message: 'Error while fetching available time slots.',error });  
     }
 }
 

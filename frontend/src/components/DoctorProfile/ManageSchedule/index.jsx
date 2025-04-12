@@ -86,7 +86,7 @@ export default function DoctorSlotScheduler() {
                   "success"
                 );
               } else {
-                Swal.fire("Error!", "Something went wrong. Try again.", "error");
+                Swal.fire("Error!", response.data.message, "error");
               }
             } catch (error) {
               Swal.fire("Error!", "Could not connect to the server.", error);
@@ -139,7 +139,7 @@ export default function DoctorSlotScheduler() {
                   "success"
                 );
               } else {
-                Swal.fire("Error!", "Something went wrong. Try again.", "error");
+                Swal.fire("Error!",  response.data.message, "error");
               }
             } catch (error) {
               Swal.fire("Error!", "Could not connect to the server.", error);
@@ -235,7 +235,7 @@ export default function DoctorSlotScheduler() {
               "success"
             );
           } else {
-            Swal.fire("Error!", "Something went wrong. Try again.", "error");
+            Swal.fire("Error!",  response.data.message, "error");
           }
         } catch (error) {
           Swal.fire("Error!", "Could not connect to the server.", error);
@@ -416,12 +416,12 @@ export default function DoctorSlotScheduler() {
             {timeSlots?.map((timeSlot, index) => (
               <li
                 key={index}
-                className="py-4 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                className=""
               >
                {
                 timeSlot?.slot?.map((range,index)=>(
                 <>
-                <div className="flex items-center justify-between">
+                <div className={`flex items-center justify-between py-4 px-3  my-2  rounded-lg transition-colors ${ range.status==="Booked" ? "bg-red-50": "bg-green-50" } `}>
                   <div className="flex items-center">
                     <div className="bg-indigo-100 p-2 rounded-lg mr-4">
                       <Calendar className="text-indigo-600" size={18} />
@@ -433,7 +433,7 @@ export default function DoctorSlotScheduler() {
                       </div>
                       <div key={index} className="text-gray-500 text-sm flex items-center">
                         <Clock size={14} className="mr-1" />
-                        {range.start} - {range.end} ({range.status})
+                        {range.start} - {range.end} <span className={`text-lg p-1 ${range.status=="Booked"? "text-red-700": "text-green-700"} `}>({range.status})</span> 
                       </div>
                       
                     </div>

@@ -102,7 +102,7 @@ const BookedAppointment = ({ doctor }) => {
             );
             await fetchAppointment();
           } else {
-            Swal.fire("Error!", "Something went wrong. Try again.", "error");
+            Swal.fire("Error!",  response.data.message, "error");
           }
         } catch (error) {
           Swal.fire("Error!", "Could not connect to the server.", "error");
