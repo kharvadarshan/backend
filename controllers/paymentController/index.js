@@ -1,6 +1,6 @@
 const  instance  = require("../../utils/rajorpay.js");
 const crypto = require("crypto");
-const { Payment } = require("../../model/payment");
+const  Payment  = require("../../model/payment");
 
 // console.log("Instance: ", instance); //
 
@@ -39,8 +39,15 @@ exports.paymentVerification = async (req, res) => {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
+      // appointmentId: req.body.notes?.appointmentId,
+      // doctorId: req.body.notes?.doctorId,
+      // patientId: req.body.notes?.patientId,
+      // appointmentDate: req.body.notes?.appointmentDate,
+      // appointmentTime: req.body.notes?.appointmentTime,
+      // amountPaid: req.body.notes?.amount,
+      // paymentStatus: "Success",
     });
-
+    
     res.redirect(
       `http://localhost:5173/payment-success?reference=${razorpay_payment_id}`
     );

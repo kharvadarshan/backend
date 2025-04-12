@@ -3,42 +3,42 @@ const mongoose = require("mongoose");
 const paymentSchema = new mongoose.Schema({
   razorpay_order_id: {
     type: String,
-    required: true,
+    // required: true,
   },
   razorpay_payment_id: {
     type: String,
-    required: true,
+    // required: true,
   },
   razorpay_signature: {
     type: String,
-    required: true,
+    // required: true,
   },
   appointmentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Appointment",
-    required: true,
+    // required: true,
   },
   patientId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    // required: true,
   },
   doctorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Doctor",
-    required: true,
+    // required: true,
   },
   appointmentDate: {
     type: String,
-    required: true,
+    // required: true,
   },
   appointmentTime: {
     type: String,
-    required: true,
+    // required: true,
   },
   amountPaid: {
     type: Number,
-    required: true,
+    // required: true,
   },
   paymentStatus: {
     type: String,
@@ -47,4 +47,6 @@ const paymentSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-module.exports = mongoose.model("Payment", paymentSchema);
+const Payment = mongoose.model("Payment", paymentSchema);
+
+module.exports = Payment

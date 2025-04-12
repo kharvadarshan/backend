@@ -1,9 +1,11 @@
 import  { useState } from "react";
 import axios from "axios";
 import { Loader2, CreditCard } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const PaymentPage = () => {
-  
+  const activeUser = useSelector((state) => state.user.user);
+  console.log(activeUser);
   const [isLoading, setIsLoading] = useState(false);
 
   const checkoutHandler = async (amount) => {
@@ -34,7 +36,12 @@ const PaymentPage = () => {
           contact: "9999999999",
         },
         notes: {
-          address: "Grownett Office",
+          appointmentId: "APPOINTMENT_ID_HERE",
+          // doctorId: appointmentData.doctorId,
+          // patientId: appointmentData.patientId,
+          // appointmentDate: appointmentData.date,
+          // appointmentTime: appointmentData.time,
+          amount,
         },
         theme: {
           color: "#4f46e5",
