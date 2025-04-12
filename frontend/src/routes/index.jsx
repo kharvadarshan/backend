@@ -1,6 +1,6 @@
 import {
   Navigate,
-//   useNavigate,
+  //   useNavigate,
   Route,
   Routes,
   useLocation,
@@ -14,80 +14,95 @@ import Contact from "../components/Contact";
 import Doctor from "../components/Doctor";
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
-import DoctorDetails from '../components/Doctor/IndividualDoctor'
-import BookAppointment from '../components/appointmentComponent/BookAppointment'
-import Profile from '../components/Profile'
-import DoctorProfile from '../components/DoctorProfile';
-import { useSelector } from 'react-redux';
-import About from '../components/About';
-import FeedbackForm from '../components/FeedBackForm/FeedBack';
-import Chatbot from '../components/Chatbot/Chatbot';
-import { useEffect } from 'react';
+import DoctorDetails from "../components/Doctor/IndividualDoctor";
+import BookAppointment from "../components/appointmentComponent/BookAppointment";
+import Profile from "../components/Profile";
+import DoctorProfile from "../components/DoctorProfile";
+import { useSelector } from "react-redux";
+import About from "../components/About";
+import FeedbackForm from "../components/FeedBackForm/FeedBack";
+import Chatbot from "../components/Chatbot/Chatbot";
+import { useEffect } from "react";
+import PaymentSuccess from "../components/Checkout/PaymentSuccess";
+import PaymentFailed from "../components/Checkout/PaymentFailed";
+import PaymentPage from "../components/Checkout/PaymentPage";
 
 const AllRoute = () => {
-    const location = useLocation();
-    const role = useSelector((state)=>state.isLogin.role);
-   const navigate=useNavigate();
-    const hideNavFooter = location.pathname === "/login" || location.pathname === "/signup"  || role === 'doctor' || role==='admin' ;
-     const publicRoutes = ['/login','/signup','/','/chatbot'];
-     useEffect(() => {
-        const path = location.pathname;
-      
-        // If no role and not in public routes => redirect to login
-        if (role === '' && !publicRoutes.includes(path)) {
-          navigate('/login');
-        }
-      
-        // If role is doctor and trying to access anything other than /all-doctors
-        // if (role === 'doctor' && path !== '/doctorprofile') {
-        //   navigate('/doctorprofile');
-        // }
-      }, [role, location.pathname, navigate]);
-      
+  const location = useLocation();
+  const role = useSelector((state) => state.isLogin.role);
+  const navigate = useNavigate();
+  const hideNavFooter =
+    location.pathname === "/login" ||
+    location.pathname === "/signup" ||
+    role === "doctor" ||
+    role === "admin";
+  const publicRoutes = ["/login", "/signup", "/", "/chatbot"];
+  useEffect(() => {
+    const path = location.pathname;
 
-    return (
-        <>
-            <div className='row g-0 custom-row'>
-                <div className='col-12 bg-light'>
-                    <div className='d-flex flex-column w-auto  h-auto'>
-                        {!hideNavFooter &&  <NavBar  />}
-                        <div className="d-flex justify-content-center">
-                            <div className='h-auto w-auto'>
-            <Routes>  
-                           
-                        <Route path="/doctorprofile/*" element={ <DoctorProfile/>}></Route>
-                        <Route path="/login"  element={<Login  />} />
-                        <Route path="/signup" element={<SignUp />} />
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />}/>
-                        <Route path="/all-doctors" element={<Doctor />} />
-                        { role === "admin" && <Route path="/admin/*" element={<Admin />} />}
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/all-doctors/:id" element={<DoctorDetails />} />
-                        <Route path="/appointment/:id" element={<BookAppointment/>}/>
-                        <Route path="/profile/*" element={<Profile/>}></Route>
-                        <Route path="/feedbackform" element={<FeedbackForm/>}></Route>
-                        <Route path="/chatbot" element={<Chatbot/>}></Route>
+    // If no role and not in public routes => redirect to login
+    if (role === "" && !publicRoutes.includes(path)) {
+      navigate("/login");
+    }
 
-                        <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-       
-                            </div>
-                        </div>
-                        {!hideNavFooter && <Footer />}
-                    </div>
-                </div>
+    // If role is doctor and trying to access anything other than /all-doctors
+    // if (role === 'doctor' && path !== '/doctorprofile') {
+    //   navigate('/doctorprofile');
+    // }
+  }, [role, location.pathname, navigate]);
+
+  return (
+    <>
+      <div className="row g-0 custom-row">
+        <div className="col-12 bg-light">
+          <div className="d-flex flex-column w-auto  h-auto">
+            {!hideNavFooter && <NavBar />}
+            <div className="d-flex justify-content-center">
+              <div className="h-auto w-auto">
+                <Routes>
+                  <Route
+                    path="/doctorprofile/*"
+                    element={<DoctorProfile />}
+                  ></Route>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/all-doctors" element={<Doctor />} />
+                  {role === "admin" && (
+                    <Route path="/admin/*" element={<Admin />} />
+                  )}
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/all-doctors/:id" element={<DoctorDetails />} />
+                  <Route
+                    path="/appointment/:id"
+                    element={<BookAppointment />}
+                  />
+                  <Route path="/profile/*" element={<Profile />}></Route>
+                  <Route
+                    path="/feedbackform"
+                    element={<FeedbackForm />}
+                  ></Route>
+                  <Route path="/chatbot" element={<Chatbot />}></Route>
+
+                  <Route path="/checkout" element={<PaymentPage />} />
+                  <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+                  <Route path="/payment-success" element={<PaymentSuccess />} />
+                  <Route path="/payment-failed" element={<PaymentFailed />} />
+
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </div>
             </div>
+            {!hideNavFooter && <Footer />}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
 
 export default AllRoute;
-
-
-
-
-
 
 // import {   Route, Routes, useLocation } from 'react-router-dom';
 // import { useState } from 'react';

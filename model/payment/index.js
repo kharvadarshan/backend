@@ -1,14 +1,26 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
 
 const paymentSchema = new mongoose.Schema({
+  razorpay_order_id: {
+    type: String,
+    required: true,
+  },
+  razorpay_payment_id: {
+    type: String,
+    required: true,
+  },
+  razorpay_signature: {
+    type: String,
+    required: true,
+  },
   appointmentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "AppointmentData",
+    ref: "Appointment",
     required: true,
   },
   patientId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", 
+    ref: "User",
     required: true,
   },
   doctorId: {
@@ -16,33 +28,23 @@ const paymentSchema = new mongoose.Schema({
     ref: "Doctor",
     required: true,
   },
-  amount: {
+  appointmentDate: {
+    type: String,
+    required: true,
+  },
+  appointmentTime: {
+    type: String,
+    required: true,
+  },
+  amountPaid: {
     type: Number,
     required: true,
   },
-  currency: {
-    type: String,
-    default: "INR",
-  },
   paymentStatus: {
     type: String,
-    enum: ["pending", "succeeded", "failed"],
-    default: "pending",
+    enum: ["Success", "Failed"],
+    default: "Success",
   },
-  transactionId: {
-    type: String,
-  },
-  paymentGateway: {
-    type: String,
-    enum: ["Stripe", "Razorpay"],
-    required: true,
-    default : "Stripe",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-});
+}, { timestamps: true });
 
-const PaymentModel = mongoose.model("Payment", paymentSchema);
-module.exports = PaymentModel;
+module.exports = mongoose.model("Payment", paymentSchema);

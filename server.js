@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const mongoose = require('mongoose');
 const doctorRoutes = require('./routes/renderDoctors');
 const doctorProfileRoutes = require('./routes/doctorProfileRoutes');
@@ -7,6 +7,7 @@ const userAuth = require('./routes/userAuth');
 const profile = require('./routes/profileRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const app = express();
+const paymentRoute = require("./routes/paymentRoutes");
 
 const cookieParser=require('cookie-parser');
 const MongoStore = require('connect-mongo');
@@ -52,10 +53,9 @@ app.use('/user',userAuth);
 app.use('/doctorprofile',doctorProfileRoutes);
 app.use('/appointments',appointmentRoutes)
 app.use('/profile',profile);
-
 app.use('/admin',adminRoutes);
+app.use("/pay", paymentRoute);
 
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
 });
-

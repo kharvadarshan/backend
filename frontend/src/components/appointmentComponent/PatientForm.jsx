@@ -41,14 +41,14 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
           position: "top-right",
           autoClose: 1000,
         });
-        navigate("/all-doctors");
+        navigate("/checkout");
         // setTimeout(() => navigate("/all-doctors"), 2000); // Redirect after 2 sec
       }
     } catch (error) {
       console.error("Error booking appointment:", error);
     }
   };
-
+  
   return (
     <div className="container py-20 md:py-20 min-h-screen flex justify-center items-center">
       <div className="bg-white text-gray-900 shadow-2xl rounded-2xl p-8 w-full max-w-3xl transform transition">
