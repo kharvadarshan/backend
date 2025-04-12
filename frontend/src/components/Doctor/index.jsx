@@ -15,7 +15,7 @@ const DoctorList = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/api/doctors");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/doctors`);
       setDoctors(response.data);
     } catch (error) {
       console.error("Error fetching doctors:", error);
@@ -86,7 +86,7 @@ const DoctorList = () => {
                 <img
                   src={
                     doctor?.image !== ""
-                      ? `http://localhost:5001${doctor.image}`
+                      ? `${import.meta.env.VITE_API_URL}${doctor.image}`
                       : "/assets/doctor.png"
                   }
                   alt={doctor.name}

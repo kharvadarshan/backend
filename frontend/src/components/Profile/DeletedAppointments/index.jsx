@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, ChevronDown, Info, FileText, Star } from "lucide-react";
+import {  ChevronDown } from "lucide-react";
 import { } from "react-toastify";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -17,7 +17,7 @@ const MyAppointments = () => {
   const getDeletedAppointmentByPatientId = async()=>{
     try
     {
-         const response = await axios.get(`http://localhost:5001/appointments/getDeletedAppointmentByPatientId/${activeUser.id}`);
+         const response = await axios.get(`${import.meta.env.VITE_API_URL}/appointments/getDeletedAppointmentByPatientId/${activeUser.id}`);
 
          if(response.data.ok)
          {
@@ -194,7 +194,7 @@ const MyAppointments = () => {
               <p className="text-sm text-gray-600">
                 <strong>Time:</strong> {appointment.time}
               </p>
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {/* <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {renderViewButton("Details", <Info size={16}/>,"bg-green-300", () =>
                   setSelectedDetail(appointment.patientForm.reason)
                 )}
@@ -205,7 +205,7 @@ const MyAppointments = () => {
                 {renderViewButton("Review", <Star size={16} />,"bg-yellow-300", () =>
                   setSelectedReview(appointment.review)
                 )}
-              </div>
+              </div> */}
             </motion.div>
           ))}
         </AnimatePresence>
@@ -226,9 +226,9 @@ const MyAppointments = () => {
                 <th className="border p-3">Date</th>
                 <th className="border p-3">Time</th>
                 <th className="border p-3 text-center">Status</th>
-                <th className="border p-3">Details</th>
+                {/* <th className="border p-3">Details</th>
                 <th className="border p-3 text-center">Report</th>
-                <th className="border p-3 text-center">Review</th>
+                <th className="border p-3 text-center">Review</th> */}
               </tr>
             </thead>
             <tbody>
@@ -249,7 +249,7 @@ const MyAppointments = () => {
                     <td className="p-3 border">
                       {getStatusBadge(appointment.status)}
                     </td>
-                    <td className="p-3 border">
+                    {/* <td className="p-3 border">
                       {renderViewButton("View", <Info size={16} />,"bg-green-300", () =>
                         setSelectedDetail(appointment.patientForm.reason)
                       )}
@@ -266,7 +266,7 @@ const MyAppointments = () => {
                       {renderViewButton("Review", <Star size={16} />,"bg-yellow-300", () =>
                         setSelectedReview(appointment.review)
                       )}
-                    </td>
+                    </td> */}
                   </motion.tr>
                 ))}
               </AnimatePresence>

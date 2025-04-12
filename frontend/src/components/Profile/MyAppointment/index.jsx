@@ -22,7 +22,7 @@ const MyAppointments = () => {
   const getAppointmentByPatientId = async()=>{
     try
     {
-         const response = await axios.get(`http://localhost:5001/appointments/getAppointmentByPatientId/${activeUser.id}`);
+         const response = await axios.get(`${import.meta.env.VITE_API_URL}/appointments/getAppointmentByPatientId/${activeUser.id}`);
 
          if(response.data.ok)
          {
@@ -48,7 +48,7 @@ const MyAppointments = () => {
         }).then(async(result)=>{
           if(result.isConfirmed){
             try{
-              const response = await  axios.delete(`http://localhost:5001/appointments/deleteAppointment/${appointmentId}`);
+              const response = await  axios.delete(`${import.meta.env.VITE_API_URL}/appointments/deleteAppointment/${appointmentId}`);
     
                   if(response.data.ok)
                   {    
@@ -72,7 +72,7 @@ const MyAppointments = () => {
       const handleViewReport = async (appointmentId) => {
          try {
            const response = await axios.get(
-             `http://localhost:5001/doctorprofile/viewReport/${appointmentId}`,
+             `${import.meta.env.VITE_API_URL}/doctorprofile/viewReport/${appointmentId}`,
              { withCredentials: true }
            );
      

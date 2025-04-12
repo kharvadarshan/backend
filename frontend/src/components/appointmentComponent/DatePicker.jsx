@@ -37,7 +37,7 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
 
     try
     {
-          const response = await axios.post('http://localhost:5001/doctorprofile/getTimeSlot',{
+          const response = await axios.post(`${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlot`,{
                 doctorId:appointmentData?.doctorId,
                 date:formattedDate,
           });

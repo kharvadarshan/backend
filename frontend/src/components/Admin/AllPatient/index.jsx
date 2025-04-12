@@ -29,7 +29,7 @@ const Patients = () => {
               if (result.isConfirmed) {
                 try {
                   const response = await axios.delete(
-                    `http://localhost:5001/admin/blockUser/${id}`
+                    `${import.meta.env.VITE_API_URL}/admin/blockUser/${id}`
                   );
         
                   if (response.data.ok) {
@@ -63,7 +63,7 @@ const Patients = () => {
                   try {
                   
                     const response = await axios.get(
-                      `http://localhost:5001/admin/unblockUser/${id}`
+                      `${import.meta.env.VITE_API_URL}/admin/unblockUser/${id}`
                     );
           
                     if (response.data.ok) {
@@ -86,7 +86,7 @@ const Patients = () => {
   const getAllPatients = async()=>{
      try
      {
-      const response = await axios.get('http://localhost:5001/admin/getAllPatient');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllPatient`);
 
       if(response.data.ok)
       {
@@ -121,10 +121,6 @@ const Patients = () => {
     >
       <td className="px-6 py-4">{patient.userName}</td>
       <td className="px-6 py-4">{patient.email}</td>
-      <td className="px-6 py-4">{patient.appointments}</td>
-      <td className="px-6 py-4">{patient.pending}</td>
-      <td className="px-6 py-4">{patient.completed}</td>
-      <td className="px-6 py-4">{patient.rejected}</td>
       <td className="px-6 py-4">
         <button
           onClick={() => {
@@ -223,7 +219,7 @@ const Patients = () => {
           <table className="min-w-full divide-y divide-gray-300">
             <thead className="bg-gray-400">
               <tr>
-                {["Name", "Email ID", "Appointments", "Pending", "Completed", "Rejected", "Block", "Delete"].map(
+                {["Name", "Email ID", "Block", "Delete"].map(
                   (heading) => (
                     <th
                       key={heading}

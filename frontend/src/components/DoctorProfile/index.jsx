@@ -6,7 +6,6 @@ import {
   faBell,
   faCalendarWeek,
   faPenToSquare,
-  faFileMedical,
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState,useEffect } from "react";
@@ -27,12 +26,12 @@ const DoctorProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [photo,setPhoto]=useState(`http://localhost:5001${activeUser.doctor?.image}`);
+  const [photo,setPhoto]=useState(`${import.meta.env.VITE_API_URL}${activeUser.doctor?.image}`);
   
   useEffect(()=>{
     if(activeUser?.doctor?.image)
     {
-      setPhoto(`http://localhost:5001${activeUser?.doctor?.image}`);
+      setPhoto(`${import.meta.env.VITE_API_URL}${activeUser?.doctor?.image}`);
     }
   },[photo]);
 
@@ -44,7 +43,7 @@ const DoctorProfile = () => {
     e.preventDefault();
     try {
       const result = await axios.post(
-        "http://localhost:5001/user/logout",
+        `${import.meta.env.VITE_API_URL}/user/logout`,
         null,
         {
           withCredentials: true,
@@ -117,7 +116,7 @@ const DoctorProfile = () => {
             <FontAwesomeIcon icon={faBell} className="text-blue-400 mr-2" />{" "}
             Scheduler
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/doctorprofile/reports"
             className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"
           >
@@ -126,7 +125,7 @@ const DoctorProfile = () => {
               className="text-blue-400 mr-2"
             />{" "}
             Reports
-          </NavLink>
+          </NavLink> */}
           <button
             onClick={logout}
             className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"

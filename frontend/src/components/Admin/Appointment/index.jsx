@@ -20,7 +20,7 @@ const Appointment = () => {
   const getAllAppointments = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5001/admin/getAllAppointment"
+        `${import.meta.env.VITE_API_URL}/admin/getAllAppointment`
       );
       if (response.data.Ok) {
         setAppointments(response.data.result);

@@ -326,7 +326,7 @@ const BookedAppointment = ({ doctor }) => {
   const handleViewReport = async (appointmentId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5001/doctorprofile/viewReport/${appointmentId}`,
+        `${import.meta.env.VITE_API_URL}/doctorprofile/viewReport/${appointmentId}`,
         { withCredentials: true }
       );
 
@@ -408,7 +408,7 @@ const BookedAppointment = ({ doctor }) => {
 
         try {
           const response = await axios.post(
-            `http://localhost:5001/doctorprofile/uploadReport/${appointmentId}`,
+            `${import.meta.env.VITE_API_URL}/doctorprofile/uploadReport/${appointmentId}`,
             formData,
             { withCredentials: true }
           );

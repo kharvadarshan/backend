@@ -20,7 +20,7 @@ const DoctorDetails = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5001/api/doctors/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/doctors/${id}`);
         setDoctor(response.data);
       } catch (error) {
         console.error("Error fetching doctor details:", error);
@@ -38,7 +38,7 @@ const DoctorDetails = () => {
   useEffect(()=>{
     if(doctor?.image)
     {
-      setPhoto(`http://localhost:5001${doctor.image}`);
+      setPhoto(`${import.meta.env.VITE_API_URL}${doctor.image}`);
     }else{
       setPhoto("/assets/doctor.png")
     }

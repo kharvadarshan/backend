@@ -8,7 +8,7 @@ const EditProfile = ({doctor,onPhotoUpdate}) => {
   
     const fetchDoctor = async()=>{
       try{
-            const response = await axios.post("http://localhost:5001/doctorprofile/getDoctorById",{email:doctor.contact});
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById`,{email:doctor.contact});
             if(response.data.ok)
             {
                  setFormData(response.data.result[0]);

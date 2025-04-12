@@ -39,7 +39,7 @@ export default function DoctorSlotScheduler() {
   const getAvailableTimeSlots = async()=>{
     try
     {
-            const response = await axios.get(`http://localhost:5001/doctorprofile/getTimeSlots/${activeUser._id}`);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlots/${activeUser._id}`);
 
             if(response.data.ok)
             {
@@ -74,7 +74,7 @@ export default function DoctorSlotScheduler() {
           if (result.isConfirmed) {
             try {
               
-              const response = await axios.post("http://localhost:5001/doctorprofile/addSlot",
+              const response = await axios.post(`${import.meta.env.VITE_API_URL}/doctorprofile/addSlot`,
                 {doctorId:activeUser._id,slot:slots}
               );
 
@@ -127,7 +127,7 @@ export default function DoctorSlotScheduler() {
               }).map((day) => format(day, "yyyy-MM-dd"));
 
               
-              const response = await axios.post("http://localhost:5001/doctorprofile/addManySlot",
+              const response = await axios.post(`${import.meta.env.VITE_API_URL}/doctorprofile/addManySlot`,
                 {doctorId:activeUser._id,dates:allDates,slot:{start:startTime,end:endTime}}
               );
 
@@ -220,7 +220,7 @@ export default function DoctorSlotScheduler() {
       if (result.isConfirmed) {
         try {
  
-          const response = await  axios.get('http://localhost:5001/doctorprofile/deleteTimeSlot',
+          const response = await  axios.get(`${import.meta.env.VITE_API_URL}/doctorprofile/deleteTimeSlot`,
                     {params:
                       {
                         id:id,
