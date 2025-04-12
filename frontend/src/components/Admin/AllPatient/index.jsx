@@ -61,6 +61,7 @@ const Patients = () => {
               }).then(async (result) => {
                 if (result.isConfirmed) {
                   try {
+                  
                     const response = await axios.get(
                       `http://localhost:5001/admin/unblockUser/${id}`
                     );

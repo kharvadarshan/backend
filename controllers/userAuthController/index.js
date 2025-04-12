@@ -13,7 +13,9 @@ env.config();
 const redisClient = redis.createClient({
    socket: {
        host: process.env.REDIS_HOSTNAME,
-       port: Number(process.env.REDIS_PORT)
+       port: Number(process.env.REDIS_PORT),
+       reconnectStrategy: (retries) => Math.min(retries * 100, 3000),
+       connectTimeout: 10000,
    },
    password: process.env.REDIS_PASSWORD
 });

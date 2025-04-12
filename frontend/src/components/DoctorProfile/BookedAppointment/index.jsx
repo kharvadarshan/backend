@@ -65,7 +65,6 @@ const BookedAppointment = ({ doctor }) => {
         `http://localhost:5001/appointments/getAppointmentByDoctorId/${doctor._id}`
       );
       if (response.data.ok) {
-        // console.log(response.data);
         setUpcoming(response.data.upcomingAppointments);
         setConfirmed(response.data.confirmedAppointment);
         setRejected(response.data.rejectedAppointments);
@@ -77,8 +76,8 @@ const BookedAppointment = ({ doctor }) => {
   };
 
   useEffect(() => {
-    if (doctor?._id) fetchAppointment();
-  }, [doctor?._id]);
+   fetchAppointment();
+  },[]);
 
   const handleAccept = async (id) => {
     Swal.fire({
@@ -205,11 +204,7 @@ const BookedAppointment = ({ doctor }) => {
       </p>
       <p>
         <strong>Time:</strong>{" "}
-        {new Date(app.date).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })}
+        {app.time}
       </p>
       <p>
         <strong>Reason:</strong> {app.patientForm.reason}
@@ -230,14 +225,33 @@ const BookedAppointment = ({ doctor }) => {
           {app.status}
         </span>
       </p>
+      <p>
+        <strong>Report:</strong>{" "}
+        {app.report ? (
+          <button
+            onClick={() => handleViewReport(app._id)}
+            className="text-blue-600 hover:underline"
+          >
+            View Report
+          </button>
+        ) : (
+          "No report uploaded"
+        )}
+      </p>
       {select === "Completed" && (
-        <p className="p-3 mt-2 flex flex-wrap justify-center gap-2">
+        <div className="p-3 mt-2 flex flex-wrap justify-center gap-2">
+        <button
+            className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg"
+            onClick={() => handleUploadReport(app._id)}
+          >
+            Upload Report
+          </button>
         <button  className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
-        // onClick={() => handleDelete(app._id)} 
+         onClick={() => handleDelete(app._id)} 
         >
           <Trash2 size={18} />
         </button>
-      </p>
+      </div>
       )}
       {isUpcoming && app.status === "Pending" && (
         <div className="flex flex-wrap gap-2 mt-3">
@@ -277,32 +291,111 @@ const BookedAppointment = ({ doctor }) => {
   );
 
 
-  // const handleDelete = async (appointmentId) => {
-  //   const confirm = await Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "This appointment will be permanently deleted!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#d33",
-  //     cancelButtonColor: "#3085d6",
-  //     confirmButtonText: "Yes, delete it!",
-  //   });
+  const handleDelete = async (appointmentId) => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "This appointment will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
   
-  //   if (confirm.isConfirmed) {
-  //     try {
-  //       const res = await axios.delete(
-  //         `http://localhost:5001/appointments/delete/${appointmentId}`
-  //       );
-  //       if (res.data.ok) {
-  //         Swal.fire("Deleted!", "Appointment has been removed.", "success");
-  //         fetchAppointment(); // Refresh the list
-  //       }
-  //     } catch (error) {
-  //       Swal.fire("Error!", "Something went wrong.", "error");
-  //       console.error(error);
-  //     }
-  //   }
-  // };
+    if (confirm.isConfirmed) {
+      try {
+        const res = await axios.delete(
+          `http://localhost:5001/appointments/deleteAppointment/${appointmentId}`
+        );
+        if (res.data.ok) {
+          Swal.fire("Deleted!", res.data.message, "success");
+          fetchAppointment();
+        }else
+        {
+          Swal.fire("Error!", res.data.message, "error");
+        }
+      } catch (error) {
+        Swal.fire("Error!", "Something went wrong.", "error");
+        console.error(error);
+      }
+    }
+  };
+
+
+  const handleViewReport = async (appointmentId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5001/reports/${appointmentId}`,
+        { withCredentials: true }
+      );
+      if (response.data.ok) {
+        window.open(response.data.url, "_blank");
+      } else {
+        Swal.fire("Error!", response.data.message || "Failed to view report", "error");
+      }
+    } catch (error) {
+      Swal.fire("Error!", "Failed to view report", "error");
+    }
+  };
+
+
+  const handleUploadReport = async (appointmentId) => {
+    Swal.fire({
+      title: "Upload Report",
+      html: `
+        <input name="reports" type="file" id="reportFile" accept="application/pdf" class="swal2-file" style="display: block; margin: 10px auto;" />
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Upload",
+      cancelButtonText: "Cancel",
+      preConfirm: async () => {
+        const fileInput = document.getElementById(
+          "reportFile"
+        ) ;
+        const files = Array.from(fileInput.files);
+        if (files.length > 5) {
+          Swal.showValidationMessage("Maximum 5 files allowed");
+          return false;
+        }
+        for (const file of files) {
+          if (file.type !== "application/pdf") {
+            Swal.showValidationMessage("Only PDF files are allowed");
+            return false;
+          }
+          if (file.size > 10 * 1024 * 1024) {
+            Swal.showValidationMessage("Each file must be less than 10MB");
+            return false;
+          }
+        }
+
+        const formData = new FormData();
+        files.forEach((file) => formData.append("reports", file));
+
+        try {
+          const response = await axios.post(
+            `http://localhost:5001/doctorprofile/uploadReport/${appointmentId}`,
+            formData,
+            { withCredentials: true }
+          );
+          if (!response.data.ok) {
+            Swal.showValidationMessage(response.data.message || "Upload failed");
+            return false;
+          }
+          return true;
+        } catch (error) {
+          Swal.showValidationMessage(
+            error.response?.data?.message || "Upload failed"
+          );
+          return false;
+        }
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Success!", "Report uploaded successfully!", "success");
+        await fetchAppointment(); // Refresh to get updated reportFileKey
+      }
+    });
+  };
   
 
   return (
@@ -386,6 +479,7 @@ const BookedAppointment = ({ doctor }) => {
               <th className="p-3 border-r">Time</th>
               <th className="p-3 border-r">Reason</th>
               <th className="p-3 border-r">Status</th>
+              {select === "Completed" && <th className="p-3">Report</th>}
               {select === "Upcoming" && <th className="p-3">Actions</th>}
               {select === "Accepted" && <th className="p-3">Actions</th>}
               {select === "Completed" && <th className="p-3">Actions</th>}
@@ -402,11 +496,7 @@ const BookedAppointment = ({ doctor }) => {
                   {new Date(app.date).toLocaleDateString()}
                 </td>
                 <td className="p-3 border-r">
-                  {new Date(app.date).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                  })}
+                   {app.time}
                 </td>
 
                 <td className="p-3 border-r">{app.patientForm.reason}</td>
@@ -423,6 +513,26 @@ const BookedAppointment = ({ doctor }) => {
                 >
                   {app.status}
                 </td>
+                {
+                  select==="Completed" && (
+                <td className="p-3 border-r">
+                  {app.report.length ? (
+                    <button
+                      onClick={() => handleViewReport(app._id)}
+                      className="text-blue-600 hover:underline mr-2"
+                    >
+                      View Report
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleUploadReport(app._id)}
+                      className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                    >
+                      Upload
+                    </button>
+                  )}
+                </td>)
+                }
                 {select === "Upcoming" && (
                   <td className="p-3 flex flex-wrap justify-center gap-2">
                     <button
@@ -445,17 +555,7 @@ const BookedAppointment = ({ doctor }) => {
                     >
                       <FontAwesomeIcon icon={faXmark} className="mr-1" /> Reject
                     </button>
-                    {/* <button
-                      onClick={() => {
-                        disableButtons(index);
-                        handleCompleted(app._id);
-                      }}
-                      className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
-                      disabled={actionDisabled[index]}
-                    >
-                      <FontAwesomeIcon icon={faCheckCircle} className="mr-1" />{" "}
-                      Complete
-                    </button> */}
+                  
                   </td>
                 )}
 
@@ -488,7 +588,7 @@ const BookedAppointment = ({ doctor }) => {
                 {select === "Completed" && (
                   <td className="p-3 flex flex-wrap justify-center gap-2">
                     <button className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
-                    //  onClick={() => handleDelete(app._id)}
+                    onClick={() => handleDelete(app._id)}
                     >
                       <Trash2 size={18} />
                     </button>

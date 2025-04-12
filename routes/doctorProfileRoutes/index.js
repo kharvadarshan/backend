@@ -1,17 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 const multer = require('multer');
-const  {
-    addTimeSlot,
-    getAvailableTimeSlots,
-    getDoctorById,
-    acceptAppointment,
-    rejectAppointment,
-     editProfile ,
-     markCompleted,
-     addManyTimeSlot, 
-     getTimeSlots,
-     deleteTimeSlot}  =require('../../controllers/doctorProfileController');
+
 
 const storage = multer.diskStorage({
     destination: './uploads/',
@@ -20,7 +10,26 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }
+});
+
+upload.any();
+
+const  {
+    addTimeSlot,
+    getAvailableTimeSlots,
+    getDoctorById,
+    acceptAppointment,
+    rejectAppointment,
+    editProfile ,
+    markCompleted,
+    addManyTimeSlot, 
+    getTimeSlots,
+    deleteTimeSlot,uploadReport }  = require('../../controllers/doctorProfileController');
+
+
 
 router.post('/addSlot',addTimeSlot);
 router.post('/addManySlot',addManyTimeSlot);
@@ -31,6 +40,8 @@ router.get('/acceptAppointment/:id',acceptAppointment);
 router.get('/rejectAppointment/:id',rejectAppointment);
 router.get('/markCompleted/:id',markCompleted);
 router.post('/editProfile',upload.single('image'),editProfile);
+router.post('/uploadReport/:appointmentId',upload.array('reports',5),uploadReport);
+
 router.get('/deleteTimeSlot',deleteTimeSlot);
 
 module.exports = router;

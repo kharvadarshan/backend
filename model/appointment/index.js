@@ -127,6 +127,22 @@ const appointmentSchema = new mongoose.Schema({
       type: Boolean,
       default:false
     },
+    report: [
+    {
+      filePath: {
+        type: String,
+        required: true,
+      },
+      fileName: {
+        type: String,
+        required: true,
+      },
+      uploadedAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+   ],
     createdAt: {
       type: Date,
       default: Date.now,

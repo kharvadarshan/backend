@@ -2,6 +2,7 @@ const TimeSlot = require('../../model/timeSlot');
 const Doctor = require('../../model/doctor');
 const Appointment = require('../../model/appointment');
 const { default: mongoose } = require('mongoose');
+const AppointmentModel = require('../../model/appointment');
 
 
 exports.addTimeSlot = async (req,res)=>{
@@ -219,4 +220,53 @@ exports.editProfile = async(req,res)=>{
     {
         res.status(500).json({ message: 'Error while updating doctor profile.',error });  
     }
+}
+
+exports.uploadReport =async(req,res)=>{
+
+    try
+    {
+        const files=req.files;
+        const {appointmentId}=req.params;
+
+        if (!files || files.length === 0) {
+            return res.status(400).json({ ok: false, message: "No files uploaded" });
+          }
+
+          const appointment = await AppointmentModel.findOne({
+            _id: appointmentId,
+          });
+
+
+          if (!appointment) {
+            return res
+              .status(403)
+              .json({ ok: false, message: "Appointment not found or unauthorized" });
+          }
+        
+          const newReports = files.map((file) => ({
+            filePath: `/uploads/${file.filename}`,
+            fileName: file.originalname,
+            uploadedAt: new Date(),
+          }));
+      
+          const result = await AppointmentModel.updateOne(
+            { _id: appointmentId },
+            {
+              $push: { report: { $each: newReports } },
+            }
+          );
+
+          if (result.modifiedCount === 0) {
+            return res.status(400).json({ ok: false, message: "Failed to update appointment" });
+          }
+
+          return res.status(200).json({ ok: true, message: "Reports uploaded successfully" });
+    
+
+    }catch(error)
+    {
+        return res.status(500).json({ message: 'Error while updating doctor profile.',error });  
+    }
+
 }

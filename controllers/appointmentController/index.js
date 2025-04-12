@@ -55,8 +55,11 @@ exports.getAllAppointmentsByDoctorId= async(req,res)=>{
     const completedAppointments = await AppointmentModel.find({
        doctorId:id,
        $and: [
-        {date:{ $lt:today}},
+        // {date:{ $lt:today}},
         {status: {$eq:'Completed'}},
+        {
+          isDeleted:false
+        }
        ],
     }).sort({date:-1});
 
@@ -112,7 +115,6 @@ exports.getDeletedAppointmentsByPatientId= async(req,res)=>{
   try
   {
     const {id}=req.params;
-    console.log(id);
     const result = await AppointmentModel.find({patientId:id,isDeleted:true}).sort({ createdAt:-1});
     if (!result || result.length === 0) {
       return res.status(404).json({message : "Appointment not Found."})
@@ -128,9 +130,7 @@ exports.getDeletedAppointmentsByPatientId= async(req,res)=>{
 exports.deleteAppointment = async(req,res)=>{
    try{
        const {appointmentId}=req.params;
-       console.log(appointmentId);
        
-
        const existingAppointment = await AppointmentModel.findById(appointmentId);
        if(!existingAppointment)
        {
