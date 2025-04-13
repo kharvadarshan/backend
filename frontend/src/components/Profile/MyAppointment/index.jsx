@@ -72,7 +72,7 @@ const MyAppointments = () => {
       const handleViewReport = async (appointmentId) => {
          try {
            const response = await axios.get(
-             `${import.meta.env.VITE_API_URL}/doctorprofile/viewReport/${appointmentId}`,
+             `${import.meta.env.VITE_API_URL}/profile/viewReport/${appointmentId}`,
              { withCredentials: true }
            );
      

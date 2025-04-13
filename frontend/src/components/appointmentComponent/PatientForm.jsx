@@ -32,7 +32,7 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/appointments`,
+        `${import.meta.env.VITE_API_URL}/appointments/appointments`,
         appointment
       );
 

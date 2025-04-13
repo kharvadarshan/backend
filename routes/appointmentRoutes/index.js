@@ -5,9 +5,12 @@ const {
       getAllAppointmentsByDoctorId, 
       getAllAppointmentsByPatientId, 
       getDeletedAppointmentsByPatientId, 
-      giveFeedback
+      giveFeedback,
+      createAppointment
     } = require('../../controllers/appointmentController');
 
+
+router.post('/appointments', createAppointment);
 router.delete('/deleteAppointment/:appointmentId',deleteAppointment);
 router.get('/getAppointmentByPatientId/:id',getAllAppointmentsByPatientId);
 router.get('/getDeletedAppointmentByPatientId/:id',getDeletedAppointmentsByPatientId);

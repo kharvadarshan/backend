@@ -12,7 +12,7 @@ router.post('/doctors', doctorController.createDoctor);
 router.put('/doctors/:id', doctorController.updateDoctor);
 router.delete('/doctors/:id', doctorController.deleteDoctor);
 
- router.post('/appointments', appointmentController.createAppointment);
+
 // router.post('/appointments',appointmentController.bookAppointment);
 // router.get('/timeslots',getTimeSlots);
 router.post('/contact', contactController.createContact);

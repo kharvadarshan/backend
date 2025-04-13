@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const AppointmentModel = require("../../model/appointment");
 const TimeSlot =require('../../model/timeSlot');
 const Feedback = require('../../model/feedback');
+const Doctor = require("../../model/doctor");
 // Create a new appointment
 exports.createAppointment = async (req, res) => {
   try {
@@ -154,43 +155,79 @@ exports.deleteAppointment = async(req,res)=>{
 
 
 exports.giveFeedback = async(req,res)=>{
+  const session = await mongoose.startSession();
+
   try
   {
+     session.startTransaction();
 
     const {appointmentId,rating,feedback} = req.body;
-     console.log(req.body);
     
      if (!mongoose.Types.ObjectId.isValid(appointmentId) || !rating || !feedback) {
       return res.status(400).json({ ok: false, message: "Missing required fields" });
     }
 
+     const appointment = await AppointmentModel.findById(appointmentId).session(session);
 
-     const appointment = await AppointmentModel.findById(appointmentId);
     if (!appointment) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ ok: false, message: "Appointment not found" });
     }
-
+   
     if (appointment.feedbackForm?.rating) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(403).json({ ok: false, message: "Feedback already submitted" });
     }
 
+     
+    const ratings = await  AppointmentModel.aggregate([
+      { $match: { doctorId: appointment.doctorId,"feedbackForm.rating":{$exists:true }}},
+      { $group:{_id:null,avgRating:{ $avg: "$feedbackForm.rating"}}}
+    ]).session(session);
+
+    const newRating =  ratings.length>0 ? ratings[0].avgRating:rating;
+    
+
+     const updateRating = await Doctor.updateOne(
+      {
+        _id:appointment.doctorId
+      },
+      {
+        $set:{
+          rating: newRating
+        }
+      },
+      { session}
+     )
+
     const updateAppointment = await AppointmentModel.updateOne(
       {  _id:appointmentId },
-      { $set:{
+      {
+         $set:{
           "feedbackForm.rating": rating,
           "feedbackForm.feedback": feedback,
           "feedbackForm.createdAt": new Date(),
          } 
-       });
+       },{session});
 
-       if(updateAppointment.modifiedCount>0)
+       if(updateAppointment.modifiedCount>0 && updateRating.modifiedCount>0)
        {
+
+        await session.commitTransaction();
+        session.endSession();
+
         return res.status(201).json({ok:true,message:"feed given successfully."});
        }else{
+        await session.abortTransaction();
+        session.endSession();
         return res.status(400).json({ok:false,message:"No changes were made."});
        }
   }catch(error)
-  {
+  {  
+    await session.abortTransaction();
+    session.endSession();
       return res.status(500).json({error:error.message});
   }
 }

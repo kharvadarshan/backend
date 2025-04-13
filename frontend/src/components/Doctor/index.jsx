@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {Star} from "lucide-react";
+
 
 const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
@@ -42,6 +44,20 @@ const DoctorList = () => {
   );
 
   const totalPages = Math.ceil(filteredDoctors.length / doctorsPerPage);
+
+
+  const renderRating = (rating) => (
+      <div className="flex items-center justify-center gap-1">
+        {[...Array(5)].map((_, index) => (
+          <Star
+            key={index}
+            size={16}
+            className={index < rating ? "text-yellow-500" : "text-gray-300"}
+            fill={index < rating ? "currentColor" : "none"}
+          />
+        ))}
+      </div>
+    );
 
   return (
     <div className="mx-5 py-7">
@@ -92,6 +108,11 @@ const DoctorList = () => {
                   alt={doctor.name}
                   className="w-24 h-24 object-cover rounded-full mx-auto mb-4 border-4 border-indigo-200"
                 />
+                <div>
+                 {
+                  renderRating(doctor.rating)
+                  }
+                </div>
                 <h5 className="text-xl font-bold text-center text-indigo-700">
                   {doctor.name}
                 </h5>
