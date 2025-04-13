@@ -4,6 +4,8 @@ import axios from "axios";
 import {} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useEffect,useState } from "react";
+
 const PatientForm = ({ appointmentData, setAppointmentData }) => {
   const navigate = useNavigate();
   const fieldData = [
@@ -28,6 +30,30 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
     });
   };
 
+  const [doctor, setDoctor] = useState(null);
+  console.log(doctor);
+
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${appointmentData.doctorId}`
+        );
+        if(response.data.ok)
+        {
+          setDoctor(response.data.result);
+        }
+        
+      } catch (error) {
+        console.error("Error fetching doctor:", error);
+        toast.error("Failed to load doctor details");
+      }
+    };
+    if (appointmentData?.doctorId) {
+      fetchDoctor();
+    }
+  }, [appointmentData?.doctorId]);
+
   const handleSubmit = async (appointment) => {
 
     try {
@@ -37,11 +63,16 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
       );
 
       if (response.data.ok) {
+        console.log(response.data);
         toast.success("Appointment booked successfully!", {
           position: "top-right",
           autoClose: 1000,
         });
-        navigate("/checkout");
+        navigate("/checkout",{ state:
+           { 
+              appointmentData:response.data.appointment,
+              doctor:doctor,
+             } });
         // setTimeout(() => navigate("/all-doctors"), 2000); // Redirect after 2 sec
       }
     } catch (error) {

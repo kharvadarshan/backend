@@ -135,6 +135,19 @@ exports.getDoctorById = async(req,res)=>{
     }
 }
 
+exports.getDoctor = async(req,res)=>{
+    try{
+          const {id}=req.params;
+          const result = await Doctor.findOne({_id:id});
+          res.status(201).json({ok:true,result:result});
+    }catch(error)
+    {
+        res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+    }
+}
+
+
+
 exports.acceptAppointment = async(req,res)=>{
    
     try{

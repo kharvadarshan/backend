@@ -127,6 +127,11 @@ const appointmentSchema = new mongoose.Schema({
       type: String,
       default:"Pending",
     },
+    paymentStatus: {
+    type: String,
+    enum: ["Pending", "Completed", "Failed"],
+    default: "Pending",
+  },
     isDeleted:{
       type: Boolean,
       default:false
