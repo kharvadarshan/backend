@@ -5,12 +5,14 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import FeedBackForm from "../../FeedBackForm/FeedBack";
+import { useNavigate } from "react-router-dom";
 
 const MyAppointments = () => {
   const activeUser = useSelector((state)=> state.user.user);
   const [appointments, setAppointments] = useState();
   const [modalData,setModalData] = useState();
   const [showFeedbackForm,setShowFeedbackForm]=useState(false);
+  const navigate = useNavigate();
 
   useEffect(()=>{
     if(activeUser?.id)
@@ -278,6 +280,32 @@ const MyAppointments = () => {
       </div>
     );
   };
+   
+
+
+  const payNow= async(appointment)=>{
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${appointment.doctorId}`
+      );
+      if(response.data.ok)
+      {
+       
+        navigate('/checkout', {  state:{
+          appointmentData:appointment,
+          doctor:response.data.result
+        }});
+      }else{
+        Swal.fire('Error', 'Failed to fetch doctor details.', 'error');
+      }
+      
+    } catch (error) {
+      console.error("Error fetching doctor:", error);
+      Swal.fire('Error', 'Could not connect to the server.', 'error');
+    }
+     
+  }
+
   return (
     <div className="p-6 mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
@@ -431,6 +459,7 @@ const MyAppointments = () => {
                 <th className="border p-3">Date</th>
                 <th className="border p-3">Time</th>
                 <th className="border p-3 text-center">Status</th>
+                <th className="border p-3 text-center">Payment Status</th>
                 <th className="border p-3">Details</th>
                 <th className="border p-3 text-center">Report</th>
                 <th className="border p-3 text-center">Review</th>
@@ -454,6 +483,21 @@ const MyAppointments = () => {
                     <td className="p-3 border">{appointment.time}</td>
                     <td className="p-3 border">
                       {getStatusBadge(appointment.status)}
+                    </td>
+                    <td className="p-3 border">
+                      {
+                        appointment.paymentStatus==="Pending" ? (
+                                        <button
+                                          onClick={ ()=>{  payNow(appointment); }}
+                                          className="flex items-center justify-content-center p-3 text-white bg-blue-500 rounded-lg w-full"
+                                       >
+                                         Pay Now
+                                       </button>
+                        ):
+                        (
+                            getStatusBadge(appointment.paymentStatus)
+                        )
+                      }
                     </td>
 
                      {/* patient details button */}

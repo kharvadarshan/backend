@@ -166,13 +166,14 @@ exports.acceptAppointment = async(req,res)=>{
         const {id}=req.params;
         const existingAppointment = await Appointment.findOne({_id:id}).session(session);
 
-        if(!existingAppointment)
+        if(!existingAppointment || existingAppointment.paymentStatus==="Completed")
         { 
             await session.abortTransaction();
             session.endSession();
             return res.status(403).json({ ok: false, message: "Appointment not found or unauthorized" });
         }
-
+        
+      
         const user = await User.findOne({_id:existingAppointment.patientId}).session(session);
         
 
@@ -213,8 +214,13 @@ exports.acceptAppointment = async(req,res)=>{
        );
 
 
-        if(result.modifiedCount > 0)
+        if(result.modifiedCount === 0)
         { 
+            await session.abortTransaction();
+            session.endSession();
+           return  res.status(200).json({ok:false,message:"No chnaes were made."});
+        }
+
 
             const mailOptions = {
                 from:process.env.EMAIL_USER,
@@ -226,13 +232,7 @@ exports.acceptAppointment = async(req,res)=>{
             await session.commitTransaction();
             session.endSession();
            return res.status(201).json({ok:true,message:"Requeste accepted successfully."});
-        }
-        else
-        {
-            await session.abortTransaction();
-            session.endSession();
-           return  res.status(200).json({ok:false,message:"No chnaes were made."});
-        }
+        
     }catch(error)
     {   
         await session.abortTransaction();
