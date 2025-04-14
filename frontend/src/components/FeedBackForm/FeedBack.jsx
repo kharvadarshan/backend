@@ -18,7 +18,7 @@ const FeedbackForm = ({appointmentId,onSubmitSuccess}) => {
     e.preventDefault();
     console.log(feedbackForm);
     try {
-     const response = await axios.post("http://localhost:5001/appointments/giveFeedback",feedbackForm);
+     const response = await axios.post(`${import.meta.env.VITE_API_URL}/appointments/giveFeedback`,feedbackForm);
      
       if(response.data.ok)
         {

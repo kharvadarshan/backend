@@ -65,6 +65,10 @@ app.use(cookieParser());
 
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 
+
+
+
+
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Failed to connect to MongoDB', err));

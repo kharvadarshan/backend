@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Trash2, Ban, Unlock } from "lucide-react";
+import axios from "axios";
+import Swal from "sweetalert2";
+
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
@@ -9,61 +12,98 @@ const Patients = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const patientsPerPage = 6;
 
-  useEffect(() => {
-    setPatients([
+
+  useEffect(()=>{
+     getAllPatients();
+  },[]);
+
+  const blockUser = async(id)=>
+  {
+        Swal.fire({
+              title: "Are you sure?",
+              text: "Do you really want to block this user?",
+              icon: "warning",
+              confirmButtonText: "Yes, Block ",
+              cancelButtonText: "No, Cancel",
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                try {
+                  const response = await axios.delete(
+                    `${import.meta.env.VITE_API_URL}/admin/blockUser/${id}`
+                  );
+        
+                  if (response.data.ok) {
+                    await getAllPatients();
+                    Swal.fire(
+                      "Blocked!",
+                      "User blocked successfully.",
+                      "success"
+                    );
+                  } else {
+                    Swal.fire("Error!", "Something went wrong. Try again.", "error");
+                  }
+                } catch (error) {
+                  Swal.fire("Error!", "Could not connect to the server.", "error");
+                }
+              }
+            });
+  }
+
+
+  const unblockUser = async(id)=>
+    {
+          Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to unblock this user?",
+                icon: "warning",
+                confirmButtonText: "Yes, Unblock ",
+                cancelButtonText: "No, Cancel",
+              }).then(async (result) => {
+                if (result.isConfirmed) {
+                  try {
+                  
+                    const response = await axios.get(
+                      `${import.meta.env.VITE_API_URL}/admin/unblockUser/${id}`
+                    );
+          
+                    if (response.data.ok) {
+                      await getAllPatients();
+                      Swal.fire(
+                        "Unblocked!",
+                        "User unblocked successfully.",
+                        "success"
+                      );
+                    } else {
+                      Swal.fire("Error!", "Something went wrong. Try again.", "error");
+                    }
+                  } catch (error) {
+                    Swal.fire("Error!", "Could not connect to the server.", "error");
+                  }
+                }
+              });
+    }
+
+  const getAllPatients = async()=>{
+     try
+     {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllPatient`);
+
+      if(response.data.ok)
       {
-        id: 1,
-        name: "Neel Sathvara",
-        email: "neel@example.com",
-        appointments: 4,
-        completed: 3,
-        pending: 5,
-        rejected: 1,
-        blocked: false,
-      },
-      {
-        id: 2,
-        name: "Pooja Sinh",
-        email: "pooja@example.com",
-        appointments: 2,
-        completed: 13,
-        pending: 9,
-        rejected: 3,
-        blocked: false,
-      },
-      {
-        id: 3,
-        name: "Darshan Patel",
-        email: "darshan@example.com",
-        appointments: 3,
-        completed: 3,
-        pending: 13,
-        rejected: 0,
-        blocked: false,
-      },
-      {
-        id: 4,
-        name: "Anjali Rana",
-        email: "anjali@example.com",
-        appointments: 1,
-        completed: 0,
-        pending: 4,
-        rejected: 2,
-        blocked: false,
-      },
-    ]);
-  }, []);
+        setPatients(response.data.patients);
+      }
+
+     }catch(error)
+     {
+        console.log(error);
+     }
+  }
 
   const handleDelete = (id) => setPatients((prev) => prev.filter((p) => p.id !== id));
 
-  const toggleBlock = (id) =>
-    setPatients((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, blocked: !p.blocked } : p))
-    );
-
   const filteredPatients = patients.filter(
     (p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      p?.userName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (!showBlockedOnly || p.blocked)
   );
 
@@ -79,19 +119,23 @@ const Patients = () => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <td className="px-6 py-4">{patient.name}</td>
+      <td className="px-6 py-4">{patient.userName}</td>
       <td className="px-6 py-4">{patient.email}</td>
-      <td className="px-6 py-4">{patient.appointments}</td>
-      <td className="px-6 py-4">{patient.pending}</td>
-      <td className="px-6 py-4">{patient.completed}</td>
-      <td className="px-6 py-4">{patient.rejected}</td>
       <td className="px-6 py-4">
         <button
-          onClick={() => toggleBlock(patient.id)}
-          title={patient.blocked ? "Unblock" : "Block"}
+          onClick={() => {
+             if(!patient.isBloked)
+             {
+              blockUser(patient._id);
+             }else
+             {
+              unblockUser(patient._id);
+             }
+          } }
+          title={ patient.isBloked ? "Unblock" : "Block"}
           className="text-indigo-600 hover:text-indigo-800"
         >
-          {patient.blocked ? <Unlock size={20} /> : <Ban size={20} />}
+          { patient.isBloked ? <Unlock size={20} /> : <Ban size={20} />}
         </button>
       </td>
       <td className="px-6 py-4">
@@ -175,7 +219,7 @@ const Patients = () => {
           <table className="min-w-full divide-y divide-gray-300">
             <thead className="bg-gray-400">
               <tr>
-                {["Name", "Email ID", "Appointments", "Pending", "Completed", "Rejected", "Block", "Delete"].map(
+                {["Name", "Email ID", "Block", "Delete"].map(
                   (heading) => (
                     <th
                       key={heading}
@@ -189,7 +233,7 @@ const Patients = () => {
             </thead>
             <tbody className="divide-y divide-gray-300 text-center">
               {currentPatients.length ? (
-                currentPatients.map((p) => <PatientRow key={p.id} patient={p} />)
+                currentPatients.map((p) => <PatientRow key={p._id} patient={p} />)
               ) : (
                 <tr>
                   <td colSpan="8" className="py-4 text-gray-600">

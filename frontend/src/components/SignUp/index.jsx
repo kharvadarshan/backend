@@ -26,7 +26,7 @@ const SignUp = () => {
             //    setMessage('Passwords do not match');
             //  }else{
              try{
-                const response = await axios.post('http://localhost:5001/user/sendOTP',{ email:formData.email});
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/sendOTP`,{ email:formData.email});
 
                  if(response.data.ok){
                   setMessage(response.data.message);
@@ -41,12 +41,12 @@ const SignUp = () => {
    const verifyOTPAndRegister = async(e) =>{
     e.preventDefault();
     try{
-          const verifyResponse = await axios.post("http://localhost:5001/user/sendOTP",{ email:formData.email,otp:otp});
+          const verifyResponse = await axios.post(`${import.meta.env.VITE_API_URL}/user/verifyOTP`,{ email:formData.email,otp:otp});
           if(verifyResponse.data.ok)
           {
             try{
        
-              const response = await axios.post("http://localhost:5001/user/signup",formData)
+              const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/signup`,formData)
              
              if(response.data.ok)
              {

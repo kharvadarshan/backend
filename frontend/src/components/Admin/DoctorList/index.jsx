@@ -21,7 +21,7 @@ const DoctorList = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/admin/doctors");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/doctors`);
       setDoctors(response.data);
     } catch (error) {
       console.error("Error fetching doctors:", error);
@@ -35,7 +35,7 @@ const DoctorList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/api/doctors/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/doctors/${id}`);
       fetchDoctors();
     } catch (err) {
       console.error("Delete error:", err);

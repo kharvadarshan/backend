@@ -2,11 +2,19 @@ import  { useState } from "react";
 import axios from "axios";
 import { Loader2, CreditCard } from "lucide-react";
 import { useSelector } from "react-redux";
+import {useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const PaymentPage = () => {
   const activeUser = useSelector((state) => state.user.user);
-  console.log(activeUser);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const appointmentData = state?.appointmentData ;
+  const doctor = state?.doctor;
+  console.log(doctor);
+  console.log(appointmentData);
 
   const checkoutHandler = async (amount) => {
     setIsLoading(true);
@@ -21,6 +29,15 @@ const PaymentPage = () => {
         amount,
       });
 
+      const notes= {
+        appointmentId: appointmentData._id,
+        doctorId: appointmentData?.doctorId,
+        patientId: appointmentData?.patientId,
+        appointmentDate: appointmentData?.date,
+        appointmentTime: appointmentData?.time,
+        amount,
+      }
+
       const options = {
         key,
         amount: order.amount,
@@ -29,25 +46,39 @@ const PaymentPage = () => {
         description: "Doctor Appointment Payment",
         image: "https://avatars.githubusercontent.com/u/25058652?v=4",
         order_id: order.id,
-        callback_url: "http://localhost:5001/pay/paymentverification",
+        //callback_url: "http://localhost:5001/pay/paymentverification",
+        handler: async function(response) {
+          try {
+            await axios.post("http://localhost:5001/pay/paymentverification", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              notes: notes
+            });
+            navigate("/payment-success", { 
+              state: { 
+                paymentId: response.razorpay_payment_id,
+                doctor,
+                appointmentData
+              } 
+            });
+          } catch (error) {
+            console.error("Payment verification failed:", error);
+           toast.error("Payment verification failed");
+           navigate("/payment-failed");
+          }
+        },
         prefill: {
-          name: "Neel Sathvara",
-          email: "neel@example.com",
-          contact: "9999999999",
+         name: activeUser?.name || appointmentData.patientForm?.name || "Guest",
+          email: activeUser?.email || appointmentData.patientForm?.email || "guest@example.com",
+          contact: appointmentData.patientForm?.number || "9999999999",
         },
-        notes: {
-          appointmentId: "APPOINTMENT_ID_HERE",
-          // doctorId: appointmentData.doctorId,
-          // patientId: appointmentData.patientId,
-          // appointmentDate: appointmentData.date,
-          // appointmentTime: appointmentData.time,
-          amount,
-        },
+        notes:notes,
         theme: {
           color: "#4f46e5",
         },
       };
-
+      console.log(options.notes);
       const razor = new window.Razorpay(options);
       razor.open();
     } catch (error) {
@@ -61,10 +92,10 @@ const PaymentPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">Confirm Appointment</h1>
-        <p className="text-sm text-gray-500 text-center mb-6">Pay ₹500 to book your appointment with Dr. Smith</p>
+        <p className="text-sm text-gray-500 text-center mb-6">{`Pay ₹${doctor?.fees} to book your appointment with ${doctor?.name} `}</p>
 
         <button
-          onClick={() => checkoutHandler(500)}
+          onClick={() => checkoutHandler(doctor.fees)}
           disabled={isLoading}
           className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-white transition ${
             isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
@@ -76,7 +107,7 @@ const PaymentPage = () => {
             </>
           ) : (
             <>
-              <CreditCard className="h-5 w-5" /> Pay ₹500
+              <CreditCard className="h-5 w-5" /> Pay ₹{doctor.fees}
             </>
           )}
         </button>

@@ -34,7 +34,7 @@ const EditProfile = () => {
 
    const fetchUser = async ()=>{
     try{
-           const response = await axios.post('http://localhost:5001/profile/edit',{id:activeUser.id});
+           const response = await axios.post(`${import.meta.env.VITE_API_URL}/profile/edit`,{id:activeUser.id});
           
            if(response.data.ok)
            {
@@ -48,7 +48,7 @@ const EditProfile = () => {
 
     useEffect(()=>{
         if(user?.image){
-        setPhotoPreview(`http://localhost:5001${user.image}`);
+        setPhotoPreview(`${import.meta.env.VITE_API_URL}${user.image}`);
         }
       },[user]);
 
@@ -57,7 +57,7 @@ const EditProfile = () => {
         e.preventDefault();
         try{
                
-               const response = await axios.post('http://localhost:5001/profile/editProfile',
+               const response = await axios.post(`${import.meta.env.VITE_API_URL}/profile/editProfile`,
                                                  user,
                                                  {headers: {
                                                    'Content-Type':'multipart/form-data'

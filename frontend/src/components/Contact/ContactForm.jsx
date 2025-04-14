@@ -17,7 +17,7 @@ import axios from 'axios'
             e.target.message.value = "";
             
             try {
-                const response = await axios.post("http://localhost:5001/api/contact", formData);
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/contact`, formData);
               
                 if (response.status === 201) { // 201 for successful creation
                   alert("Message sent successfully!");

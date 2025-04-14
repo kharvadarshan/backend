@@ -2,6 +2,7 @@ const TimeSlot = require('../../model/timeSlot');
 const Doctor = require('../../model/doctor');
 const Appointment = require('../../model/appointment');
 const { default: mongoose } = require('mongoose');
+const AppointmentModel = require('../../model/appointment');
 
 
 exports.addTimeSlot = async (req,res)=>{
@@ -134,27 +135,109 @@ exports.getDoctorById = async(req,res)=>{
     }
 }
 
-exports.acceptAppointment = async(req,res)=>{
+exports.getDoctor = async(req,res)=>{
     try{
+          const {id}=req.params;
+          const result = await Doctor.findOne({_id:id});
+          res.status(201).json({ok:true,result:result});
+    }catch(error)
+    {
+        res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+    }
+}
+
+
+
+exports.acceptAppointment = async(req,res)=>{
+   
+    try{
+
+
         const {id}=req.params;
+        
+
+
+        const existingAppointment = await Appointment.findOne({_id:id});
+
+        if(!existingAppointment)
+        {
+           
+            return res
+              .status(403)
+              .json({ ok: false, message: "Appointment not found or unauthorized" });
+        }
+
+
+        const result1 = await TimeSlot.updateOne(
+            {
+                _id:existingAppointment.timeSlot,
+                 doctorId:existingAppointment.doctorId,
+                "slot._id":existingAppointment.slot
+             },{
+                
+             $set:{
+                "slot.$.status":"Booked",
+                "slot.$.appointmentId":id
+             }
+            },
+           
+       );
+
+
+        if(result1.modifiedCount <= 0)
+            {
+               return res.status(200).json({ok:false,message:"Time slot status is not changed."});
+            }
+
         const result = await  Appointment.updateOne({
             _id:id
         },{
             $set:{status:"Confirmed"}
-        });
+        },
+    );
 
 
         if(result.modifiedCount > 0)
         {
-            res.status(201).json({ok:true,message:"Requeste accepted successfully."});
+           return res.status(201).json({ok:true,message:"Requeste accepted successfully."});
         }
         else
         {
-            res.status(200).json({ok:false,message:"No chnaes were made."});
+
+           return  res.status(200).json({ok:false,message:"No chnaes were made."});
         }
     }catch(error)
+    {   
+        return res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+    }
+};
+
+
+exports.viewReport = async(req,res)=>{
+    try
     {
-        res.status(500).json({ message: 'Error while fetching available time slots.',error });  
+        const {appointmentId}=req.params;
+
+        const appointment = await AppointmentModel.findOne({
+            _id:appointmentId
+        });
+
+        if(!appointment)
+        {
+            return res.status(400).json({ok:false,message:'Appointment not found.'});
+        }
+
+        const reports = (appointment.report).map((report)=>({
+            fileName:report.fileName,
+            uploadAt:report.uploadAt,
+            url:`${req.protocol}://${req.get('host')}${report.filePath}`,
+        }))
+       
+       return res.status(201).json({ok:true,reports:reports});
+
+    }catch(error)
+    {
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -198,7 +281,7 @@ exports.markCompleted = async(req,res)=>{
            }
     }catch(error)
     {
-
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -219,4 +302,53 @@ exports.editProfile = async(req,res)=>{
     {
         res.status(500).json({ message: 'Error while updating doctor profile.',error });  
     }
+}
+
+exports.uploadReport =async(req,res)=>{
+
+    try
+    {
+        const files=req.files;
+        const {appointmentId}=req.params;
+
+        if (!files || files.length === 0) {
+            return res.status(400).json({ ok: false, message: "No files uploaded" });
+          }
+
+          const appointment = await AppointmentModel.findOne({
+            _id: appointmentId,
+          });
+
+
+          if (!appointment) {
+            return res
+              .status(403)
+              .json({ ok: false, message: "Appointment not found or unauthorized" });
+          }
+        
+          const newReports = files.map((file) => ({
+            filePath: `/uploads/${file.filename}`,
+            fileName: file.originalname,
+            uploadedAt: new Date(),
+          }));
+      
+          const result = await AppointmentModel.updateOne(
+            { _id: appointmentId },
+            {
+              $push: { report: { $each: newReports } },
+            }
+          );
+
+          if (result.modifiedCount === 0) {
+            return res.status(400).json({ ok: false, message: "Failed to update appointment" });
+          }
+
+          return res.status(200).json({ ok: true, message: "Reports uploaded successfully" });
+    
+
+    }catch(error)
+    {
+        return res.status(500).json({ message: 'Error while updating doctor profile.',error });  
+    }
+
 }

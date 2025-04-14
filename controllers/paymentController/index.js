@@ -1,6 +1,7 @@
 const  instance  = require("../../utils/rajorpay.js");
 const crypto = require("crypto");
 const  Payment  = require("../../model/payment");
+const Appointment = require('../../model/appointment');
 
 // console.log("Instance: ", instance); //
 
@@ -19,9 +20,12 @@ exports.checkout = async (req, res) => {
 };
 
 
+
 exports.paymentVerification = async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, notes } =
     req.body;
+
+    console.log(req.body);
 
   const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -35,23 +39,49 @@ exports.paymentVerification = async (req, res) => {
   if (isAuthentic) {
     // Database comes here
 
-    await Payment.create({
+   const payment= await Payment.create({
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
-      // appointmentId: req.body.notes?.appointmentId,
-      // doctorId: req.body.notes?.doctorId,
-      // patientId: req.body.notes?.patientId,
-      // appointmentDate: req.body.notes?.appointmentDate,
-      // appointmentTime: req.body.notes?.appointmentTime,
-      // amountPaid: req.body.notes?.amount,
-      // paymentStatus: "Success",
+      appointmentId: notes?.appointmentId,
+      doctorId: notes?.doctorId,
+      patientId: notes?.patientId,
+      appointmentDate:notes?.appointmentDate,
+      appointmentTime: notes?.appointmentTime,
+      amountPaid: notes?.amount,
+      paymentStatus: "Success",
+    });
+
+    await payment.save();
+
+    await Appointment.findByIdAndUpdate(notes.appointmentId, {
+      paymentStatus: "Completed",
     });
     
     res.redirect(
       `http://localhost:5173/payment-success?reference=${razorpay_payment_id}`
     );
   } else {
+
+    const payment = new Payment({
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      appointmentId: notes.appointmentId,
+      patientId: notes.patientId,
+      doctorId: notes.doctorId,
+      appointmentDate: notes.appointmentDate,
+      appointmentTime: notes.appointmentTime,
+      amountPaid: notes.amount,
+      paymentStatus: "Failed",
+    });
+    await payment.save();
+
+    await Appointment.findByIdAndUpdate(notes.appointmentId, {
+      paymentStatus: "Failed",
+    });
+
     res.redirect(`http://localhost:5173/payment-failed`);
   }
+  
 };

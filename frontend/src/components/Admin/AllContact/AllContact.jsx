@@ -15,7 +15,7 @@ const ContactList = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/admin/allcontacts");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/allcontacts`);
       const sortedContacts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setContacts(sortedContacts);
     } catch (error) {
@@ -29,7 +29,7 @@ const ContactList = () => {
 
     try {
       const response = await axios.delete(
-        `http://localhost:5001/api/allcontacts/${id}`
+        `${import.meta.env.VITE_API_URL}/api/allcontacts/${id}`
       );
       alert(response.data.message);
       fetchContacts();

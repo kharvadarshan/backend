@@ -37,7 +37,7 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
 
     try
     {
-          const response = await axios.post('http://localhost:5001/doctorprofile/getTimeSlot',{
+          const response = await axios.post(`${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlot`,{
                 doctorId:appointmentData?.doctorId,
                 date:formattedDate,
           });
@@ -75,6 +75,13 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
       slot: time._id,
     }));
   };
+
+  const handleTimeSlotId = (timeSlot)=>{
+    setAppointmentData((prev)=>({
+       ...prev,
+       timeSlot:timeSlot._id
+    }))
+  }
 
 
   return (
@@ -119,10 +126,11 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
                                    key={index1}
                                    onClick={(e) => {
                                      e.preventDefault();
+                                     handleTimeSlotId(time);
                                      handleTimeSlotSelect(slot1);
                                    }}
                                    className={`m-2 py-2 px-4 text-sm font-medium rounded-md border transition-all shadow-md ${
-                                     time.status === "Booked"
+                                     slot1.status === "Booked"
                                        ? "bg-red-100 text-gray-400 cursor-not-allowed border-red-400"
                                        : appointmentData.slot === slot1._id
                                        ? "bg-indigo-600 text-white border-indigo-700 shadow-lg scale-105"

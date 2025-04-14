@@ -53,6 +53,10 @@ const appointmentSchema = new mongoose.Schema({
       type: Date, 
       required: true,
     },
+    timeSlot:{
+      type:mongoose.Schema.Types.ObjectId,
+      required:true,
+    },
     slot:{
       type:mongoose.Schema.Types.ObjectId,
       required:true,
@@ -123,10 +127,31 @@ const appointmentSchema = new mongoose.Schema({
       type: String,
       default:"Pending",
     },
+    paymentStatus: {
+    type: String,
+    enum: ["Pending", "Completed", "Failed"],
+    default: "Pending",
+  },
     isDeleted:{
       type: Boolean,
       default:false
     },
+    report: [
+    {
+      filePath: {
+        type: String,
+        required: true,
+      },
+      fileName: {
+        type: String,
+        required: true,
+      },
+      uploadedAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+   ],
     createdAt: {
       type: Date,
       default: Date.now(),

@@ -1,4 +1,5 @@
 const User = require('../../model/user');
+const AppointmentModel = require('../../model/appointment');
 
 exports.editProfile = async(req,res)=>{
 
@@ -37,3 +38,30 @@ exports.getUserDetailsById = async(req,res)=>{
     }
 }
 
+exports.viewReport = async(req,res)=>{
+    try
+    {
+        const {appointmentId}=req.params;
+
+        const appointment = await AppointmentModel.findOne({
+            _id:appointmentId
+        });
+
+        if(!appointment)
+        {
+            return res.status(400).json({ok:false,message:'Appointment not found.'});
+        }
+
+        const reports = (appointment.report).map((report)=>({
+            fileName:report.fileName,
+            uploadAt:report.uploadAt,
+            url:`${req.protocol}://${req.get('host')}${report.filePath}`,
+        }))
+       
+       return res.status(201).json({ok:true,reports:reports});
+
+    }catch(error)
+    {
+        res.status(500).json({ error: error.message });
+    }
+}

@@ -30,14 +30,13 @@ function LoginPage() {
     e.preventDefault();
     try {
       const result = await axios.post(
-        "http://localhost:5001/user/login",
+        `${import.meta.env.VITE_API_URL}/user/login`,
         formData,
         { withCredentials: true }
       );
 
       if (result.data.ok) {
         setMessage(result.data.message);
-        // localStorage.setItem("token", result.data.token);
         dispatch(setIsLogin());
         dispatch(setRole(result.data.user.role));
         dispatch(setUser(result.data.user));

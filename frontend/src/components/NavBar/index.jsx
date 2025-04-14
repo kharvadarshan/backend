@@ -26,7 +26,7 @@ const NavBar = () => {
     try {
      
       const result = await axios.post(
-        "http://localhost:5001/user/logout",
+        `${import.meta.env.VITE_API_URL}/user/logout`,
         null,
         {
           
