@@ -20,6 +20,8 @@ import BookedAppointment from "./BookedAppointment";
 import { toast } from "react-toastify";
 import { resetUser } from "../../slices/userAuthSlice";
 import { resetDoctor } from "../../slices/doctorSlice";
+import Feedback from "./Feedback";
+
 
 const DoctorProfile = () => {
   const activeUser = useSelector((state) => state.user.user);
@@ -116,6 +118,11 @@ const DoctorProfile = () => {
             <FontAwesomeIcon icon={faBell} className="text-blue-400 mr-2" />{" "}
             Scheduler
           </NavLink>
+          <NavLink
+          to="/doctorprofile/feedback"
+          className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700">
+               Feedback
+          </NavLink>
           {/* <NavLink
             to="/doctorprofile/reports"
             className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"
@@ -146,6 +153,7 @@ const DoctorProfile = () => {
           <Route path="bookings" element={<BookedAppointment doctor={activeUser.doctor}/>} />
           <Route path="manageschedule" element={<ManageSchedule />} />
           <Route path="reports" element={<Reports />} />
+          <Route path="feedback" element={<Feedback doctor={activeUser.doctor}/>}></Route>
         </Routes>
         <Outlet />
       </div>

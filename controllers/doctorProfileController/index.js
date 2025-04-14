@@ -198,11 +198,11 @@ exports.acceptAppointment = async(req,res)=>{
             },{session} );
 
 
-        if(result1.modifiedCount <= 0)
+        if(result1.modifiedCount === 0)
         {  
             await session.abortTransaction();
             session.endSession();
-               return res.status(200).json({ok:false,message:"Time slot status is not changed."});
+              return res.status(200).json({ok:false,message:"Time slot status is not changed."});
         }
 
 

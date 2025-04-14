@@ -6,7 +6,8 @@ const {
       getAllAppointmentsByPatientId, 
       getDeletedAppointmentsByPatientId, 
       giveFeedback,
-      createAppointment
+      createAppointment,
+    
     } = require('../../controllers/appointmentController');
 
 
