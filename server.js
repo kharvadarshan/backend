@@ -16,6 +16,43 @@ const multer=require('multer');
 const path=require('path');
 const session=require('express-session');
 const env = require('dotenv')
+
+// ---------------------------------------------------
+
+const http = require("http");
+const { Server } = require("socket.io");
+
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  // console.log("User connected:", socket.id);
+
+  socket.on("sendLocation", (location) => {
+    socket.broadcast.emit("updateLocation", location);
+  });
+
+  socket.on("disconnect", () => {
+    // console.log("User disconnected:", socket.id);
+  });
+});
+
+
+server.listen(5000, () => {
+  console.log(`Server running on http://localhost:{5000}`);
+});
+
+
+// ---------------------------------------------------
+
+
 env.config();
 const PORT=process.env.PORT;
 app.use(cors({origin:"http://localhost:5173", credentials: true,}));

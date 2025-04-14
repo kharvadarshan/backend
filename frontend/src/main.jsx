@@ -5,6 +5,7 @@ import App from './App.jsx'
 import {store,persistor} from './redux/store.jsx'
 import {Provider} from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import "leaflet/dist/leaflet.css";
 createRoot(document.getElementById('root')).render(
     <BrowserRouter>
    <Provider store={store} >

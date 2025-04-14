@@ -26,6 +26,7 @@ import { useEffect } from "react";
 import PaymentSuccess from "../components/Checkout/PaymentSuccess";
 import PaymentFailed from "../components/Checkout/PaymentFailed";
 import PaymentPage from "../components/Checkout/PaymentPage";
+import DoctorMapTracker from "../components/Map/DoctorMapTracker";
 
 const AllRoute = () => {
   const location = useLocation();
@@ -89,6 +90,7 @@ const AllRoute = () => {
                   <Route path="/paymentsuccess" element={<PaymentSuccess />} />
                   <Route path="/payment-success" element={<PaymentSuccess />} />
                   <Route path="/payment-failed" element={<PaymentFailed />} />
+                  <Route path="/map" element={<DoctorMapTracker />} />
 
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
