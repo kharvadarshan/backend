@@ -232,6 +232,23 @@ const MyAppointments = () => {
     </div>
   );
 
+
+  // Function to format the time from 24-hour to 12-hour AM/PM format
+const formatTime = (time) => {
+  const [startTime, endTime] = time.split(" - ");
+  
+  const convertTo12Hour = (timeStr) => {
+    const [hours, minutes] = timeStr.split(":");
+    let hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    hour = hour ? hour : 12; // the hour '0' should be '12'
+    return `${hour}:${minutes} ${ampm}`;
+  };
+
+  return `${convertTo12Hour(startTime)} - ${convertTo12Hour(endTime)}`;
+};
+
   // appointment form details popup
   const Modal = ({ isOpen, onClose, data }) => {
     if (!isOpen || !data) return null;
@@ -413,7 +430,7 @@ const MyAppointments = () => {
                 {new Date(appointment.date.$date).toLocaleDateString()}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Time:</strong> {appointment.time}
+                <strong>Time:</strong> {formatTime(appointment.time)}
               </p>
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {/* patient details button */}
@@ -463,7 +480,7 @@ const MyAppointments = () => {
       </div>
 
       {/* Table Layout for Medium+ Screens */}
-      {currentAppointment.length === 0 ? (
+      {filteredAppointments.length === 0 ? (
         <p className="text-gray-500 text-center text-lg mt-4">
           No appointments found.
         </p>
@@ -501,7 +518,7 @@ const MyAppointments = () => {
                     <td className="p-3 border">
                       {new Date(appointment.date).toLocaleDateString()}
                     </td>
-                    <td className="p-3 border">{appointment.time}</td>
+                    <td className="p-3 border"> {formatTime(appointment.time)}</td>
                     <td className="p-3 border">
                       {getStatusBadge(appointment.status)}
                     </td>
