@@ -7,6 +7,8 @@ import Swal from "sweetalert2";
 import FeedBackForm from "../../FeedBackForm/FeedBack";
 import { useNavigate } from "react-router-dom";
 
+
+
 const MyAppointments = () => {
   const activeUser = useSelector((state)=> state.user.user);
   const [appointments, setAppointments] = useState();
@@ -150,7 +152,7 @@ const MyAppointments = () => {
   const uniqueYears = useMemo(() => {
     if(!appointments) return [];
     const years = [
-      ...new Set(appointments.map((appt) => new Date(appt.date.$date).getFullYear())),
+      ...new Set(appointments.map((appt) => new Date(appt.date).getFullYear())),
     ];
     return years.sort();
   }, [appointments]);
@@ -160,7 +162,7 @@ const MyAppointments = () => {
     const months = [
       ...new Set(
         appointments.map((appt) =>
-          new Date(appt.date.$date).toLocaleString("en-US", { month: "long" })
+          new Date(appt.date).toLocaleString("en-US", { month: "long" })
         )
       ),
     ];
@@ -170,7 +172,7 @@ const MyAppointments = () => {
   const filteredAppointments = useMemo(() => {
     if(!appointments) return [];
     return appointments.filter((appointment) => {
-      const apptDate = new Date(appointment.date.$date);
+      const apptDate = new Date(appointment.date);
       const year = apptDate.getFullYear().toString();
       const appointmentMonth = apptDate.toLocaleString(
         "en-US",
@@ -419,14 +421,14 @@ const MyAppointments = () => {
                   {/* give feedback & display rating */}
                 { appointment.status === "Completed" &&  
                 ( 
-                  !appointment.feedbackForm?.rating ? 
+                  !appointment?.feedbackForm?.rating ? 
                   (
                              renderViewButton("Give Feedback", <Star size={16} />,"bg-yellow-300", () =>{
                              setSelectedAppointment(appointment);
                               setShowFeedbackForm(true);})
                   ):(  
                          renderRating(appointment.feedbackForm.rating)
-                       )
+                    )
                 )}
 
 

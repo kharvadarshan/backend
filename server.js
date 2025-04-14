@@ -20,12 +20,12 @@ const env = require('dotenv')
 // ---------------------------------------------------
 
 const http = require("http");
-const { Server } = require("socket.io");
+const socketIo = require("socket.io");
 
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
+const io =  socketIo(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -33,14 +33,15 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  // console.log("User connected:", socket.id);
+
+  console.log("User connected:", socket.id);
 
   socket.on("sendLocation", (location) => {
-    socket.broadcast.emit("updateLocation", location);
+    io.emit("updateLocation", location);
   });
 
   socket.on("disconnect", () => {
-    // console.log("User disconnected:", socket.id);
+     console.log("User disconnected:", socket.id);
   });
 });
 

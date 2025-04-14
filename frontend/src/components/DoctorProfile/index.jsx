@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faBell,
+  faCommentDots,
   faCalendarWeek,
   faPenToSquare,
   faRightFromBracket,
@@ -121,7 +122,7 @@ const DoctorProfile = () => {
           <NavLink
           to="/doctorprofile/feedback"
           className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700">
-               Feedback
+             <FontAwesomeIcon className="text-blue-400 mr-2" icon={faCommentDots} />  Feedback
           </NavLink>
           {/* <NavLink
             to="/doctorprofile/reports"
