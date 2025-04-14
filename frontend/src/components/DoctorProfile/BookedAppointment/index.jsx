@@ -62,7 +62,7 @@ const BookedAppointment = ({ doctor }) => {
   const fetchAppointment = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5001/appointments/getAppointmentByDoctorId/${doctor._id}`
+        `${import.meta.env.VITE_API_URL}/appointments/getAppointmentByDoctorId/${doctor._id}`
       );
       if (response.data.ok) {
         setUpcoming(response.data.upcomingAppointments);
@@ -91,7 +91,7 @@ const BookedAppointment = ({ doctor }) => {
       if (result.isConfirmed) {
         try {
           const response = await axios.get(
-            `http://localhost:5001/doctorprofile/acceptAppointment/${id}`
+            `${import.meta.env.VITE_API_URL}/doctorprofile/acceptAppointment/${id}`
           );
 
           if (response.data.ok) {
@@ -122,7 +122,7 @@ const BookedAppointment = ({ doctor }) => {
       if (result.isConfirmed) {
         try {
           const response = await axios.get(
-            `http://localhost:5001/doctorprofile/rejectAppointment/${id}`
+            `${import.meta.env.VITE_API_URL}/doctorprofile/rejectAppointment/${id}`
           );
 
           if (!response.data.ok) {
@@ -153,7 +153,7 @@ const BookedAppointment = ({ doctor }) => {
       if (result.isConfirmed) {
         try {
           const response = await axios.get(
-            `http://localhost:5001/doctorprofile/markCompleted/${id}`
+            `${import.meta.env.VITE_API_URL}/doctorprofile/markCompleted/${id}`
           );
 
           if (response.data.ok) {
@@ -172,207 +172,6 @@ const BookedAppointment = ({ doctor }) => {
       }
     });
   };
-
-  const filteredAppointments = () => {
-    if (select === "Upcoming") return applyFilters(upcoming || []);
-    if (select === "Accepted") return applyFilters(confirmed || []);
-    if (select === "Rejected") return applyFilters(rejected || []);
-    if (select === "Completed") return applyFilters(completed || []);
-    return [];
-  };
-  const paginatedAppointments = () => {
-    const filtered = filteredAppointments() || [];
-    const start = (currentPage - 1) * appointmentsPerPage;
-    const end = start + appointmentsPerPage;
-    return filtered.slice(start, end);
-  };
-
-  const totalPages = Math.ceil(
-    (filteredAppointments()?.length || 0) / (appointmentsPerPage || 1)
-  );
-
-  const renderCard = (app, index, isUpcoming = true) => (
-    <div
-      key={app._id}
-      className="border border-gray-300 rounded-xl p-4 mb-4 shadow-sm"
-    >
-      <p>
-        <strong>Patient:</strong> {app.patientForm.patientname}
-      </p>
-      <p>
-        <strong>Date:</strong> {new Date(app.date).toLocaleDateString()}
-      </p>
-      <p>
-        <strong>Time:</strong>{" "}
-        {app.time}
-      </p>
-      <p>
-        <strong>Reason:</strong> {app.patientForm.reason}
-      </p>
-      <p>
-        <strong>Status:</strong>{" "}
-        <span
-          className={`font-semibold ${
-            app.status === "Confirmed"
-              ? "text-yellow-800"
-              : app.status === "Rejected"
-              ? "text-red-600"
-              : app.status === "Completed"
-              ? "text-green-700"
-              : "text-yellow-600"
-          }`}
-        >
-          {app.status}
-        </span>
-      </p>
-      <p>
-        <strong>Report:</strong>{" "}
-        {app.report?.length>0 ? (
-          <button
-            onClick={() => handleViewReport(app._id)}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition duration-200"
-          >
-            <span className="text-xl">☁️</span> {/* Cloud icon (replace with proper icon if available) */}
-            <span>Download</span>
-          </button>
-        ) : (
-          "No report uploaded"
-        )}
-      </p>
-      {select === "Completed" && (
-        <div className="p-3 mt-2 flex flex-wrap justify-center gap-2">
-        <button
-            className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg"
-            onClick={() => handleUploadReport(app._id)}
-          >
-            Upload Report
-          </button>
-        <button  className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
-         onClick={() => handleDelete(app._id)} 
-        >
-          <Trash2 size={18} />
-        </button>
-      </div>
-      )}
-      {isUpcoming && app.status === "Pending" && (
-        <div className="flex flex-wrap gap-2 mt-3">
-          <button
-            onClick={() => {
-              disableButtons(index);
-              handleAccept(app._id);
-            }}
-            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
-            disabled={actionDisabled[index]}
-          >
-            <FontAwesomeIcon icon={faCheck} className="mr-1" /> Accept
-          </button>
-          <button
-            onClick={() => {
-              disableButtons(index);
-              handleReject(app._id);
-            }}
-            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:opacity-50"
-            disabled={actionDisabled[index]}
-          >
-            <FontAwesomeIcon icon={faXmark} className="mr-1" /> Reject
-          </button>
-          <button
-            onClick={() => {
-              disableButtons(index);
-              handleCompleted(app._id);
-            }}
-            className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
-            disabled={actionDisabled[index]}
-          >
-            <FontAwesomeIcon icon={faCheckCircle} className="mr-1" /> Complete
-          </button>
-        </div>
-      )}
-    </div>
-  );
-
-
-  const handleDelete = async (appointmentId) => {
-    const confirm = await Swal.fire({
-      title: "Are you sure?",
-      text: "This appointment will be permanently deleted!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    });
-  
-    if (confirm.isConfirmed) {
-      try {
-        const res = await axios.delete(
-          `http://localhost:5001/appointments/deleteAppointment/${appointmentId}`
-        );
-        if (res.data.ok) {
-          Swal.fire("Deleted!", res.data.message, "success");
-          fetchAppointment();
-        }else
-        {
-          Swal.fire("Error!", res.data.message, "error");
-        }
-      } catch (error) {
-        Swal.fire("Error!", "Something went wrong.", "error");
-        console.error(error);
-      }
-    }
-  };
-
-
-  const handleViewReport = async (appointmentId) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/doctorprofile/viewReport/${appointmentId}`,
-        { withCredentials: true }
-      );
-
-      if (response.data.ok) {
-        const reports = response.data.reports;
-        if (reports.length === 0) {
-          Swal.fire('Info', 'No reports available.', 'info');
-          return;
-        }
-
-        const html = reports
-        .map(
-          (report) => `
-            <div style="margin: 10px 0;">
-              <a href="${report.url}" target="_blank" style="color: #1e90ff;">
-                ${report.fileName} (Uploaded: ${new Date(
-                  report.uploadedAt
-                ).toLocaleDateString()})
-              </a>
-            </div>
-          `
-        )
-        .join('');
-        // reports.forEach((report) => {
-        //   const link = document.createElement('a');
-        //   link.href = report.url;
-        //   link.download = report.fileName; // Suggest filename for download
-        //   document.body.appendChild(link);
-        //   link.click();
-        //   document.body.removeChild(link);
-        // });
-
-        Swal.fire({
-          title: 'Reports',
-          html,
-          icon: 'info',
-          confirmButtonText: 'Close',
-        });
-      } else {
-        Swal.fire('Error!', response.data.message || 'Failed to view reports', 'error');
-      }
-    } catch (error) {
-      Swal.fire("Error!", "Failed to view report", "error");
-    }
-  };
-
 
   const handleUploadReport = async (appointmentId) => {
     Swal.fire({
@@ -431,6 +230,232 @@ const BookedAppointment = ({ doctor }) => {
       }
     });
   };
+
+
+  const handleViewReport = async (appointmentId) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/doctorprofile/viewReport/${appointmentId}`,
+        { withCredentials: true }
+      );
+
+      if (response.data.ok) {
+        const reports = response.data.reports;
+        if (reports.length === 0) {
+          Swal.fire('Info', 'No reports available.', 'info');
+          return;
+        }
+
+        const html = reports
+        .map(
+          (report) => `
+            <div style="margin: 10px 0;">
+              <a href="${report.url}" target="_blank" style="color: #1e90ff;">
+                ${report.fileName} (Uploaded: ${new Date(
+                  report.uploadedAt
+                ).toLocaleDateString()})
+              </a>
+            </div>
+          `
+        )
+        .join('');
+        // reports.forEach((report) => {
+        //   const link = document.createElement('a');
+        //   link.href = report.url;
+        //   link.download = report.fileName; // Suggest filename for download
+        //   document.body.appendChild(link);
+        //   link.click();
+        //   document.body.removeChild(link);
+        // });
+
+        Swal.fire({
+          title: 'Reports',
+          html,
+          icon: 'info',
+          confirmButtonText: 'Close',
+        });
+      } else {
+        Swal.fire('Error!', response.data.message || 'Failed to view reports', 'error');
+      }
+    } catch (error) {
+      Swal.fire("Error!", "Failed to view report", "error");
+    }
+  };
+
+
+  const handleDelete = async (appointmentId) => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "This appointment will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+  
+    if (confirm.isConfirmed) {
+      try {
+        const res = await axios.delete(
+          `http://localhost:5001/appointments/deleteAppointment/${appointmentId}`
+        );
+        if (res.data.ok) {
+          Swal.fire("Deleted!", res.data.message, "success");
+          fetchAppointment();
+        }else
+        {
+          Swal.fire("Error!", res.data.message, "error");
+        }
+      } catch (error) {
+        Swal.fire("Error!", "Something went wrong.", "error");
+        console.error(error);
+      }
+    }
+  };
+
+  const filteredAppointments = () => {
+    if (select === "Upcoming") return applyFilters(upcoming || []);
+    if (select === "Accepted") return applyFilters(confirmed || []);
+    if (select === "Rejected") return applyFilters(rejected || []);
+    if (select === "Completed") return applyFilters(completed || []);
+    return [];
+  };
+  const paginatedAppointments = () => {
+    const filtered = filteredAppointments() || [];
+    const start = (currentPage - 1) * appointmentsPerPage;
+    const end = start + appointmentsPerPage;
+    return filtered.slice(start, end);
+  };
+
+  const totalPages = Math.ceil(
+    (filteredAppointments()?.length || 0) / (appointmentsPerPage || 1)
+  );
+
+  const renderCard = (app, index, isUpcoming = true) => (
+    <div
+      key={app._id}
+      className="border border-gray-300 rounded-xl p-4 mb-4 shadow-sm"
+    >
+      <p>
+        <strong>Patient:</strong> {app.patientForm.patientname}
+      </p>
+      <p>
+        <strong>Date:</strong> {new Date(app.date).toLocaleDateString()}
+      </p>
+      <p>
+        <strong>Time:</strong>{" "}
+        {app.time}
+      </p>
+      <p>
+        <strong>Reason:</strong> {app.patientForm.reason}
+      </p>
+      <p>
+        <strong>Status:</strong>{" "}
+        <span
+          className={`font-semibold ${
+            app.status === "Confirmed"
+              ? "text-yellow-800"
+              : app.status === "Rejected"
+              ? "text-red-600"
+              : app.status === "Completed"
+              ? "text-green-700"
+              : "text-yellow-600"
+          }`}
+        >
+          {app.status}
+        </span>
+      </p>
+      {
+        select==="Upcoming" && (
+          <p>
+          <strong>Payment Status:</strong>{" "}
+         {app.paymentStatus}
+         </p>
+        )
+      }
+      
+      <p>
+        <strong>Report:</strong>{" "}
+        {app.report?.length>0 ? (
+          <button
+            onClick={() => handleViewReport(app._id)}
+            className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition duration-200"
+          >
+            <span className="text-xl">☁️</span> {/* Cloud icon (replace with proper icon if available) */}
+            <span>Download</span>
+          </button>
+        ) : (
+          "No report uploaded"
+        )}
+      </p>
+      {select === "Completed" && (
+        <div className="p-3 mt-2 flex flex-wrap justify-center gap-2">
+        <button
+            className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg"
+            onClick={() => handleUploadReport(app._id)}
+          >
+            Upload Report
+          </button>
+        <button  className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
+         onClick={() => handleDelete(app._id)} 
+        >
+          <Trash2 size={18} />
+        </button>
+      </div>
+      )}
+      {select==="Upcoming" && (
+        <div className="flex flex-wrap gap-2 mt-3">
+          <button
+            onClick={() => {
+              disableButtons(index);
+              handleAccept(app._id);
+            }}
+            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+            disabled={actionDisabled[index]}
+          >
+            <FontAwesomeIcon icon={faCheck} className="mr-1" /> Accept
+          </button>
+          <button
+            onClick={() => {
+              disableButtons(index);
+              handleReject(app._id);
+            }}
+            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:opacity-50"
+            disabled={actionDisabled[index]}
+          >
+            <FontAwesomeIcon icon={faXmark} className="mr-1" /> Reject
+          </button>
+        
+        </div>
+      )}
+
+      { 
+        select==="Accepted" && (
+          <div className="flex flex-wrap gap-2 mt-3">
+          <button
+            onClick={() => {
+              disableButtons(index);
+              handleCompleted(app._id);
+            }}
+            className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+            disabled={actionDisabled[index]}
+          >
+            <FontAwesomeIcon icon={faCheckCircle} className="mr-1" /> Complete
+          </button>
+          </div>
+        )
+      }
+    </div>
+  );
+
+
+
+
+
+ 
+
+
+ 
   
 
   return (
@@ -514,6 +539,7 @@ const BookedAppointment = ({ doctor }) => {
               <th className="p-3 border-r">Time</th>
               <th className="p-3 border-r">Reason</th>
               <th className="p-3 border-r">Status</th>
+              {select === "Upcoming" && <th className="p-3">Payment Status</th>}
               {select === "Completed" && <th className="p-3">Report</th>}
               {select === "Upcoming" && <th className="p-3">Actions</th>}
               {select === "Accepted" && <th className="p-3">Actions</th>}
@@ -548,6 +574,12 @@ const BookedAppointment = ({ doctor }) => {
                 >
                   {app.status}
                 </td>
+                
+                
+                  {
+                     select === "Upcoming" && ( <td className="p-3 border-r"> {app.paymentStatus}</td> )
+                  }
+               
                 {
                   select==="Completed" && (
                 <td className="p-3 border-r">
@@ -597,7 +629,7 @@ const BookedAppointment = ({ doctor }) => {
 
                 {select === "Accepted" && (
                   <td className="p-3 flex flex-wrap justify-center gap-2">
-                    <button
+                    {/* <button
                       onClick={() => {
                         disableButtons(index);
                         handleReject(app._id);
@@ -606,7 +638,7 @@ const BookedAppointment = ({ doctor }) => {
                       disabled={actionDisabled[index]}
                     >
                       <FontAwesomeIcon icon={faXmark} className="mr-1" /> Reject
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => {
                         disableButtons(index);

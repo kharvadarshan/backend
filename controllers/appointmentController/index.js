@@ -3,6 +3,8 @@ const AppointmentModel = require("../../model/appointment");
 const TimeSlot =require('../../model/timeSlot');
 const Feedback = require('../../model/feedback');
 const Doctor = require("../../model/doctor");
+
+
 // Create a new appointment
 exports.createAppointment = async (req, res) => {
   try {

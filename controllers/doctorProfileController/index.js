@@ -1,9 +1,19 @@
 const TimeSlot = require('../../model/timeSlot');
 const Doctor = require('../../model/doctor');
 const Appointment = require('../../model/appointment');
+const User=require('../../model/user');
 const { default: mongoose } = require('mongoose');
 const AppointmentModel = require('../../model/appointment');
-
+const nodemailer=require('nodemailer');
+const env=require('dotenv');
+env.config();
+const transporter = nodemailer.createTransport({
+   service:"gmail",
+   auth :{
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+   } 
+});
 
 exports.addTimeSlot = async (req,res)=>{
     try{
@@ -149,22 +159,28 @@ exports.getDoctor = async(req,res)=>{
 
 
 exports.acceptAppointment = async(req,res)=>{
-   
+    const session= await mongoose.startSession();
     try{
-
+         session.startTransaction();
 
         const {id}=req.params;
-        
-
-
-        const existingAppointment = await Appointment.findOne({_id:id});
+        const existingAppointment = await Appointment.findOne({_id:id}).session(session);
 
         if(!existingAppointment)
-        {
-           
-            return res
-              .status(403)
-              .json({ ok: false, message: "Appointment not found or unauthorized" });
+        { 
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(403).json({ ok: false, message: "Appointment not found or unauthorized" });
+        }
+
+        const user = await User.findOne({_id:existingAppointment.patientId}).session(session);
+        
+
+        if(!user)
+        {   
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(403).json({ ok: false, message: "User not found." });
         }
 
 
@@ -173,41 +189,54 @@ exports.acceptAppointment = async(req,res)=>{
                 _id:existingAppointment.timeSlot,
                  doctorId:existingAppointment.doctorId,
                 "slot._id":existingAppointment.slot
-             },{
-                
+             },{   
              $set:{
                 "slot.$.status":"Booked",
                 "slot.$.appointmentId":id
              }
-            },
-           
-       );
+            },{session} );
 
 
         if(result1.modifiedCount <= 0)
-            {
+        {  
+            await session.abortTransaction();
+            session.endSession();
                return res.status(200).json({ok:false,message:"Time slot status is not changed."});
-            }
+        }
+
 
         const result = await  Appointment.updateOne({
             _id:id
         },{
             $set:{status:"Confirmed"}
-        },
-    );
+        },{ session}
+       );
 
 
         if(result.modifiedCount > 0)
-        {
+        { 
+
+            const mailOptions = {
+                from:process.env.EMAIL_USER,
+                to:user.email,
+                subject:"Appointment Confirmation",
+                text:`Hii, Your appointment with ${existingAppointment.doctor} is successfully confirmed on ${existingAppointment.date}. Nice to see you on BookMyDoctor.`
+            }
+             await transporter.sendMail(mailOptions);
+            await session.commitTransaction();
+            session.endSession();
            return res.status(201).json({ok:true,message:"Requeste accepted successfully."});
         }
         else
         {
-
+            await session.abortTransaction();
+            session.endSession();
            return  res.status(200).json({ok:false,message:"No chnaes were made."});
         }
     }catch(error)
     {   
+        await session.abortTransaction();
+        session.endSession();
         return res.status(500).json({ message: 'Error while fetching available time slots.',error });  
     }
 };
