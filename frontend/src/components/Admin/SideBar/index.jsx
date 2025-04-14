@@ -7,11 +7,10 @@ import { useDispatch } from 'react-redux';
 import { resetIsLogin,resetRole } from '../../../slices/loginSlice';
 import { resetUser } from '../../../slices/userAuthSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-
+import { faRightFromBracket,faClipboardList,faUserDoctor,faUserPlus, faAddressCard, faHospitalUser } from '@fortawesome/free-solid-svg-icons';
+import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
-  const menu = [  "Doctors List", "Add Doctor", "All Contacts" , "All Patient"];
   const [isOpen, setIsOpen] = useState(false);
    
   const navigate = useNavigate();
@@ -73,35 +72,30 @@ const Sidebar = () => {
       >
         <div className="p-4">
           <h2 className="text-2xl font-bold">Hospital</h2>
-          <ul className="mt-6">
-            <li>
-            <Link to='/admin'  className="block p-2 hover:bg-blue-900 rounded"  onClick={closeSidebar} >
-              Appointments
-            </Link>
-            </li>
-            {
-              menu.map(
-                (item) => (
-                  <li key={item} className="mb-2 ">
-                    <Link
-                     to={`/admin/${item.trim().replace(/\s/g, "").toLowerCase()}`}
-                      onClick={closeSidebar} 
-                      className="block p-2 hover:bg-blue-900 rounded"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                )
-              )
-            }
-            <button
-                        onClick={logout}
-                        className="flex items-center p-3 text-gray-700 hover:bg-red-100 rounded-lg w-full"
-                      >
-                        <FontAwesomeIcon icon={faRightFromBracket} className="text-red-500 text-lg mr-3" />
-                        Logout
-                      </button>
-          </ul>
+         
+           <nav className='flex flex-col space-y-3'>
+            <NavLink to='/admin'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"  onClick={closeSidebar} >
+            <FontAwesomeIcon className=" mr-2  " icon={faClipboardList} />{" "}Appointments
+            </NavLink>
+            <NavLink to='/admin/doctorslist'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+            <FontAwesomeIcon className="mr-2  " icon={faUserDoctor} />{" "}Doctor List
+            </NavLink>
+            <NavLink to='/admin/adddoctor'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+            <FontAwesomeIcon className=" mr-2 " icon={faUserPlus} />{" "}Add Doctor
+            </NavLink>
+            <NavLink to='/admin/allcontacts'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+            <FontAwesomeIcon className=" mr-2 " icon={faAddressCard} />{" "}All Contact
+            </NavLink>
+            <NavLink to='/admin/allpatient'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700" >
+            <FontAwesomeIcon className="mr-2 " icon={faHospitalUser} />{" "}All Patient
+            </NavLink>
+            <NavLink onClick={logout}  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700">
+            <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />{" "}Logout
+            </NavLink>
+            
+            </nav>
+                      
+        
         </div>
       </div>
 
@@ -113,7 +107,6 @@ const Sidebar = () => {
           ></div>
         )} */}
 
-        
     </div>
   );
 };
