@@ -127,7 +127,7 @@ const Sidebar = () => {
           </button>
         </div>
 
-        <div className="flex flex-col h-full w-full p-4">
+        <div className="flex bg-blue-400 flex-col h-full w-full p-4">
           <h2 className="text-3xl font-bold mb-8 tracking-wide text-center">
             🏥 Hospital
           </h2>
