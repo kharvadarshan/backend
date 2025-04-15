@@ -166,7 +166,7 @@ exports.acceptAppointment = async(req,res)=>{
         const {id}=req.params;
         const existingAppointment = await Appointment.findOne({_id:id}).session(session);
 
-        if(!existingAppointment || existingAppointment.paymentStatus==="Completed")
+        if(!existingAppointment || !existingAppointment.paymentStatus==="Completed")
         { 
             await session.abortTransaction();
             session.endSession();

@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const AppointmentModel = require("../../model/appointment");
 const TimeSlot =require('../../model/timeSlot');
-const Feedback = require('../../model/feedback');
 const Doctor = require("../../model/doctor");
 
 
@@ -164,12 +163,16 @@ exports.giveFeedback = async(req,res)=>{
      session.startTransaction();
 
     const {appointmentId,rating,feedback} = req.body;
+    console.log(req.body);
+
     
      if (!mongoose.Types.ObjectId.isValid(appointmentId) || !rating || !feedback) {
       return res.status(400).json({ ok: false, message: "Missing required fields" });
     }
 
      const appointment = await AppointmentModel.findById(appointmentId).session(session);
+     console.log(appointment);
+
 
     if (!appointment) {
       await session.abortTransaction();
@@ -177,7 +180,7 @@ exports.giveFeedback = async(req,res)=>{
       return res.status(404).json({ ok: false, message: "Appointment not found" });
     }
    
-    if (appointment.feedbackForm?.rating) {
+    if (appointment?.feedbackForm?.rating) {
       await session.abortTransaction();
       session.endSession();
       return res.status(403).json({ ok: false, message: "Feedback already submitted" });
@@ -188,9 +191,10 @@ exports.giveFeedback = async(req,res)=>{
       { $match: { doctorId: appointment.doctorId,"feedbackForm.rating":{$exists:true }}},
       { $group:{_id:null,avgRating:{ $avg: "$feedbackForm.rating"}}}
     ]).session(session);
+    console.log(ratings);
 
     const newRating =  ratings.length>0 ? ratings[0].avgRating:rating;
-    
+     console.log(newRating);
 
      const updateRating = await Doctor.updateOne(
       {
@@ -202,7 +206,11 @@ exports.giveFeedback = async(req,res)=>{
         }
       },
       { session}
-     )
+     );
+
+
+     console.log(updateRating);
+
 
     const updateAppointment = await AppointmentModel.updateOne(
       {  _id:appointmentId },
@@ -214,7 +222,10 @@ exports.giveFeedback = async(req,res)=>{
          } 
        },{session});
 
-       if(updateAppointment.modifiedCount>0 && updateRating.modifiedCount>0)
+       console.log(updateAppointment);
+
+
+       if(updateAppointment.modifiedCount>0  && updateRating.modifiedCount>0)
        {
 
         await session.commitTransaction();
