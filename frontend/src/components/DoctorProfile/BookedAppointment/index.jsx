@@ -106,6 +106,7 @@ const BookedAppointment = ({ doctor }) => {
           }
         } catch (error) {
           Swal.fire("Error!", "Could not connect to the server.", "error");
+          console.error(error);
         }
       }
     });
@@ -137,6 +138,7 @@ const BookedAppointment = ({ doctor }) => {
           }
         } catch (error) {
           Swal.fire("Error!", "Could not connect to the server.", "error");
+          console.error(error);
         }
       }
     });
@@ -168,6 +170,7 @@ const BookedAppointment = ({ doctor }) => {
           }
         } catch (error) {
           Swal.fire("Error!", "Could not connect to the server.", "error");
+          console.error(error);
         }
       }
     });
@@ -278,7 +281,8 @@ const BookedAppointment = ({ doctor }) => {
         Swal.fire('Error!', response.data.message || 'Failed to view reports', 'error');
       }
     } catch (error) {
-      Swal.fire("Error!", "Failed to view report", "error");
+      Swal.fire("Error!", "Failed to view report","error");
+      console.error(error);
     }
   };
 
