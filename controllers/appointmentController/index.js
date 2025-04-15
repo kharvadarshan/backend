@@ -170,7 +170,7 @@ exports.giveFeedback = async(req,res)=>{
       return res.status(400).json({ ok: false, message: "Missing required fields" });
     }
 
-     const appointment = await AppointmentModel.findById(appointmentId).session(session);
+     const appointment = await AppointmentModel.findOne({_id:appointmentId}).session(session);
      console.log(appointment);
 
 
@@ -188,13 +188,19 @@ exports.giveFeedback = async(req,res)=>{
 
      
     const ratings = await  AppointmentModel.aggregate([
-      { $match: { doctorId: appointment.doctorId,"feedbackForm.rating":{$exists:true }}},
-      { $group:{_id:null,avgRating:{ $avg: "$feedbackForm.rating"}}}
+      { $match: { doctorId: appointment.doctorId,"feedbackForm.rating":{$exists:true },"feedbackForm.rating": { $ne: null }}},
+      { $group:{_id:null,avgRating:{ $avg: "$feedbackForm.rating"}, count: { $sum: 1 }}}
     ]).session(session);
     console.log(ratings);
 
-    const newRating =  ratings.length>0 ? ratings[0].avgRating:rating;
-     console.log(newRating);
+    let newRating;
+    if (ratings.length > 0 && ratings[0].count > 0) {
+      const currentTotal = ratings[0].avgRating * ratings[0].count;
+      newRating = (currentTotal + parseInt(rating)) / (ratings[0].count + 1);
+    } else {
+      newRating = parseInt(rating);
+    }
+    console.log(newRating);
 
      const updateRating = await Doctor.updateOne(
       {
@@ -216,7 +222,7 @@ exports.giveFeedback = async(req,res)=>{
       {  _id:appointmentId },
       {
          $set:{
-          "feedbackForm.rating": rating,
+          "feedbackForm.rating": parseInt(rating),
           "feedbackForm.feedback": feedback,
           "feedbackForm.createdAt": new Date(),
          } 

@@ -266,7 +266,6 @@ const MyAppointments = () => {
           className="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl border border-gray-200"
         >
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-gray-800">Submit Feedback</h2>
             <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
               <X size={24} />
             </button>
@@ -380,7 +379,7 @@ const MyAppointments = () => {
         <AnimatePresence>
           {filteredAppointments.map((appointment) => (
             <motion.div
-              key={appointment._id.$oid}
+              key={appointment._id}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -472,7 +471,7 @@ const MyAppointments = () => {
               <AnimatePresence>
                 {filteredAppointments.map((appointment) => (
                   <motion.tr
-                    key={appointment._id.$oid}
+                    key={appointment._id}
                     className="border text-center"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
