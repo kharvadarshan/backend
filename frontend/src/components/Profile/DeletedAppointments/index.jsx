@@ -1,36 +1,36 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {  ChevronDown } from "lucide-react";
-import { } from "react-toastify";
+import { ChevronDown } from "lucide-react";
+import {} from "react-toastify";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
 const MyAppointments = () => {
-  const activeUser = useSelector((state)=> state.user.user);
-  
+  const activeUser = useSelector((state) => state.user.user);
+  const [currentPage, setCurrentPage] = useState(1);
+  const appointmentsPerPage = 5; // Number of Appointments per page
+
   const [appointments, setAppointments] = useState();
 
-  useEffect(()=>{
-       getDeletedAppointmentByPatientId();
-  },[]);
+  useEffect(() => {
+    getDeletedAppointmentByPatientId();
+  }, []);
 
-  const getDeletedAppointmentByPatientId = async()=>{
-    try
-    {
-         const response = await axios.get(`${import.meta.env.VITE_API_URL}/appointments/getDeletedAppointmentByPatientId/${activeUser.id}`);
+  const getDeletedAppointmentByPatientId = async () => {
+    try {
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_API_URL
+        }/appointments/getDeletedAppointmentByPatientId/${activeUser.id}`
+      );
 
-         if(response.data.ok)
-         {
-          setAppointments(response.data.result);
-         }
-
-    }catch(error)
-    {
-          console.log(error);
+      if (response.data.ok) {
+        setAppointments(response.data.result);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
-
-
 
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
@@ -38,8 +38,6 @@ const MyAppointments = () => {
   // const [selectedDetail, setSelectedDetail] = useState(null);
   // const [selectedReport, setSelectedReport] = useState(null);
   // const [selectedReview, setSelectedReview] = useState(null);
-
- 
 
   const getStatusBadge = (status) => {
     const statusColors = {
@@ -57,19 +55,18 @@ const MyAppointments = () => {
   };
 
   const uniqueYears = useMemo(() => {
-    if(!appointments) return [];
+    if (!appointments) return [];
     const years = [
-      ...new Set(appointments.map((appt) => new Date(appt.date.$date).getFullYear())),
+      ...new Set(appointments.map((appt) => new Date(appt.date).getFullYear())),
     ];
     return years.sort();
   }, [appointments]);
-
   const uniqueMonths = useMemo(() => {
-    if(!appointments) return [];
+    if (!appointments) return [];
     const months = [
       ...new Set(
         appointments.map((appt) =>
-          new Date(appt.date.$date).toLocaleString("en-US", { month: "long" })
+          new Date(appt.date).toLocaleString("en-US", { month: "long" })
         )
       ),
     ];
@@ -77,14 +74,13 @@ const MyAppointments = () => {
   }, [appointments]);
 
   const filteredAppointments = useMemo(() => {
-    if(!appointments) return [];
+    if (!appointments) return [];
     return appointments.filter((appointment) => {
       const apptDate = new Date(appointment.date.$date);
       const year = apptDate.getFullYear().toString();
-      const appointmentMonth = apptDate.toLocaleString(
-        "en-US",
-        { month: "long" }
-      );
+      const appointmentMonth = apptDate.toLocaleString("en-US", {
+        month: "long",
+      });
 
       return (
         (filterStatus === "All" || appointment.status === filterStatus) &&
@@ -94,16 +90,44 @@ const MyAppointments = () => {
     });
   }, [appointments, filterStatus, filterMonth, filterYear]);
 
+  // Pagination logic
+  const indexOfLastAppointment = currentPage * appointmentsPerPage;
+  const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
+  const currentAppointment = filteredAppointments.slice(
+    indexOfFirstAppointment,
+    indexOfLastAppointment
+  );
+
+  const totalPages = Math.ceil(
+    filteredAppointments.length / appointmentsPerPage
+  );
+
   const renderViewButton = (label, icon, className, onClick) => (
     <motion.button
       onClick={onClick}
       whileHover={{ scale: 1.1 }}
-      className= {`${className} mt-1  text-black px-4 py-2 rounded-lg shadow-md transition w-full sm:w-36 flex items-center justify-center gap-2 `}
+      className={`${className} mt-1  text-black px-4 py-2 rounded-lg shadow-md transition w-full sm:w-36 flex items-center justify-center gap-2 `}
     >
       {icon}
       {label}
     </motion.button>
   );
+
+  // Function to format the time from 24-hour to 12-hour AM/PM format
+  const formatTime = (time) => {
+    const [startTime, endTime] = time.split(" - ");
+
+    const convertTo12Hour = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":");
+      let hour = parseInt(hours, 10);
+      const ampm = hour >= 12 ? "PM" : "AM";
+      hour = hour % 12;
+      hour = hour ? hour : 12; // the hour '0' should be '12'
+      return `${hour}:${minutes} ${ampm}`;
+    };
+
+    return `${convertTo12Hour(startTime)} - ${convertTo12Hour(endTime)}`;
+  };
 
   return (
     <div className="p-6 mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -116,7 +140,7 @@ const MyAppointments = () => {
         {/* Status Filter */}
         <div className="relative">
           <select
-            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:text-blue-900 text-center"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
@@ -134,7 +158,7 @@ const MyAppointments = () => {
         {/* Month Filter */}
         <div className="relative">
           <select
-            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:text-blue-900 text-center"
             value={filterMonth}
             onChange={(e) => setFilterMonth(e.target.value)}
           >
@@ -154,7 +178,7 @@ const MyAppointments = () => {
         {/* Year Filter */}
         <div className="relative">
           <select
-            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:text-blue-900 text-center"
             value={filterYear}
             onChange={(e) => setFilterYear(e.target.value)}
           >
@@ -175,7 +199,7 @@ const MyAppointments = () => {
       {/* Card Layout for Small Screens */}
       <div className="md:hidden space-y-4">
         <AnimatePresence>
-          {filteredAppointments.map((appointment) => (
+          {currentAppointment.map((appointment) => (
             <motion.div
               key={appointment._id.$oid}
               initial={{ opacity: 0, y: -10 }}
@@ -189,10 +213,11 @@ const MyAppointments = () => {
                 {getStatusBadge(appointment.status)}
               </div>
               <p className="text-sm text-gray-600">
-                <strong>Date:</strong> { new Date(appointment.date.$date).toLocaleDateString()}
+                <strong>Date:</strong>{" "}
+                {new Date(appointment.date.$date).toLocaleDateString()}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Time:</strong> {appointment.time}
+                <strong>Time:</strong> {formatTime(appointment.time)}
               </p>
               {/* <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {renderViewButton("Details", <Info size={16}/>,"bg-green-300", () =>
@@ -233,7 +258,7 @@ const MyAppointments = () => {
             </thead>
             <tbody>
               <AnimatePresence>
-                {filteredAppointments.map((appointment) => (
+                {currentAppointment.map((appointment) => (
                   <motion.tr
                     key={appointment._id}
                     className="border text-center"
@@ -243,9 +268,15 @@ const MyAppointments = () => {
                     transition={{ duration: 0.2 }}
                   >
                     <td className="p-3 border">{appointment.doctor}</td>
-                    <td className="p-3 border">{appointment.patientForm.patientname}</td>
-                    <td className="p-3 border">{new Date(appointment.date).toLocaleDateString()}</td>
-                    <td className="p-3 border">{appointment.time}</td>
+                    <td className="p-3 border">
+                      {appointment.patientForm.patientname}
+                    </td>
+                    <td className="p-3 border">
+                      {new Date(appointment.date).toLocaleDateString()}
+                    </td>
+                    <td className="p-3 border">
+                      {formatTime(appointment.time)}
+                    </td>
                     <td className="p-3 border">
                       {getStatusBadge(appointment.status)}
                     </td>
@@ -274,11 +305,33 @@ const MyAppointments = () => {
           </table>
         </div>
       )}
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-8">
+        <div className="flex items-center justify-center space-x-3 border border-gray-300 rounded-lg px-6 py-3 shadow-lg bg-white w-full max-w-sm sm:max-w-md">
+          <button
+            className="px-4 py-2 rounded-full text-base sm:text-lg font-semibold transition-all bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            ◀ Prev
+          </button>
+          <span className="px-4 py-2 rounded-full bg-indigo-500 text-white text-base sm:text-lg font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="px-4 py-2 rounded-full text-base sm:text-lg font-semibold transition-all bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next ▶
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default MyAppointments;
-
-
-
