@@ -26,10 +26,10 @@ const DoctorList = () => {
 
   const specializations = [
     "All",
-    ...new Set(doctors?.map((doctor) => doctor.specialization)),
+    ...new Set(doctors.map((doctor) => doctor.specialization)),
   ];
 
-  const filteredDoctors = doctors?.filter(
+  const filteredDoctors = doctors.filter(
     (doctor) =>
       selectedSpecialization === "All" ||
       doctor.specialization === selectedSpecialization
@@ -71,7 +71,7 @@ const DoctorList = () => {
             <h5 className="text-xl font-bold text-center mb-4 text-indigo-700">
               Specialization
             </h5>
-            {specializations?.map((specialization) => (
+            {specializations.map((specialization) => (
               <button
                 key={specialization}
                 className={`w-full text-left px-4 py-3 rounded-md my-2 transition-all font-medium ${
@@ -93,8 +93,7 @@ const DoctorList = () => {
         {/* Doctor Cards */}
         <div className="w-full md:w-3/4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            {currentDoctors?.map((doctor) => (
+            {currentDoctors.map((doctor) => (
               <div
                 key={doctor.id}
                 onClick={() => navigate(`/all-doctors/${doctor._id}`)}

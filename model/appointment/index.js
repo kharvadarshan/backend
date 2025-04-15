@@ -109,20 +109,27 @@ const appointmentSchema = new mongoose.Schema({
       required: true,
     }
     },
-    feedbackForm:{
-      rating:{
-        type:Number,
-        min:1,
-        max:5
+   feedbackForm: {
+    type: {
+      rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+        required: false,
+        default: null, // Default to null
+      },
+      feedback: {
+        type: String,
+        required: false,
+        default: "",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
-    feedback:{
-        type:String,
-    },
-    createdAt:{
-        type:Date,
-        default:Date.now()
-    }
-    },
+    default: () => ({}),
+  },
     status:{
       type: String,
       default:"Pending",

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { resetIsLogin, resetRole } from "../../../slices/loginSlice";
-import { resetUser } from "../../../slices/userAuthSlice";
+import {toast} from "react-toastify";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { resetIsLogin,resetRole } from '../../../slices/loginSlice';
+import { resetUser } from '../../../slices/userAuthSlice';
 import {
   CalendarCheck,
   Stethoscope,
@@ -17,6 +17,10 @@ import {
   Menu,
   X,
 } from "lucide-react";
+
+
+
+
 
 const Sidebar = () => {
   const menu = [
@@ -62,19 +66,57 @@ const Sidebar = () => {
         <Menu className="w-6 h-6" />
       </button>
 
-      {/* Overlay */}
+{/*    
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/30 z-40"
           onClick={closeSidebar}
         ></div>
-      )}
+      )} */}
 
       {/* Sidebar */}
-      <div
+        {/* <div
         className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white shadow-2xl p-4 z-50 transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:relative lg:flex`}
       >
+       <div className="p-4">
+          <h2 className="text-2xl font-bold">Hospital</h2>
+         
+           <nav className='flex flex-col space-y-3'>
+            <NavLink to='/admin'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"  onClick={closeSidebar} >
+            <FontAwesomeIcon className=" mr-2  " icon={faClipboardList} />{" "}Appointments
+            </NavLink>
+            <NavLink to='/admin/doctorslist'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+            <FontAwesomeIcon className="mr-2  " icon={faUserDoctor} />{" "}Doctor List
+            </NavLink>
+            <NavLink to='/admin/adddoctor'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+            <FontAwesomeIcon className=" mr-2 " icon={faUserPlus} />{" "}Add Doctor
+            </NavLink>
+            <NavLink to='/admin/allcontacts'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+            <FontAwesomeIcon className=" mr-2 " icon={faAddressCard} />{" "}All Contact
+            </NavLink>
+            <NavLink to='/admin/allpatient'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700" >
+            <FontAwesomeIcon className="mr-2 " icon={faHospitalUser} />{" "}All Patient
+            </NavLink>
+            <NavLink onClick={logout}  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700">
+            <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />{" "}Logout
+            </NavLink>
+            
+            </nav>
+                      
+        
+        </div> 
+      </div>*/}
+
+      {/* Improved Mobile Overlay */}
+       {isOpen && (
+          <div
+            onClick={toggleSidebar}
+            className="md:hidden fixed inset-0  bg-opacity-50 z-30 transition-opacity duration-200"
+          ></div>
+        )}
+
+   
         {/* Close button for mobile */}
         <div className="lg:hidden flex justify-end mb-2">
           <button onClick={toggleSidebar}>
@@ -82,7 +124,7 @@ const Sidebar = () => {
           </button>
         </div>
 
-        <div className="flex flex-col h-full w-full">
+        <div className="flex flex-col h-full w-full p-4">
           <h2 className="text-3xl font-bold mb-8 tracking-wide text-center">
             🏥 Hospital
           </h2>
@@ -130,7 +172,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-      </div>
+
     </>
   );
 };

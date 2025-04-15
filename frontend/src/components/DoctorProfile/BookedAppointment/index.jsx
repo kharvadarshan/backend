@@ -106,6 +106,7 @@ const BookedAppointment = ({ doctor }) => {
           }
         } catch (error) {
           Swal.fire("Error!", "Could not connect to the server.", "error");
+          console.error(error);
         }
       }
     });
@@ -137,6 +138,7 @@ const BookedAppointment = ({ doctor }) => {
           }
         } catch (error) {
           Swal.fire("Error!", "Could not connect to the server.", "error");
+          console.error(error);
         }
       }
     });
@@ -168,6 +170,7 @@ const BookedAppointment = ({ doctor }) => {
           }
         } catch (error) {
           Swal.fire("Error!", "Could not connect to the server.", "error");
+          console.error(error);
         }
       }
     });
@@ -278,7 +281,8 @@ const BookedAppointment = ({ doctor }) => {
         Swal.fire('Error!', response.data.message || 'Failed to view reports', 'error');
       }
     } catch (error) {
-      Swal.fire("Error!", "Failed to view report", "error");
+      Swal.fire("Error!", "Failed to view report","error");
+      console.error(error);
     }
   };
 
@@ -331,7 +335,7 @@ const BookedAppointment = ({ doctor }) => {
     (filteredAppointments()?.length || 0) / (appointmentsPerPage || 1)
   );
 
-  const renderCard = (app, index) => (
+  const renderCard = (app, index, isUpcoming = true) => (
     <div
       key={app._id}
       className="border border-gray-300 rounded-xl p-4 mb-4 shadow-sm"
@@ -456,23 +460,7 @@ const BookedAppointment = ({ doctor }) => {
 
 
  
-  // Function to format the time from 24-hour to 12-hour AM/PM format
-const formatTime = (time) => {
-  const [startTime, endTime] = time.split(" - ");
   
-  const convertTo12Hour = (timeStr) => {
-    const [hours, minutes] = timeStr.split(":");
-    let hour = parseInt(hours, 10);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    hour = hour % 12;
-    hour = hour ? hour : 12; // the hour '0' should be '12'
-    return `${hour}:${minutes} ${ampm}`;
-  };
-
-  return `${convertTo12Hour(startTime)} - ${convertTo12Hour(endTime)}`;
-};
-  
-  console.log(paginatedAppointments());
 
   return (
     <div className="bg-white p-4 m-4 mb-4 border border-blue-400 rounded-lg shadow-lg">
@@ -573,7 +561,7 @@ const formatTime = (time) => {
                   {new Date(app.date).toLocaleDateString()}
                 </td>
                 <td className="p-3 border-r">
-                {formatTime(app.time)}
+                   {app.time}
                 </td>
 
                 <td className="p-3 border-r">{app.patientForm.reason}</td>
