@@ -16,7 +16,7 @@ const MyAppointments = () => {
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const appointmentsPerPage = 5; // Number of Appointments per page
-
+  
 
   useEffect(() => {
     if (activeUser?.id) getAppointmentByPatientId();
