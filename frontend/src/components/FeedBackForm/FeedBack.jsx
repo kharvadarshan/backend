@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { FaStar } from "react-icons/fa";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import axios from "axios";
+import { useToast } from "../Notification/ToastProvider";
 
 const FeedbackForm = ({appointmentId,onSubmitSuccess}) => {
- 
+  const toast = useToast();
   const [hover, setHover] = useState(0);
  
   
@@ -23,10 +24,14 @@ const FeedbackForm = ({appointmentId,onSubmitSuccess}) => {
       if(response.data.ok)
         {
           onSubmitSuccess();
-          toast.success("Feedback submitted successfully!",{
-            position:"top-center"
-          });
+          // toast.success("Feedback submitted successfully!",{
+          //   position:"top-center"
+          // });
+          toast("success","Feedback Submitted Successfully...!")
           setFeedbackForm({...feedbackForm,rating:0,feedback:""});
+        }
+        else{
+          toast("error","Please Give Again FeedBack...!");
         }
          
     } catch (error) {

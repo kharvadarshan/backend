@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import {toast} from "react-toastify";
+// import {toast} from "react-toastify";
+import { useToast } from "../../Notification/ToastProvider";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { resetIsLogin,resetRole } from '../../../slices/loginSlice';
@@ -23,6 +24,7 @@ import {
 
 
 const Sidebar = () => {
+  const toast = useToast();
   const menu = [
     { label: "Doctors List", icon: <Stethoscope className="w-5 h-5" /> },
     { label: "Add Doctor", icon: <UserPlus className="w-5 h-5" /> },
@@ -45,7 +47,8 @@ const Sidebar = () => {
         { withCredentials: true }
       );
       if (result.data.ok) {
-        toast.success("Logout Successfully...!", { position: "top-right" });
+        // toast.success("Logout Successfully...!", { position: "top-right" });
+        toast("success","Logout Successfully...!");
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetRole());

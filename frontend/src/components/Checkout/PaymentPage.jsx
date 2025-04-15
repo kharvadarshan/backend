@@ -3,13 +3,15 @@ import axios from "axios";
 import { Loader2, CreditCard } from "lucide-react";
 import { useSelector } from "react-redux";
 import {useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import {useToast} from '../Notification/ToastProvider'
 
 const PaymentPage = () => {
   const activeUser = useSelector((state) => state.user.user);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
   const { state } = useLocation();
   const appointmentData = state?.appointmentData ;
   const doctor = state?.doctor;
@@ -64,7 +66,8 @@ const PaymentPage = () => {
             });
           } catch (error) {
             console.error("Payment verification failed:", error);
-           toast.error("Payment verification failed");
+          //  toast.error("Payment verification failed");
+          toast("error","Payment Verification Failed...!");
            navigate("/payment-failed");
           }
         },

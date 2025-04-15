@@ -3,7 +3,13 @@ import { Route, Routes, Outlet } from "react-router-dom";
 import EditProfile from "./EditProfile.jsx";
 import Appointments from "./MyAppointment/index.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCalendarWeek, faPenToSquare, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faCalendarWeek,
+  faPenToSquare,
+  faRightFromBracket,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { resetIsLogin, resetRole } from "../../slices/loginSlice.jsx";
@@ -18,13 +24,12 @@ const Profile = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const user = useSelector((state)=>state.user.user);
-   console.log(user);
-   
+  const user = useSelector((state) => state.user.user);
+  console.log(user);
+
   const logout = async (e) => {
     e.preventDefault();
     try {
-     
       const result = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/logout`,
         null,
@@ -34,7 +39,7 @@ const Profile = () => {
       );
       if (result.data.ok) {
         // toast.success("Logout Successfully...!", { position: "top-right" });
-        toast("success","Logout Successfully...!");
+        toast("success", "Logout Successfully...!");
         // localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());
@@ -49,15 +54,30 @@ const Profile = () => {
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       {/* Mobile Sidebar Toggle */}
-      <button
+      {/* <button
         className={`md:hidden p-4 absolute ${isSidebarOpen ? "left-48" : "left-0"} top-16  z-50 text-gray-700 rounded`}
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         <FontAwesomeIcon icon={faBars} className="text-2xl" />
+      </button> */}
+      <button
+        className={`lg:hidden p-4 absolute ${
+          isSidebarOpen ? "left-48" : "left-0"
+        } top-16 z-50 text-gray-700 rounded`}
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        <FontAwesomeIcon
+          icon={isSidebarOpen ? faTimes : faBars}
+          className="text-2xl transition-all duration-300"
+        />
       </button>
 
       {/* Sidebar */}
-      <div className={`absolute min-h-[650px] md:relative w-64 bg-cyan-300 shadow-md flex flex-col items-center text-center p-6 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition-transform duration-300 ease-in-out`}> 
+      <div
+        className={`absolute min-h-[650px] lg:relative w-64 bg-cyan-300 shadow-md flex flex-col items-center text-center p-6 transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 transition-transform duration-300 ease-in-out z-40`}
+      >
         <img
           src={`http://localhost:5001${user.image}`}
           className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-gray-300 mb-4"
@@ -65,44 +85,56 @@ const Profile = () => {
         />
         <h1 className="text-xl font-semibold text-gray-700">John Doe</h1>
         <hr className="my-4 w-full border-gray-300" />
-        
+
         {/* Navigation Links */}
         <div className="flex flex-col w-full space-y-2">
           <NavLink
             to="/profile"
             className="flex items-center p-3 text-gray-700 hover:bg-blue-100 rounded-lg"
           >
-            <FontAwesomeIcon icon={faPenToSquare} className="text-blue-500 text-lg mr-3" />
+            <FontAwesomeIcon
+              icon={faPenToSquare}
+              className="text-blue-500 text-lg mr-3"
+            />
             Edit Profile
           </NavLink>
           <NavLink
             to="/profile/myappointment"
             className="flex items-center p-3 text-gray-700 hover:bg-blue-100 rounded-lg"
           >
-            <FontAwesomeIcon icon={faCalendarWeek} className="text-blue-500 text-lg mr-3" />
+            <FontAwesomeIcon
+              icon={faCalendarWeek}
+              className="text-blue-500 text-lg mr-3"
+            />
             My Appointments
           </NavLink>
           <NavLink
             to="/profile/deletedAppointments"
             className="flex items-center p-3 text-gray-700 hover:bg-blue-100 rounded-lg"
           >
-            <FontAwesomeIcon icon={faCalendarWeek} className="text-blue-500 text-lg mr-3" />
+            <FontAwesomeIcon
+              icon={faCalendarWeek}
+              className="text-blue-500 text-lg mr-3"
+            />
             DeletedAppointments
           </NavLink>
           <button
             onClick={logout}
             className="flex items-center p-3 text-gray-700 hover:bg-red-100 rounded-lg w-full"
           >
-            <FontAwesomeIcon icon={faRightFromBracket} className="text-red-500 text-lg mr-3" />
+            <FontAwesomeIcon
+              icon={faRightFromBracket}
+              className="text-red-500 text-lg mr-3"
+            />
             Logout
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-white shadow-md overflow-y-auto">
+      <div className="flex-1 bg-white pt-10 lg:pt-0 shadow-md overflow-y-auto">
         <Routes>
-          <Route path="/" element={<EditProfile />} />
+          <Route path="/" element={<EditProfile isSidebarOpen={isSidebarOpen} />} />
           <Route path="myappointment" element={<Appointments />} />
           <Route path="deletedAppointments" element={<DeletedAppointments />} />
         </Routes>

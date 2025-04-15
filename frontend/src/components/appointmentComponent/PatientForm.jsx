@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import {} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { useEffect,useState } from "react";
+import { useToast } from "../Notification/ToastProvider";
 
 const PatientForm = ({ appointmentData, setAppointmentData }) => {
   const navigate = useNavigate();
+  const toast = useToast();
   const fieldData = [
     { id: "name", label: "Your Name" },
     { id: "patientname", label: "Patient Name" },
@@ -46,7 +48,8 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
         
       } catch (error) {
         console.error("Error fetching doctor:", error);
-        toast.error("Failed to load doctor details");
+        // toast.error("Failed to load doctor details");
+        toast("error","Failed To Load Doctor Details...!");
       }
     };
     if (appointmentData?.doctorId) {
@@ -64,10 +67,11 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
 
       if (response.data.ok) {
         console.log(response.data);
-        toast.success("Appointment booked successfully!", {
-          position: "top-right",
-          autoClose: 1000,
-        });
+        // toast.success("Appointment booked successfully!", {
+        //   position: "top-right",
+        //   autoClose: 1000,
+        // });
+        toast("success","Appointment Booked Successfully...!");
         navigate("/checkout",{ state:
            { 
               appointmentData:response.data.appointment,

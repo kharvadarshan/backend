@@ -1,14 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {toast} from 'react-toastify';
-
-const EditProfile = () => {
-  const [user,setUser]=useState("");
-  const activeUser = useSelector((state)=>state.user.user);
-  const [photoPreview, setPhotoPreview] = useState(''); // State for photo preview
-
-
+// import { toast } from "react-toastify";
+import { useToast } from "../../Notification/ToastProvider";
+const EditProfile = ({isSidebarOpen}) => {
+  const [user, setUser] = useState("");
+  const activeUser = useSelector((state) => state.user.user);
+  const [photoPreview, setPhotoPreview] = useState(""); // State for photo preview
+  const toast = useToast();
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -22,58 +21,54 @@ const EditProfile = () => {
     setUser({ ...user, [name]: value });
   };
 
+  useEffect(() => {
+    if (activeUser?.id) fetchUser();
+  }, [activeUser?.id]);
 
+  const fetchUser = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/profile/edit`,
+        { id: activeUser.id }
+      );
 
-
-
-  useEffect(()=>{
-    if(activeUser?.id)
-     fetchUser();
-  },[activeUser?.id]);
-
-
-   const fetchUser = async ()=>{
-    try{
-           const response = await axios.post(`${import.meta.env.VITE_API_URL}/profile/edit`,{id:activeUser.id});
-          
-           if(response.data.ok)
-           {
-               setUser(response.data.result[0]);
-           }
-    }catch(error)
-    {
+      if (response.data.ok) {
+        setUser(response.data.result[0]);
+      }
+    } catch (error) {
       console.error(error);
     }
-   }
+  };
 
-    useEffect(()=>{
-        if(user?.image){
-        setPhotoPreview(`${import.meta.env.VITE_API_URL}${user.image}`);
-        }
-      },[user]);
+  useEffect(() => {
+    if (user?.image) {
+      setPhotoPreview(`${import.meta.env.VITE_API_URL}${user.image}`);
+    }
+  }, [user]);
 
-    console.log(user);
-   const handleSubmit = async(e)=>{
-        e.preventDefault();
-        try{
-               
-               const response = await axios.post(`${import.meta.env.VITE_API_URL}/profile/editProfile`,
-                                                 user,
-                                                 {headers: {
-                                                   'Content-Type':'multipart/form-data'
-                                                 }});
-              if(response.data.ok)
-              {
-                   toast.success("Profile updated Successfully...!",{
-                              position:"top-right"
-                         });
-              }
-   
-        }catch(error)
+  console.log(user);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/profile/editProfile`,
+        user,
         {
-             console.log(error);
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-     };
+      );
+      if (response.data.ok) {
+        // toast.success("Profile updated Successfully...!", {
+        //   position: "top-right",
+        // });
+        toast("success","Profile Updated Successfully...!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="min-h-[650px] mt-10 md:my-2 p-4">
@@ -83,17 +78,19 @@ const EditProfile = () => {
       >
         {/* Header */}
         <div className="bg-blue-400 p-6">
-          <h1 className="text-3xl font-bold text-center text-white">Edit Profile</h1>
+          <h1 className="text-3xl font-bold text-center text-white">
+            Edit Profile
+          </h1>
         </div>
 
         {/* Profile Photo Section */}
         <div className="p-6">
           <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6">
-            <div className="relative">
+            <div className={`relative ${isSidebarOpen ? "-z-10" : "z-10"} `}>
               <img
                 src={photoPreview}
                 alt="Profile"
-                className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
+                className="w-32 h-32  rounded-full border-4 border-white shadow-lg"
               />
               <label
                 htmlFor="photo-upload"
@@ -129,7 +126,9 @@ const EditProfile = () => {
               />
             </div>
             <div className="text-center md:text-left">
-              <h2 className="text-2xl text-center font-bold text-gray-800">{user.userName}</h2>
+              <h2 className="text-2xl text-center font-bold text-gray-800">
+                {user.userName}
+              </h2>
               <p className="text-gray-600">{}</p>
             </div>
           </div>

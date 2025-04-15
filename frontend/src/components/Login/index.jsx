@@ -11,10 +11,12 @@ import { setIsLogin, setRole } from "../../slices/loginSlice";
 import { setDoctor } from "../../slices/doctorSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { useToast } from "../Notification/ToastProvider";
 function LoginPage() {
   const [loginType, setLoginType] = useState("patient"); // Default to 'patient' login
   const navigate = useNavigate();
+  const toast = useToast();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -40,9 +42,10 @@ function LoginPage() {
         dispatch(setIsLogin());
         dispatch(setRole(result.data.user.role));
         dispatch(setUser(result.data.user));
-        toast.success("Login Successfully...!", {
-          position: "top-right",
-        });
+        // toast.success("Login Successfully...!", {
+        //   position: "top-right",
+        // });
+        toast("success","Login Successfully...!");
         if (result.data.user.role === "doctor") {
           dispatch(setDoctor(result.data.user.doctor));
           navigate("/doctorprofile");

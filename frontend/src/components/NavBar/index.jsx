@@ -9,34 +9,35 @@ import { useSelector } from "react-redux";
 import { resetUser } from "../../slices/userAuthSlice";
 import { useDispatch } from "react-redux";
 import { resetIsLogin, resetRole } from "../../slices/loginSlice";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { useToast } from "../Notification/ToastProvider";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
+
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   //const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
   // const activeUser = useSelector((state) => state.user.user);
   const isLogin = useSelector((state) => state.isLogin.isLogin);
- 
 
   const logout = async () => {
-
     try {
-     
       const result = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/logout`,
         null,
         {
-          
           withCredentials: true,
         }
       );
       if (result.data.ok) {
-        toast.success("Logout Successfully...!", {
-          position: "top-right",
-        });
+        // toast.success("Logout Successfully...!", {
+        //   position: "top-right",
+        // });
+        toast("success", "Logout Successfully...!");
         // localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());
@@ -59,13 +60,18 @@ const NavBar = () => {
       <div className="flex justify-between items-center h-16  px-3 ">
         {/* Logo */}
         <div className="">
-          <img className="" width="326px" height="" src="../../../public/assets/BookMyDoctor Logo - Original with Transparent Background - 5000x5000.png" ></img>
+          <img
+            className=""
+            width="250px"
+            height=""
+            src="../../../public/assets/BookMyDoctor Logo - Original with Transparent Background - 5000x5000.png"
+          ></img>
         </div>
 
         {/* Toggle Button for Mobile */}
         <div className="flex lg:hidden">
           <button
-            className="text-white hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600"
+            className="text-white  hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600"
             type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
@@ -88,7 +94,7 @@ const NavBar = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden  lg:flex space-x-8 items-center ">
+        <div className="hidden  lg:flex space-x-8 items-center">
           <NavLink
             to="/"
             className="text-white hover:text-gray-400 text-lg no-underline"
@@ -158,10 +164,7 @@ const NavBar = () => {
                 {/* <FontAwesomeIcon icon="fa-solid fa-user" /> */}
                 <span className="ml-2 hidden lg:inline">
                   {" "}
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    className="text-blue-500 text-lg pr-2"
-                  />
+                  <UserCircleIcon className="h-8 w-8 text-blue-400 hover:text-blue-200" />
                   {/* {activeUser ? activeUser.email : ""} */}
                 </span>
               </button>
@@ -216,7 +219,7 @@ const NavBar = () => {
           >
             Contact
           </NavLink>
-          <button
+          {/* <button
             onClick={handleLoginPage}
             className="block bg-blue-500 text-white px-4 py-2 rounded-md w-full hover:bg-blue-600"
           >
@@ -227,7 +230,52 @@ const NavBar = () => {
             className="block bg-yellow-500 text-white px-4 py-2 rounded-md w-full hover:bg-yellow-600"
           >
             Sign Up
-          </button>
+          </button> */}
+
+          {!isLogin ? (
+            <>
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate("/login");
+                }}
+                className="w-full bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate("/signup");
+                }}
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md"
+              >
+                Sign Up
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate("/profile");
+                }}
+                className="w-full text-white text-lg flex justify-center items-center gap-2 py-2 hover:text-gray-200"
+              >
+                {/* <UserCircleIcon className="h-8 w-8 text-blue-400 hover:text-blue-200"/> */}
+                Profile
+              </button>
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  logout();
+                }}
+                className="w-full bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       )}
       {/* </div> */}

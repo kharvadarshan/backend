@@ -23,6 +23,7 @@
     "@fullcalendar/react": "^6.1.17",
     "@fullcalendar/timegrid": "^6.1.17",
     "@googleapis/calendar": "^9.8.0",
+    "@heroicons/react": "^2.2.0",
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.5.1",
     "@stripe/react-stripe-js": "^3.6.0",

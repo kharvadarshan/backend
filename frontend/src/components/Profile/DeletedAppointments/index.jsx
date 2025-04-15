@@ -116,7 +116,7 @@ const MyAppointments = () => {
         {/* Status Filter */}
         <div className="relative">
           <select
-            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center focus:text-blue-500"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
@@ -134,7 +134,7 @@ const MyAppointments = () => {
         {/* Month Filter */}
         <div className="relative">
           <select
-            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center focus:text-blue-500"
             value={filterMonth}
             onChange={(e) => setFilterMonth(e.target.value)}
           >
@@ -154,7 +154,7 @@ const MyAppointments = () => {
         {/* Year Filter */}
         <div className="relative">
           <select
-            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none"
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center focus:text-blue-500"
             value={filterYear}
             onChange={(e) => setFilterYear(e.target.value)}
           >
