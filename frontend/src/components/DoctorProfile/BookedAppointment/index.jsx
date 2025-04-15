@@ -331,7 +331,7 @@ const BookedAppointment = ({ doctor }) => {
     (filteredAppointments()?.length || 0) / (appointmentsPerPage || 1)
   );
 
-  const renderCard = (app, index, isUpcoming = true) => (
+  const renderCard = (app, index) => (
     <div
       key={app._id}
       className="border border-gray-300 rounded-xl p-4 mb-4 shadow-sm"
@@ -456,7 +456,23 @@ const BookedAppointment = ({ doctor }) => {
 
 
  
+  // Function to format the time from 24-hour to 12-hour AM/PM format
+const formatTime = (time) => {
+  const [startTime, endTime] = time.split(" - ");
   
+  const convertTo12Hour = (timeStr) => {
+    const [hours, minutes] = timeStr.split(":");
+    let hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    hour = hour ? hour : 12; // the hour '0' should be '12'
+    return `${hour}:${minutes} ${ampm}`;
+  };
+
+  return `${convertTo12Hour(startTime)} - ${convertTo12Hour(endTime)}`;
+};
+  
+  console.log(paginatedAppointments());
 
   return (
     <div className="bg-white p-4 m-4 mb-4 border border-blue-400 rounded-lg shadow-lg">
@@ -557,7 +573,7 @@ const BookedAppointment = ({ doctor }) => {
                   {new Date(app.date).toLocaleDateString()}
                 </td>
                 <td className="p-3 border-r">
-                   {app.time}
+                {formatTime(app.time)}
                 </td>
 
                 <td className="p-3 border-r">{app.patientForm.reason}</td>
