@@ -7,138 +7,142 @@ import Swal from "sweetalert2";
 import FeedBackForm from "../../FeedBackForm/FeedBack";
 import { useNavigate } from "react-router-dom";
 
-
-
 const MyAppointments = () => {
-  const activeUser = useSelector((state)=> state.user.user);
+  const activeUser = useSelector((state) => state.user.user);
   const [appointments, setAppointments] = useState();
-  const [modalData,setModalData] = useState();
-  const [showFeedbackForm,setShowFeedbackForm]=useState(false);
+  const [modalData, setModalData] = useState();
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const appointmentsPerPage = 4;
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    if(activeUser?.id)
-       getAppointmentByPatientId();
-  },[activeUser?.id]);
+  useEffect(() => {
+    if (activeUser?.id) getAppointmentByPatientId();
+  }, [activeUser?.id]);
 
+  // get all apointment of patient
+  const getAppointmentByPatientId = async () => {
+    try {
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_API_URL
+        }/appointments/getAppointmentByPatientId/${activeUser.id}`
+      );
 
-  // get all apointment of patient 
-  const getAppointmentByPatientId = async()=>{
-    try
-    {
-         const response = await axios.get(`${import.meta.env.VITE_API_URL}/appointments/getAppointmentByPatientId/${activeUser.id}`);
-
-         if(response.data.ok)
-         {
-          setAppointments(response.data.result);
-         }
-
-    }catch(error)
-    {
-          console.log(error);
+      if (response.data.ok) {
+        setAppointments(response.data.result);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
-
   // delete appointment which is  completed
-  const handleDelete = async(appointmentId)=>{
+  const handleDelete = async (appointmentId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this completed appointment ?",
+      icon: "warning",
+      confirmButtonText: "Yes, Continue",
+      cancelButtonText: "No, Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(
+            `${
+              import.meta.env.VITE_API_URL
+            }/appointments/deleteAppointment/${appointmentId}`
+          );
 
-       Swal.fire({
-                title:"Are you sure?",
-                text:"Do you really want to delete this completed appointment ?",
-                icon:"warning",
-                confirmButtonText:"Yes, Continue",
-                cancelButtonText:"No, Cancel",
-        }).then(async(result)=>{
-          if(result.isConfirmed){
-            try{
-              const response = await  axios.delete(`${import.meta.env.VITE_API_URL}/appointments/deleteAppointment/${appointmentId}`);
-    
-                  if(response.data.ok)
-                  {    
-                       Swal.fire("Deleted Successfully!","The appointment has been deleted","success");
-                       await getAppointmentByPatientId();
-                  }else
-                  {
-                       Swal.fire(response.data.message,"Something went wrong. Try again.","error");
-                  }
-            }
-            catch(error)
-            {
-              Swal.fire("Error!","Could not connect to the server.","error");
-            }
+          if (response.data.ok) {
+            Swal.fire(
+              "Deleted Successfully!",
+              "The appointment has been deleted",
+              "success"
+            );
+            await getAppointmentByPatientId();
+          } else {
+            Swal.fire(
+              response.data.message,
+              "Something went wrong. Try again.",
+              "error"
+            );
           }
-        });
-        
-     }
+        } catch (error) {
+          Swal.fire("Error!", "Could not connect to the server.", "error");
+        }
+      }
+    });
+  };
 
+  const handleViewReport = async (appointmentId) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/profile/viewReport/${appointmentId}`,
+        { withCredentials: true }
+      );
 
-      const handleViewReport = async (appointmentId) => {
-         try {
-           const response = await axios.get(
-             `${import.meta.env.VITE_API_URL}/profile/viewReport/${appointmentId}`,
-             { withCredentials: true }
-           );
-     
-           if (response.data.ok) {
-             const reports = response.data.reports;
-             if (reports.length === 0) {
-               Swal.fire('Info', 'No reports available.', 'info');
-               return;
-             }
-     
-             const html = reports
-             .map(
-               (report) => `
+      if (response.data.ok) {
+        const reports = response.data.reports;
+        if (reports.length === 0) {
+          Swal.fire("Info", "No reports available.", "info");
+          return;
+        }
+
+        const html = reports
+          .map(
+            (report) => `
                  <div style="margin: 10px 0;">
-                   <a href="${report.url}" target="_blank" style="color: #1e90ff;">
+                   <a href="${
+                     report.url
+                   }" target="_blank" style="color: #1e90ff;">
                      ${report.fileName} (Uploaded: ${new Date(
-                       report.uploadedAt
-                     ).toLocaleDateString()})
+              report.uploadedAt
+            ).toLocaleDateString()})
                    </a>
                  </div>
                `
-             )
-             .join('');
-             // reports.forEach((report) => {
-             //   const link = document.createElement('a');
-             //   link.href = report.url;
-             //   link.download = report.fileName; // Suggest filename for download
-             //   document.body.appendChild(link);
-             //   link.click();
-             //   document.body.removeChild(link);
-             // });
-     
-             Swal.fire({
-               title: 'Reports',
-               html,
-               icon: 'info',
-               confirmButtonText: 'Close',
-             });
-           } else {
-             Swal.fire('Error!', response.data.message || 'Failed to view reports', 'error');
-           }
-         } catch (error) {
-           Swal.fire("Error!", "Failed to view report", "error");
-         }
-       };
+          )
+          .join("");
+        // reports.forEach((report) => {
+        //   const link = document.createElement('a');
+        //   link.href = report.url;
+        //   link.download = report.fileName; // Suggest filename for download
+        //   document.body.appendChild(link);
+        //   link.click();
+        //   document.body.removeChild(link);
+        // });
 
-
+        Swal.fire({
+          title: "Reports",
+          html,
+          icon: "info",
+          confirmButtonText: "Close",
+        });
+      } else {
+        Swal.fire(
+          "Error!",
+          response.data.message || "Failed to view reports",
+          "error"
+        );
+      }
+    } catch (error) {
+      Swal.fire("Error!", "Failed to view report", "error");
+    }
+  };
 
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterMonth, setFilterMonth] = useState("All");
   const [filterYear, setFilterYear] = useState("All");
- 
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
- 
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   const getStatusBadge = (status) => {
     const statusColors = {
       Confirmed: "bg-green-100 text-green-700 border border-green-400",
       Pending: "bg-yellow-100 text-yellow-700 border border-yellow-400",
       Rejected: "bg-red-100 text-red-700 border border-red-400",
-      Completed:"bg-blue-100 text-blue-700 border border-blue-400"
+      Completed: "bg-blue-100 text-blue-700 border border-blue-400",
     };
     return (
       <span
@@ -150,7 +154,7 @@ const MyAppointments = () => {
   };
 
   const uniqueYears = useMemo(() => {
-    if(!appointments) return [];
+    if (!appointments) return [];
     const years = [
       ...new Set(appointments.map((appt) => new Date(appt.date).getFullYear())),
     ];
@@ -158,7 +162,7 @@ const MyAppointments = () => {
   }, [appointments]);
 
   const uniqueMonths = useMemo(() => {
-    if(!appointments) return [];
+    if (!appointments) return [];
     const months = [
       ...new Set(
         appointments.map((appt) =>
@@ -170,14 +174,13 @@ const MyAppointments = () => {
   }, [appointments]);
 
   const filteredAppointments = useMemo(() => {
-    if(!appointments) return [];
+    if (!appointments) return [];
     return appointments.filter((appointment) => {
       const apptDate = new Date(appointment.date);
       const year = apptDate.getFullYear().toString();
-      const appointmentMonth = apptDate.toLocaleString(
-        "en-US",
-        { month: "long" }
-      );
+      const appointmentMonth = apptDate.toLocaleString("en-US", {
+        month: "long",
+      });
 
       return (
         (filterStatus === "All" || appointment.status === filterStatus) &&
@@ -187,17 +190,33 @@ const MyAppointments = () => {
     });
   }, [appointments, filterStatus, filterMonth, filterYear]);
 
-  const renderViewButton = (label, icon, className, onClick) => (
+  const totalPages = Math.ceil(
+    filteredAppointments.length / appointmentsPerPage
+  );
+  const indexOfLastAppointment = currentPage * appointmentsPerPage;
+  const indexOfFirstPatient = indexOfLastAppointment - appointmentsPerPage;
+  const currentAppointment = filteredAppointments.slice(
+    indexOfFirstPatient,
+    indexOfLastAppointment
+  );
+
+  const renderViewButton = (
+    label,
+    icon,
+    className,
+    onClick,
+    isDisabled = false
+  ) => (
     <motion.button
       onClick={onClick}
-      whileHover={{ scale: 1.1 }}
-      className= {`${className} mt-1 text-black px-4 py-2 rounded-lg shadow-md transition w-full sm:w-36 flex items-center justify-center gap-2 `}
+      whileHover={isDisabled ? { scale: 1.0 } : { scale: 1.1 }}
+      className={`${className} mt-1 text-black px-4 py-2 rounded-lg shadow-md transition w-full sm:w-36 flex items-center justify-center gap-2 `}
+      disabled={isDisabled}
     >
       {icon}
       {label}
     </motion.button>
   );
-
 
   // New function to render rating stars
   const renderRating = (rating) => (
@@ -227,20 +246,41 @@ const MyAppointments = () => {
         >
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-800">Patient Details</h2>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700"
+            >
               <X size={24} />
             </button>
           </div>
           <div className="space-y-3">
-            <p><strong>Name:</strong> {data.name}</p>
-            <p><strong>Patient Name:</strong> {data.patientname}</p>
-            <p><strong>Age:</strong> {data.age}</p>
-            <p><strong>Gender:</strong> {data.gender}</p>
-            <p><strong>Email:</strong> {data.email}</p>
-            <p><strong>Address:</strong> {data.address}</p>
-            <p><strong>Reason:</strong> {data.reason}</p>
-            <p><strong>City:</strong> {data.city}</p>
-            <p><strong>Number:</strong> {data.number}</p>
+            <p>
+              <strong>Name:</strong> {data.name}
+            </p>
+            <p>
+              <strong>Patient Name:</strong> {data.patientname}
+            </p>
+            <p>
+              <strong>Age:</strong> {data.age}
+            </p>
+            <p>
+              <strong>Gender:</strong> {data.gender}
+            </p>
+            <p>
+              <strong>Email:</strong> {data.email}
+            </p>
+            <p>
+              <strong>Address:</strong> {data.address}
+            </p>
+            <p>
+              <strong>Reason:</strong> {data.reason}
+            </p>
+            <p>
+              <strong>City:</strong> {data.city}
+            </p>
+            <p>
+              <strong>Number:</strong> {data.number}
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -251,6 +291,22 @@ const MyAppointments = () => {
         </motion.div>
       </div>
     );
+  };
+
+  // Function to format the time from 24-hour to 12-hour AM/PM format
+  const formatTime = (time) => {
+    const [startTime, endTime] = time.split(" - ");
+
+    const convertTo12Hour = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":");
+      let hour = parseInt(hours, 10);
+      const ampm = hour >= 12 ? "PM" : "AM";
+      hour = hour % 12;
+      hour = hour ? hour : 12; // the hour '0' should be '12'
+      return `${hour}:${minutes} ${ampm}`;
+    };
+
+    return `${convertTo12Hour(startTime)} - ${convertTo12Hour(endTime)}`;
   };
 
   // feedback popup
@@ -266,46 +322,47 @@ const MyAppointments = () => {
           className="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl border border-gray-200"
         >
           <div className="flex justify-between items-center mb-4">
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700"
+            >
               <X size={24} />
             </button>
           </div>
           <FeedBackForm
             appointmentId={appointment._id} // Assuming doctorId exists in appointment
-            onSubmitSuccess={()=>{
+            onSubmitSuccess={() => {
               onClose();
               getAppointmentByPatientId();
-              } }// Close modal on success
+            }} // Close modal on success
           />
         </motion.div>
       </div>
     );
   };
-   
 
-
-  const payNow= async(appointment)=>{
+  const payNow = async (appointment) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${appointment.doctorId}`
+        `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${
+          appointment.doctorId
+        }`
       );
-      if(response.data.ok)
-      {
-       
-        navigate('/checkout', {  state:{
-          appointmentData:appointment,
-          doctor:response.data.result
-        }});
-      }else{
-        Swal.fire('Error', 'Failed to fetch doctor details.', 'error');
+      if (response.data.ok) {
+        navigate("/checkout", {
+          state: {
+            appointmentData: appointment,
+            doctor: response.data.result,
+          },
+        });
+      } else {
+        Swal.fire("Error", "Failed to fetch doctor details.", "error");
       }
-      
     } catch (error) {
       console.error("Error fetching doctor:", error);
-      Swal.fire('Error', 'Could not connect to the server.', 'error');
+      Swal.fire("Error", "Could not connect to the server.", "error");
     }
-     
-  }
+  };
 
   return (
     <div className="p-6 mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -356,7 +413,7 @@ const MyAppointments = () => {
         {/* Year Filter */}
         <div className="relative">
           <select
-            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center focus:text-blue-500" 
+            className="p-3 border rounded-lg shadow-sm bg-white text-gray-700 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center focus:text-blue-500"
             value={filterYear}
             onChange={(e) => setFilterYear(e.target.value)}
           >
@@ -391,46 +448,44 @@ const MyAppointments = () => {
                 {getStatusBadge(appointment.status)}
               </div>
               <p className="text-sm text-gray-600">
-                <strong>Date:</strong> { new Date(appointment.date.$date).toLocaleDateString()}
+                <strong>Date:</strong>{" "}
+                {new Date(appointment.date.$date).toLocaleDateString()}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Time:</strong> {appointment.time}
+                <strong>Time:</strong> {formatTime(appointment.time)}
               </p>
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {appointment.status === "Completed" &&
+                  (!appointment?.feedbackForm?.rating
+                    ? renderViewButton(
+                        "Give Feedback",
+                        <Star size={16} />,
+                        "bg-yellow-300",
+                        () => {
+                          setSelectedAppointment(appointment);
+                          setShowFeedbackForm(true);
+                        }
+                      )
+                    : renderRating(appointment.feedbackForm.rating))}
 
-                 {/* patient details button */}
-                {renderViewButton("Details", <Info size={16}/>,"bg-green-300", () =>
-                  setModalData(appointment.patientForm)
+                {/* patient details button */}
+                {renderViewButton(
+                  "Details",
+                  <Info size={16} />,
+                  "bg-green-300",
+                  () => setModalData(appointment.patientForm)
                 )}
-                
 
                 {/* patient can get report */}
-                { appointment.status=== "Completed" && (
-                 
-                 appointment.report.length > 0 ?
-                (
-                  renderViewButton("Download Report", <FileText size={16} />,"bg-blue-300", () =>
-                    handleViewReport(appointment._id)
-                )):(
-                   "No reports uploaded."
-                )
-                )
-                }
+                {appointment.status === "Completed" &&
+                  renderViewButton(
+                    "Download Report",
+                    <FileText size={16} />,
+                    "bg-blue-300",
+                    () => handleViewReport(appointment._id)
+                  )}
 
-                  {/* give feedback & display rating */}
-                { appointment.status === "Completed" &&  
-                ( 
-                  !appointment?.feedbackForm?.rating ? 
-                  (
-                             renderViewButton("Give Feedback", <Star size={16} />,"bg-yellow-300", () =>{
-                             setSelectedAppointment(appointment);
-                              setShowFeedbackForm(true);})
-                  ):(  
-                         renderRating(appointment.feedbackForm.rating)
-                    )
-                )}
-
-
+                {/* give feedback & display rating */}
 
                 <button
                   onClick={() => handleDelete(appointment._id.$oid)}
@@ -469,7 +524,7 @@ const MyAppointments = () => {
             </thead>
             <tbody>
               <AnimatePresence>
-                {filteredAppointments.map((appointment) => (
+                {currentAppointment.map((appointment) => (
                   <motion.tr
                     key={appointment._id}
                     className="border text-center"
@@ -479,36 +534,44 @@ const MyAppointments = () => {
                     transition={{ duration: 0.2 }}
                   >
                     <td className="p-3 border">{appointment.doctor}</td>
-                    <td className="p-3 border">{appointment.patientForm.patientname}</td>
-                    <td className="p-3 border">{new Date(appointment.date).toLocaleDateString()}</td>
-                    <td className="p-3 border">{appointment.time}</td>
+                    <td className="p-3 border">
+                      {appointment.patientForm.patientname}
+                    </td>
+                    <td className="p-3 border">
+                      {new Date(appointment.date).toLocaleDateString()}
+                    </td>
+                    <td className="p-3 border">
+                      {formatTime(appointment.time)}
+                    </td>
                     <td className="p-3 border">
                       {getStatusBadge(appointment.status)}
                     </td>
                     <td className="p-3 border">
-                      {
-                        appointment.paymentStatus==="Pending" ? (
-                                        <button
-                                          onClick={ ()=>{  payNow(appointment); }}
-                                          className="flex items-center justify-content-center p-3 text-white bg-blue-500 rounded-lg w-full"
-                                       >
-                                         Pay Now
-                                       </button>
-                        ):
-                        (
-                            getStatusBadge(appointment.paymentStatus)
-                        )
-                      }
-                    </td>
-
-                     {/* patient details button */}
-                    <td className="p-3 border">
-                      {renderViewButton("View", <Info size={16} />,"bg-green-300", () =>
-                        setModalData(appointment.patientForm)
+                      {appointment.paymentStatus === "Pending" ? (
+                        <button
+                          onClick={() => {
+                            payNow(appointment);
+                          }}
+                          className="flex items-center justify-content-center p-3 text-white bg-blue-500 rounded-lg w-full"
+                        >
+                          Pay Now
+                        </button>
+                      ) : (
+                        getStatusBadge(appointment.paymentStatus)
                       )}
                     </td>
 
-                     {/* patient can get report */}
+                    {/* patient details button */}
+                    <td className="p-3 border">
+                      {renderViewButton(
+                        "View",
+                        <Info size={16} />,
+                        "bg-green-300",
+                        () => setModalData(appointment.patientForm)
+                      )}
+                    </td>
+
+                    {/* patient can get report */}
                     <td className="p-3 border">
                       {renderViewButton(
                         "Download  Report",
@@ -518,30 +581,30 @@ const MyAppointments = () => {
                       )}
                     </td>
 
-
-                     {/* give feedback & display rating */}
+                    {/* give feedback & display rating */}
                     <td className="p-3 border">
-
-                      { 
-                        appointment.status==="Completed" ? (   
-                         !appointment.feedbackForm?.rating ? 
-                          (
-                                
-                                    (renderViewButton("Give Feedback", <Star size={16} />,"bg-yellow-300", () =>{
-                                                   setSelectedAppointment(appointment);
-                                                    setShowFeedbackForm(true);})
-                                    )
-                          ): (
-                            renderRating(appointment.feedbackForm.rating)
-                          )
-
-                      ):(
-                       
-                        (renderViewButton("Give Feedback", <Star size={16} />,"bg-yellow-300 ", () =>{
-                                                   setSelectedAppointment(appointment);
-                                                    setShowFeedbackForm(true);})
-                                    )
-                      )}
+                      {appointment.status === "Completed"
+                        ? !appointment.feedbackForm?.rating
+                          ? renderViewButton(
+                              "Give Feedback",
+                              <Star size={16} />,
+                              "bg-yellow-300",
+                              () => {
+                                setSelectedAppointment(appointment);
+                                setShowFeedbackForm(true);
+                              }
+                            )
+                          : renderRating(appointment.feedbackForm.rating)
+                        : renderViewButton(
+                            "Give Feedback",
+                            <Star size={16} />,
+                            "bg-gray-300  ",
+                            true,
+                            () => {
+                              setSelectedAppointment(appointment);
+                              setShowFeedbackForm(true);
+                            }
+                          )}
                     </td>
                     <td className="p-3 border">
                       <button
@@ -565,19 +628,40 @@ const MyAppointments = () => {
         data={modalData}
       />
       <FeedbackModal
-      isOpen={showFeedbackForm}
-      onClose={()=>setShowFeedbackForm(false)} 
-      appointment={selectedAppointment}>
-      </FeedbackModal>
+        isOpen={showFeedbackForm}
+        onClose={() => setShowFeedbackForm(false)}
+        appointment={selectedAppointment}
+      ></FeedbackModal>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-8">
+        <div className="flex items-center justify-center space-x-3 border border-gray-300 rounded-lg px-6 py-3 shadow-lg bg-white w-full max-w-md">
+          <button
+            className="px-4 py-2 rounded-full text-sm md:text-xl font-semibold bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            ◀ Prev
+          </button>
+          <span className="px-4 py-2 md:text-xl  rounded-full bg-indigo-500 text-white text-sm font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 hover:bg-gray-300 md:text-xl  disabled:opacity-50"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next ▶
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default MyAppointments;
-
-
-
-
 
 // import axios from "axios";
 // import { useSelector } from "react-redux";

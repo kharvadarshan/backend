@@ -104,7 +104,7 @@ const Patients = () => {
   const filteredPatients = patients.filter(
     (p) =>
       p?.userName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (!showBlockedOnly || p.blocked)
+      (!showBlockedOnly || p.isBlocked)
   );
 
   const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
@@ -167,10 +167,10 @@ const Patients = () => {
       <div className="flex items-center gap-4 mt-2">
         <button
           onClick={() => toggleBlock(patient.id)}
-          title={patient.blocked ? "Unblock" : "Block"}
+          title={patient.isBlocked ? "Unblock" : "Block"}
           className="text-indigo-600 hover:text-indigo-800"
         >
-          {patient.blocked ? <Unlock size={20} /> : <Ban size={20} />}
+          {patient.isBlocked ? <Unlock size={20} /> : <Ban size={20} />}
         </button>
         <button
           onClick={() => handleDelete(patient.id)}
@@ -225,7 +225,7 @@ const Patients = () => {
                       key={heading}
                       className="px-4 py-3 text-center text-xs font-medium text-white uppercase tracking-wider"
                     >
-                      {heading}
+                       {heading}
                     </th>
                   )
                 )}

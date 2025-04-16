@@ -10,7 +10,7 @@ const Appointment = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
 
-  const itemsPerPage = 3;
+  const itemsPerPage = 5;
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
@@ -147,7 +147,7 @@ const formatTime = (time) => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        Appointment Dashboard
+        Appointments Dashboard
       </motion.h2>
 
       <div className="flex flex-wrap gap-4 justify-between mb-6">

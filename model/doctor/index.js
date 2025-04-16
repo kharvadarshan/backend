@@ -25,6 +25,7 @@ const doctorSchema = new mongoose.Schema({
     max:5,
     required:false
    },
+   isBlocked : {type: Boolean , default: false}
 },{
   timestamps:true,
 });
