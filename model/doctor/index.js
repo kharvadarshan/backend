@@ -23,6 +23,8 @@ const doctorSchema = new mongoose.Schema({
     min:1,
     max:5
    },
+},{
+  timestamps:true,
 });
 
 // Set auto-increment for the `id` field

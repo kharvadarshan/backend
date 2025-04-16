@@ -24,7 +24,9 @@ const timeRangeSchema = new mongoose.Schema({
         required:false,
         default:false
     }
-});
+},{
+    timestamps:true,
+  });
 
 
 const timeSlotSchema = new mongoose.Schema({
@@ -37,7 +39,9 @@ const timeSlotSchema = new mongoose.Schema({
         required:true
     },
     slot: [timeRangeSchema],
-});
+},{
+    timestamps:true,
+  });
 
 const TimeSlot  = mongoose.model('TimeSlot',timeSlotSchema);
 module.exports = TimeSlot;

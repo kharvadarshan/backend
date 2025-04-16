@@ -160,6 +160,8 @@ const appointmentSchema = new mongoose.Schema({
       type: Date,
       default: Date.now(),
     },
+  },{
+    timestamps:true,
   });
   
   const AppointmentModel = mongoose.model("AppointmentData", appointmentSchema);

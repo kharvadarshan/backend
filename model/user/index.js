@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema({
     role : { type: String, enum : ['user','doctor','admin'],required:true},
     image: { type: String, required: false,default:""},
     isBloked: { type:Boolean,required:false,default:false}
-});
+},{
+    timestamps:true,
+  });
 
 userSchema.plugin(AutoIncrement, { inc_field: 'userId' });
 
