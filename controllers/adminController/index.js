@@ -3,6 +3,7 @@ const contactModel = require("../../model/contact");
 const AppointmentModel=require("../../model/appointment");
 const Doctor=require('../../model/doctor');
 const User = require('../../model/user');
+const Specialization = require("../../model/specialization");
 
 exports.gettingContact = async (req, res) => {
   try {
@@ -146,7 +147,52 @@ exports.addDoctor = async(req,res)=>{
 
   }catch(error)
   { 
-    
     return res.status(500).json({error:error.message});
+  }
+};
+
+
+exports.addSpecialization =async(req,res)=>{
+  try
+  {
+     console.log(req.body);
+     const {name}=req.body;
+
+     if (!name || name.trim() === "") {
+      return res.status(400).json({ message: "Specialization name is required." });
+    }
+
+    const exists = await Specialization.findOne({name});
+
+    if(exists)
+    {
+      return res.status(409).json({ok:false,message:`${name} already exists.`});
+    }
+
+    const  newSpecialization = new Specialization({name:name});
+    await  newSpecialization.save();
+
+    return res.status(201).json({ok:true,message:"Specialization added successfully."});
+
+  }catch(error)
+  {
+    return res.status(500).json({error:error.message});
+  }
+}
+
+
+exports.getSpecialization= async(req,res)=>{
+  try
+  {
+    const spec = await Specialization.find({});
+   console.log(spec);
+    if(spec.length === 0)
+      return res.status(404).json({ok:false,message:"Specialization not found."});
+
+    return res.status(201).json({ok:true,specialization:spec});
+  }catch(error)
+  {
+    console.log(error);
+    return res.status(500).json({ok:false,error:error.message});
   }
 }
