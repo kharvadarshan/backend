@@ -62,18 +62,12 @@ const AddDoctor = () => {
       if (result.isConfirmed) {
         try {
           const response = await axios.post(
-            `${
-              import.meta.env.VITE_API_URL
-            }/admin/addDoctor`,formData
+            `${import.meta.env.VITE_API_URL}/admin/addDoctor`,
+            formData
           );
 
           if (response.data.ok) {
-            Swal.fire(
-              "Added!",
-              "The new doctor has been added.",
-              "success"
-            );
-           
+            Swal.fire("Added!", "The new doctor has been added.", "success");
           } else {
             Swal.fire("Error!", response.data.message, "error");
           }
@@ -104,7 +98,7 @@ const AddDoctor = () => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {fieldData.map(({ id, label, type = "text" }) => (
+            {fieldData.map(({ id, label, type = "text" }) =>
               id === "specialization" ? (
                 <div key={id} ref={dropdownRef} className="relative w-full">
                   <label
@@ -118,9 +112,7 @@ const AddDoctor = () => {
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
                     <div className="flex justify-between items-center w-full h-full px-3 pr-10 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 cursor-pointer">
-                      <span>
-                        {formData[id] || `Select ${label}`}
-                      </span>
+                      <span>{formData[id] || `Select ${label}`}</span>
                       <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                     </div>
                     {showDropdown && (
@@ -160,7 +152,7 @@ const AddDoctor = () => {
                   />
                 </div>
               )
-            ))}
+            )}
           </div>
 
           <div className="mt-6">
@@ -200,7 +192,6 @@ const AddDoctor = () => {
 };
 
 export default AddDoctor;
-
 
 // import { useState } from "react";
 // import { motion } from "framer-motion";

@@ -30,7 +30,7 @@ const DoctorList = () => {
 
   const toggleBlock = (id) =>
     setDoctors((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, blocked: !d.blocked } : d))
+      prev.map((d) => (d._id === id ? { ...d, isBlocked: !d.isBlocked } : d))
     );
 
   const handleDelete = async (id) => {
@@ -96,7 +96,7 @@ const DoctorList = () => {
         Doctor List
       </motion.h1>
 
-      <div className="flex flex-wrap gap-4 mb-6 items-center justify-between">
+      <div className="flex flex-wrap  gap-4 mb-6 items-center justify-between">
         <input
           type="text"
           placeholder="Search by name or specialization"
@@ -104,11 +104,11 @@ const DoctorList = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="px-4 py-2 outline-none focus:ring-2 ring-indigo-400 border border-gray-300 rounded-md w-full max-w-md"
         />
-        <div className="relative w-full md:max-w-xs">
+        <div className="relative  w-full md:max-w-xs">
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-full appearance-none p-3 border border-gray-300 rounded-xl shadow pr-8 focus:ring-2 ring-indigo-400 outline-none"
+            className="w-full overflow-y-auto appearance-none p-3 border border-gray-300 rounded-xl shadow pr-8 focus:ring-2 ring-indigo-400 outline-none"
           >
             <option value="">Filter by Year</option>
             {uniqueYears.map((year, i) => (
@@ -127,7 +127,7 @@ const DoctorList = () => {
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="w-full appearance-none p-3 border border-gray-300 rounded-xl shadow pr-8 focus:ring-2 ring-indigo-400 outline-none"
+            className="w-full  appearance-none p-3 border border-gray-300 rounded-xl shadow pr-8 focus:ring-2 ring-indigo-400 outline-none"
           >
             <option value="">Filter by Month</option>
             {uniqueMonths.map((month, i) => (
@@ -189,22 +189,22 @@ const DoctorList = () => {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
-                      onClick={() => toggleBlock(doctor.id)}
+                      onClick={() => toggleBlock(doctor._id)}
                       // title={doctor.blocked ? "Unblock" : "Block"}
                       className="text-indigo-600 hover:text-indigo-800"
                     >
-                      {doctor.blocked ? (
+                      {doctor.isBlocked ? (
                         <Unlock size={20} />
                       ) : (
                         <Ban size={20} />
                       )}
                     </button>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-center">
                     <button
                       onClick={() => handleDelete(doctor.id)}
                       title="Delete Doctor"
-                      className="text-red-600 hover:text-red-800"
+                      className="text-red-600  hover:text-red-800"
                     >
                       <Trash2 size={20} />
                     </button>
