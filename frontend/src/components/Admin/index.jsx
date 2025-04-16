@@ -54,7 +54,7 @@ const Admin = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-100 overflow-y-auto max-h-screen p-4">
+      <main className="flex-1 bg-gray-100 scrollbar-hide overflow-y-auto max-h-screen p-4">
         <Routes>
           <Route path="/" element={<Appointment />} />
           <Route path="/allcontacts" element={<ContactList />} />

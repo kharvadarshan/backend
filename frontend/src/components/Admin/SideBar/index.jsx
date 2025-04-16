@@ -91,7 +91,7 @@ const Sidebar = () => {
         className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white shadow-2xl p-4 z-40 transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:relative`}
       >
-        <div className="flex flex-col h-full justify-between">
+        <div className="flex overflow-y-auto scroll-smooth scrollbar-hide flex-col h-full justify-between">
           {/* Header */}
           <div>
             <h2 className="text-3xl font-bold mb-8 tracking-wide text-center">
