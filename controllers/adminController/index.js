@@ -130,3 +130,23 @@ exports.unblockUser=async(req,res)=>{
     return res.status(500).json({ error: error.message });
   }
 }
+
+exports.addDoctor = async(req,res)=>{
+  try
+  {  
+    const formData = req.body;
+     const newDoctor = new Doctor(formData);
+      const savedDoctor = await newDoctor.save();
+  if(savedDoctor){
+     return res.status(201).json({ok:true,doctor:savedDoctor});
+  }else
+  {
+     return res.status(400).json({ok:false});
+  }
+
+  }catch(error)
+  { 
+    
+    return res.status(500).json({error:error.message});
+  }
+}

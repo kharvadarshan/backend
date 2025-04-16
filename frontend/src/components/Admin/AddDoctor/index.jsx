@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-
+import Swal from "sweetalert2";
+import axios from "axios";
 const AddDoctor = () => {
   const fieldData = [
     { id: "name", label: "Full Name" },
@@ -50,18 +51,37 @@ const AddDoctor = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Doctor Data:", formData);
-    setFormData({
-      name: "",
-      email: "",
-      specialization: "",
-      speciality: "",
-      phoneno: "",
-      experience: "",
-      degree: "",
-      field: "",
-      fees: "",
-      address: "",
-      about: "",
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to add Doctor?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Add",
+      cancelButtonText: "No, Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.post(
+            `${
+              import.meta.env.VITE_API_URL
+            }/admin/addDoctor`,formData
+          );
+
+          if (response.data.ok) {
+            Swal.fire(
+              "Added!",
+              "The new doctor has been added.",
+              "success"
+            );
+           
+          } else {
+            Swal.fire("Error!", response.data.message, "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "Could not connect to the server.", "error");
+          console.error(error);
+        }
+      }
     });
   };
 

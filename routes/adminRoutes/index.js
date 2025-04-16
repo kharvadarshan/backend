@@ -7,7 +7,9 @@ const{
     getAllDoctors,
     getAllPatient,
     blockUser,
-    unblockUser}=require('../../controllers/adminController');
+    unblockUser,
+    addDoctor
+}=require('../../controllers/adminController');
 
 router.get('/allcontacts', gettingContact);
 router.delete('/allcontacts/:id', delettingContact);
@@ -16,6 +18,7 @@ router.get('/doctors', getAllDoctors);
 router.get('/getAllPatient',getAllPatient);
 router.delete('/blockUser/:id',blockUser);
 router.get('/unblockUser/:id',unblockUser);
+router.post('/addDoctor',addDoctor)
 
 
 module.exports=router;
