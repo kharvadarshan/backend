@@ -84,6 +84,22 @@ const Appointment = () => {
   );
   const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
 
+// Function to format the time from 24-hour to 12-hour AM/PM format
+const formatTime = (time) => {
+  const [startTime, endTime] = time.split(" - ");
+  
+  const convertTo12Hour = (timeStr) => {
+    const [hours, minutes] = timeStr.split(":");
+    let hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    hour = hour ? hour : 12; // the hour '0' should be '12'
+    return `${hour}:${minutes} ${ampm}`;
+  };
+
+  return `${convertTo12Hour(startTime)} - ${convertTo12Hour(endTime)}`;
+};
+
   const reasonPopUp = () => {
     if (!selectedReason) return null;
     return (
@@ -226,7 +242,7 @@ const Appointment = () => {
                 <td className="px-4">
                   {new Date(item.date.$date || item.date).toLocaleDateString()}
                 </td>
-                <td className="px-4">{item.time}</td>
+                <td className="px-4">{formatTime(item.time)}</td>
                 <td className="px-4  truncate max-w-[150px]">{item.patientForm.reason}</td>
                 <td className="px-4 ">
                   <span

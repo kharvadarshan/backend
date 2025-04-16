@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+// import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
@@ -15,8 +15,12 @@ const ContactList = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/allcontacts`);
-      const sortedContacts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/admin/allcontacts`
+      );
+      const sortedContacts = response.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       setContacts(sortedContacts);
     } catch (error) {
       console.error("Error Fetching All Contacts:", error);
@@ -47,19 +51,19 @@ const ContactList = () => {
     indexOfLastContact
   );
 
-  const paginate = (direction) => {
-    setCurrentPage((prevPage) => {
-      if (direction === "next")
-        return prevPage < totalPages ? prevPage + 1 : prevPage;
-      if (direction === "prev") return prevPage > 1 ? prevPage - 1 : prevPage;
-      return prevPage;
-    });
-  };
+  // const paginate = (direction) => {
+  //   setCurrentPage((prevPage) => {
+  //     if (direction === "next")
+  //       return prevPage < totalPages ? prevPage + 1 : prevPage;
+  //     if (direction === "prev") return prevPage > 1 ? prevPage - 1 : prevPage;
+  //     return prevPage;
+  //   });
+  // };
 
   return (
     <div className="w-full  min-h-[650px] flex flex-col items-center bg-gray-100 p-6">
       <motion.h1
-        className="text-3xl font-bold text-gray-800 mb-6"
+        className="text-4xl font-bold text-indigo-600 mb-8"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -117,7 +121,7 @@ const ContactList = () => {
         ))}
       </div>
 
-      <div className="flex items-center mt-6 space-x-4">
+      {/* <div className="flex items-center mt-6 space-x-4">
         <motion.button
           whileHover={{ scale: 1.2 }}
           onClick={() => paginate("prev")}
@@ -139,6 +143,30 @@ const ContactList = () => {
         >
           <FaArrowRight />
         </motion.button>
+      </div> */}
+
+      <div className="flex justify-center mt-8">
+        <div className="flex items-center justify-center space-x-3 border border-gray-300 rounded-lg px-6 py-3 shadow-lg bg-white w-full max-w-md">
+          <button
+            className="px-4 py-2 rounded-full text-sm md:text-xl font-semibold bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            ◀ Prev
+          </button>
+          <span className="px-4 py-2 md:text-xl  rounded-full bg-indigo-500 text-white text-sm font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 hover:bg-gray-300 md:text-xl  disabled:opacity-50"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next ▶
+          </button>
+        </div>
       </div>
 
       {selectedContact && (

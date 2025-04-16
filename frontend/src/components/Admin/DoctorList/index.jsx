@@ -57,6 +57,8 @@ const DoctorList = () => {
       ),
     ];
   }, [doctors]);
+
+
   const filteredDoctors = useMemo(() => {
     return doctors.filter((doctor) => {
       const matchesSearch =
@@ -82,7 +84,7 @@ const DoctorList = () => {
     (currentPage - 1) * doctorsPerPage,
     currentPage * doctorsPerPage
   );
-
+  console.log(paginatedDoctors);
   return (
     <div className="max-w-7xl mx-auto p-4 bg-gray-100 min-h-[650px]">
       <motion.h1
