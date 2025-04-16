@@ -43,23 +43,25 @@ import SideBar from "./SideBar";
 import ContactList from "./AllContact/AllContact";
 import DoctorList from "./DoctorList";
 import ALLPatient from "./AllPatient";
+import SpecializationForm from "./ManagedSpecialization";
 
 const Admin = () => {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="hidden lg:block w-64 bg-white shadow-lg z-10">
+      <aside className="lg:block lg:w-64 bg-white shadow-lg z-10">
         <SideBar />
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-100 overflow-y-auto max-h-screen p-4">
+      <main className="flex-1 bg-gray-100 scrollbar-hide overflow-y-auto max-h-screen p-4">
         <Routes>
           <Route path="/" element={<Appointment />} />
           <Route path="/allcontacts" element={<ContactList />} />
           <Route path="/adddoctor" element={<AddDoctor />} />
           <Route path="/doctorslist" element={<DoctorList />} />
           <Route path="/allpatient" element={<ALLPatient />} />
+          <Route path="/managedspecialization" element={<SpecializationForm />} />
         </Routes>
       </main>
     </div>
