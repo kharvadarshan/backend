@@ -48,7 +48,7 @@ const Admin = () => {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="hidden lg:block w-64 bg-white shadow-lg z-10">
+      <aside className="lg:block lg:w-64 bg-white shadow-lg z-10">
         <SideBar />
       </aside>
 

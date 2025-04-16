@@ -77,9 +77,9 @@ const AddDoctor = () => {
   }, []);
 
   return (
-    <div className="container py-20 md:py-10 min-h-screen flex justify-center items-center p-6">
+    <div className="container py-20 md:py-10 min-h-screen flex justify-center items-center">
       <div className="bg-white text-gray-900 shadow-2xl rounded-2xl p-8 w-full max-w-3xl">
-        <h2 className="text-center text-blue-600 font-bold text-3xl mb-6">
+        <h2 className="text-center text-blue-600 font-bold  text-2xl md:text-4xl mb-6">
           Add Doctor
         </h2>
         <form onSubmit={handleSubmit}>

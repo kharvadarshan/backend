@@ -1,12 +1,10 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-// import {toast} from "react-toastify";
 import { useToast } from "../../Notification/ToastProvider";
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { resetIsLogin,resetRole } from '../../../slices/loginSlice';
-import { resetUser } from '../../../slices/userAuthSlice';
+import { useDispatch } from "react-redux";
+import { resetIsLogin, resetRole } from "../../../slices/loginSlice";
+import { resetUser } from "../../../slices/userAuthSlice";
 import {
   CalendarCheck,
   Stethoscope,
@@ -19,22 +17,19 @@ import {
   X,
 } from "lucide-react";
 
-
-
-
-
 const Sidebar = () => {
   const toast = useToast();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const sidebarRef = useRef(null);
+
   const menu = [
     { label: "Doctors List", icon: <Stethoscope className="w-5 h-5" /> },
     { label: "Add Doctor", icon: <UserPlus className="w-5 h-5" /> },
     { label: "All Contacts", icon: <Phone className="w-5 h-5" /> },
     { label: "All Patient", icon: <Users className="w-5 h-5" /> },
   ];
-
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
@@ -47,8 +42,7 @@ const Sidebar = () => {
         { withCredentials: true }
       );
       if (result.data.ok) {
-        // toast.success("Logout Successfully...!", { position: "top-right" });
-        toast("success","Logout Successfully...!");
+        toast("success", "Logout Successfully...!");
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetRole());
@@ -59,107 +53,79 @@ const Sidebar = () => {
     }
   };
 
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target)
+      ) {
+        closeSidebar();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
+
   return (
     <>
-      {/* Hamburger for mobile/tablet */}
+      {/* Hamburger button */}
       <button
-        className="lg:hidden fixed top-4 left-4 z-50 bg-blue-800 text-white p-2 rounded-md shadow-md"
+        className={`lg:hidden  fixed top-4 ${isOpen ? "left-[235px] text-black bg-white" : "left-4 bg-blue-800 text-white"} z-50   p-2 rounded-md shadow-md`}
         onClick={toggleSidebar}
       >
-        <Menu className="w-6 h-6" />
+        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 " />}
       </button>
 
-{/*    
+      {/* Overlay for mobile */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 z-40"
-          onClick={closeSidebar}
-        ></div>
-      )} */}
+        <div className="fixed inset-0 bg-black/30 z-40 transition-opacity duration-200 lg:hidden" />
+      )}
 
       {/* Sidebar */}
-        {/* <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white shadow-2xl p-4 z-50 transform transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:relative lg:flex`}
+      <div
+        ref={sidebarRef}
+        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white shadow-2xl p-4 z-40 transform transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:relative`}
       >
-       <div className="p-4">
-          <h2 className="text-2xl font-bold">Hospital</h2>
-         
-           <nav className='flex flex-col space-y-3'>
-            <NavLink to='/admin'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"  onClick={closeSidebar} >
-            <FontAwesomeIcon className=" mr-2  " icon={faClipboardList} />{" "}Appointments
-            </NavLink>
-            <NavLink to='/admin/doctorslist'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
-            <FontAwesomeIcon className="mr-2  " icon={faUserDoctor} />{" "}Doctor List
-            </NavLink>
-            <NavLink to='/admin/adddoctor'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
-            <FontAwesomeIcon className=" mr-2 " icon={faUserPlus} />{" "}Add Doctor
-            </NavLink>
-            <NavLink to='/admin/allcontacts'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
-            <FontAwesomeIcon className=" mr-2 " icon={faAddressCard} />{" "}All Contact
-            </NavLink>
-            <NavLink to='/admin/allpatient'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700" >
-            <FontAwesomeIcon className="mr-2 " icon={faHospitalUser} />{" "}All Patient
-            </NavLink>
-            <NavLink onClick={logout}  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700">
-            <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />{" "}Logout
-            </NavLink>
-            
-            </nav>
-                      
-        
-        </div> 
-      </div>*/}
+        <div className="flex flex-col h-full justify-between">
+          {/* Header */}
+          <div>
+            <h2 className="text-3xl font-bold mb-8 tracking-wide text-center">
+              🏥 Hospital
+            </h2>
 
-      {/* Improved Mobile Overlay */}
-       {isOpen && (
-          <div
-            onClick={toggleSidebar}
-            className="md:hidden fixed inset-0  bg-opacity-50 z-30 transition-opacity duration-200"
-          ></div>
-        )}
-
-   
-        {/* Close button for mobile */}
-        <div className="lg:hidden flex justify-end mb-2">
-          <button onClick={toggleSidebar}>
-            <X className="text-white w-6 h-6" />
-          </button>
-        </div>
-
-        <div className="flex bg-blue-400 flex-col h-full w-full p-4">
-          <h2 className="text-3xl font-bold mb-8 tracking-wide text-center">
-            🏥 Hospital
-          </h2>
-
-          <ul className="space-y-2  text-base flex-1">
-            <li>
-              <Link
-                to="/admin"
-                onClick={closeSidebar}
-                className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-200"
-              >
-                <CalendarCheck className="w-5 h-5" />
-                <span className="font-medium">Appointments</span>
-              </Link>
-            </li>
-
-            {menu.map((item) => (
-              <li key={item.label}>
+            {/* Navigation */}
+            <ul className="space-y-2 text-base">
+              <li>
                 <Link
-                  to={`/admin/${item.label.replace(/\s/g, "").toLowerCase()}`}
+                  to="/admin"
                   onClick={closeSidebar}
                   className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-200"
                 >
-                  {item.icon}
-                  <span className="font-medium">{item.label}</span>
+                  <CalendarCheck className="w-5 h-5" />
+                  <span className="font-medium">Appointments</span>
                 </Link>
               </li>
-            ))}
-          </ul>
+
+              {menu.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    to={`/admin/${item.label.replace(/\s/g, "").toLowerCase()}`}
+                    onClick={closeSidebar}
+                    className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-200"
+                  >
+                    {item.icon}
+                    <span className="font-medium">{item.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* Footer */}
-          <div className="pb-5  md:pb-10 md:pt-3  lg:pb-0 border-t border-blue-500/50">
+          <div className="border-t border-blue-500/50 pt-4 mt-4">
             <div className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-2">
                 <UserCircle className="w-6 h-6 text-white/90" />
@@ -175,7 +141,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-
+      </div>
     </>
   );
 };
@@ -189,6 +155,194 @@ export default Sidebar;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+// import { useState } from "react";
+// import { Link } from "react-router-dom";
+// import axios from "axios";
+// // import {toast} from "react-toastify";
+// import { useToast } from "../../Notification/ToastProvider";
+// import { useNavigate } from "react-router-dom";
+// import { useDispatch } from "react-redux";
+// import { resetIsLogin, resetRole } from "../../../slices/loginSlice";
+// import { resetUser } from "../../../slices/userAuthSlice";
+// import {
+//   CalendarCheck,
+//   Stethoscope,
+//   UserPlus,
+//   Phone,
+//   Users,
+//   LogOut,
+//   UserCircle,
+//   Menu,
+//   X,
+// } from "lucide-react";
+
+// const Sidebar = () => {
+//   const toast = useToast();
+//   const menu = [
+//     { label: "Doctors List", icon: <Stethoscope className="w-5 h-5" /> },
+//     { label: "Add Doctor", icon: <UserPlus className="w-5 h-5" /> },
+//     { label: "All Contacts", icon: <Phone className="w-5 h-5" /> },
+//     { label: "All Patient", icon: <Users className="w-5 h-5" /> },
+//   ];
+
+//   const [isOpen, setIsOpen] = useState(false);
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+
+//   const toggleSidebar = () => setIsOpen(!isOpen);
+//   const closeSidebar = () => setIsOpen(false);
+
+//   const logout = async () => {
+//     try {
+//       const result = await axios.post(
+//         `${import.meta.env.VITE_API_URL}/user/logout`,
+//         null,
+//         { withCredentials: true }
+//       );
+//       if (result.data.ok) {
+//         // toast.success("Logout Successfully...!", { position: "top-right" });
+//         toast("success", "Logout Successfully...!");
+//         dispatch(resetIsLogin());
+//         dispatch(resetUser());
+//         dispatch(resetRole());
+//         navigate("/");
+//       }
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
+
+//   return (
+//     <>
+//       {/* Hamburger for mobile/tablet */}
+//       <button
+//         className="lg:hidden fixed top-4 left-4 z-50 bg-blue-800 text-white p-2 rounded-md shadow-md"
+//         onClick={toggleSidebar}
+//       >
+//         <Menu className="w-6 h-6" />
+//       </button>
+
+//       {/*    
+//       {isOpen && (
+//         <div
+//           className="fixed inset-0 bg-black/30 z-40"
+//           onClick={closeSidebar}
+//         ></div>
+//       )} */}
+
+//       {/* Sidebar */}
+//       {/* <div
+//         className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white shadow-2xl p-4 z-50 transform transition-transform duration-300 ease-in-out
+//         ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:relative lg:flex`}
+//       >
+//        <div className="p-4">
+//           <h2 className="text-2xl font-bold">Hospital</h2>
+         
+//            <nav className='flex flex-col space-y-3'>
+//             <NavLink to='/admin'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"  onClick={closeSidebar} >
+//             <FontAwesomeIcon className=" mr-2  " icon={faClipboardList} />{" "}Appointments
+//             </NavLink>
+//             <NavLink to='/admin/doctorslist'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+//             <FontAwesomeIcon className="mr-2  " icon={faUserDoctor} />{" "}Doctor List
+//             </NavLink>
+//             <NavLink to='/admin/adddoctor'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+//             <FontAwesomeIcon className=" mr-2 " icon={faUserPlus} />{" "}Add Doctor
+//             </NavLink>
+//             <NavLink to='/admin/allcontacts'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700"   >
+//             <FontAwesomeIcon className=" mr-2 " icon={faAddressCard} />{" "}All Contact
+//             </NavLink>
+//             <NavLink to='/admin/allpatient'  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700" >
+//             <FontAwesomeIcon className="mr-2 " icon={faHospitalUser} />{" "}All Patient
+//             </NavLink>
+//             <NavLink onClick={logout}  className="flex items-center text-xl p-2 rounded-lg hover:bg-gray-700">
+//             <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />{" "}Logout
+//             </NavLink>
+            
+//             </nav>
+                      
+        
+//         </div> 
+//       </div>*/}
+
+//       {/* Improved Mobile Overlay */}
+//       {isOpen && (
+//         <div
+//           onClick={toggleSidebar}
+//           className="md:hidden fixed inset-0  bg-opacity-50 z-30 transition-opacity duration-200"
+//         ></div>
+//       )}
+
+//       {/* Close button for mobile */}
+//       <div className="lg:hidden flex justify-end mb-2">
+//         <button onClick={toggleSidebar}>
+//           <X className="text-white w-6 h-6" />
+//         </button>
+//       </div>
+
+//       <div className="flex bg-blue-400 flex-col h-full w-full p-4">
+//         <h2 className="text-3xl font-bold mb-8 tracking-wide text-center">
+//           🏥 Hospital
+//         </h2>
+
+//         <ul className="space-y-2  text-base flex-1">
+//           <li>
+//             <Link
+//               to="/admin"
+//               onClick={closeSidebar}
+//               className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-200"
+//             >
+//               <CalendarCheck className="w-5 h-5" />
+//               <span className="font-medium">Appointments</span>
+//             </Link>
+//           </li>
+
+//           {menu.map((item) => (
+//             <li key={item.label}>
+//               <Link
+//                 to={`/admin/${item.label.replace(/\s/g, "").toLowerCase()}`}
+//                 onClick={closeSidebar}
+//                 className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-200"
+//               >
+//                 {item.icon}
+//                 <span className="font-medium">{item.label}</span>
+//               </Link>
+//             </li>
+//           ))}
+//         </ul>
+
+//         {/* Footer */}
+//         <div className="pb-5  md:pb-10 md:pt-3  lg:pb-0 border-t border-blue-500/50">
+//           <div className="flex items-center justify-between px-4 py-3">
+//             <div className="flex items-center gap-2">
+//               <UserCircle className="w-6 h-6 text-white/90" />
+//               <span className="text-sm font-semibold">Admin</span>
+//             </div>
+//             <button
+//               onClick={logout}
+//               className="p-2 rounded-full hover:bg-red-600/70 bg-red-500/60 transition"
+//               title="Logout"
+//             >
+//               <LogOut className="w-5 h-5 text-white" />
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Sidebar;
 
 // import { useState } from "react";
 // import { Link } from "react-router-dom";
