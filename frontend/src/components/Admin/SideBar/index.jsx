@@ -14,6 +14,7 @@ import {
   LogOut,
   UserCircle,
   Menu,
+  Settings,
   X,
 } from "lucide-react";
 
@@ -29,6 +30,7 @@ const Sidebar = () => {
     { label: "Add Doctor", icon: <UserPlus className="w-5 h-5" /> },
     { label: "All Contacts", icon: <Phone className="w-5 h-5" /> },
     { label: "All Patient", icon: <Users className="w-5 h-5" /> },
+    { label: "Managed Specialization", icon: <Settings className="w-5 h-5" /> },
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);

@@ -43,6 +43,7 @@ import SideBar from "./SideBar";
 import ContactList from "./AllContact/AllContact";
 import DoctorList from "./DoctorList";
 import ALLPatient from "./AllPatient";
+import SpecializationForm from "./ManagedSpecialization";
 
 const Admin = () => {
   return (
@@ -60,6 +61,7 @@ const Admin = () => {
           <Route path="/adddoctor" element={<AddDoctor />} />
           <Route path="/doctorslist" element={<DoctorList />} />
           <Route path="/allpatient" element={<ALLPatient />} />
+          <Route path="/managedspecialization" element={<SpecializationForm />} />
         </Routes>
       </main>
     </div>
