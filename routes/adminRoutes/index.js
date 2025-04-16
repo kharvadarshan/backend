@@ -11,6 +11,7 @@ const{
     addDoctor,
     addSpecialization,
     getSpecialization,
+    deleteSpecialization,
 }=require('../../controllers/adminController');
 
 router.get('/allcontacts', gettingContact);
@@ -23,6 +24,7 @@ router.get('/unblockUser/:id',unblockUser);
 router.post('/addDoctor',addDoctor);
 router.post('/addSpecialization',addSpecialization);
 router.get('/getSpecialization',getSpecialization);
+router.delete('/deleteSpecialization/:id',deleteSpecialization);
 
 
 

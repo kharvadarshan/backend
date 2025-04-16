@@ -8,6 +8,11 @@ const specializationSchema = new mongoose.Schema({
         unique:true,
         trim:true
     },
+    isDeleted:{
+        type:Boolean,
+        required:false,
+        default:false,
+    },
     createdAt:
     {
         type:Date,

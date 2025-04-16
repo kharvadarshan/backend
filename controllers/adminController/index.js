@@ -155,7 +155,7 @@ exports.addDoctor = async(req,res)=>{
 exports.addSpecialization =async(req,res)=>{
   try
   {
-     console.log(req.body);
+
      const {name}=req.body;
 
      if (!name || name.trim() === "") {
@@ -184,15 +184,41 @@ exports.addSpecialization =async(req,res)=>{
 exports.getSpecialization= async(req,res)=>{
   try
   {
-    const spec = await Specialization.find({});
-   console.log(spec);
+    const spec = await Specialization.find({isDeleted:false});
     if(spec.length === 0)
       return res.status(404).json({ok:false,message:"Specialization not found."});
 
     return res.status(201).json({ok:true,specialization:spec});
   }catch(error)
   {
-    console.log(error);
+    
+    return res.status(500).json({ok:false,error:error.message});
+  }
+};
+
+
+
+exports.deleteSpecialization = async(req,res)=>{
+  try
+  {
+    const {id}=req.params;
+
+     const updateSpecialization = await Specialization.updateOne(
+      {_id:id},
+      {$set:{
+        isDeleted:true
+      }}
+     );
+
+     if(updateSpecialization.modifiedCount>0)
+      {
+        return res.status(201).json({ok:true,message:"User blocked successfully."});
+      }else
+      {
+        return res.status(400).json({ok:false,message:"No changes were made."});
+      }
+  }catch(error)
+  {
     return res.status(500).json({ok:false,error:error.message});
   }
 }

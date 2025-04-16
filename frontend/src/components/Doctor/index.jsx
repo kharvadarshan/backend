@@ -15,6 +15,10 @@ const DoctorList = () => {
     fetchDoctors();
   }, []);
 
+
+  
+
+
   const fetchDoctors = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/doctors`);
@@ -23,6 +27,8 @@ const DoctorList = () => {
       console.error("Error fetching doctors:", error);
     }
   };
+  
+
 
   const specializations = [
     "All",

@@ -8,8 +8,6 @@ const SpecializationForm = () => {
   const [specializations, setSpecializations] = useState([]); // Mocked existing specializations
   const [message, setMessage] = useState("");
 
-
-
   const getSpecialization = async()=>{
     try
     {
@@ -53,7 +51,8 @@ const SpecializationForm = () => {
           );
 
           if (response.data.ok) {
-            setMessage(response.data.message)
+            getSpecialization();
+            setSpecialization("");
             Swal.fire(
               "Added!",
               "The new specialization has been added.",
@@ -61,11 +60,11 @@ const SpecializationForm = () => {
             );
            
           } else {
-            setMessage(response.data.message)
+           
             Swal.fire("Error!", response.data.message, "error");
           }
         } catch (error) {
-          setMessage(error.message)
+          
           Swal.fire("Error!", "Could not connect to the server.", "error");
           console.error(error);
         }
@@ -74,8 +73,44 @@ const SpecializationForm = () => {
   };
 
   const handleDelete = (spec) => {
-    setSpecializations(specializations.filter((item) => item !== spec));
-    setMessage(`❌ ${spec} removed successfully.`);
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete Specialization?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Delete",
+      cancelButtonText: "No, Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(
+            `${
+              import.meta.env.VITE_API_URL
+            }/admin/deleteSpecialization/${spec}`,
+          );
+
+          if (response.data.ok) {
+             getSpecialization();
+            setSpecialization("");
+            Swal.fire(
+              "Deleted!",
+              "The specialization has been deleted.",
+              "success"
+            );
+           
+          } else {
+           
+            Swal.fire("Error!", response.data.message, "error");
+          }
+        } catch (error) {
+          
+          Swal.fire("Error!", "Could not connect to the server.", "error");
+          console.error(error);
+        }
+      }
+    });
+    
   };
 
   return (
@@ -122,7 +157,7 @@ const SpecializationForm = () => {
             >
               <span>{spec.name}</span>
               <button
-                onClick={() => handleDelete(spec)}
+                onClick={() => handleDelete(spec._id)}
                 className="text-red-500 hover:text-red-700"
               >
                 <Trash2 className="w-4 h-4" />
