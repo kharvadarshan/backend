@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 
 const MyAppointments = () => {
   const activeUser = useSelector((state)=> state.user.user);
+  const [currentPage, setCurrentPage] = useState(1);
+  const appointmentsPerPage = 4;
   
   const [appointments, setAppointments] = useState();
 
@@ -57,19 +59,19 @@ const MyAppointments = () => {
   };
 
   const uniqueYears = useMemo(() => {
-    if(!appointments) return [];
+    if (!appointments) return [];
     const years = [
-      ...new Set(appointments.map((appt) => new Date(appt.date.$date).getFullYear())),
+      ...new Set(appointments.map((appt) => new Date(appt.date).getFullYear())),
     ];
     return years.sort();
   }, [appointments]);
 
   const uniqueMonths = useMemo(() => {
-    if(!appointments) return [];
+    if (!appointments) return [];
     const months = [
       ...new Set(
         appointments.map((appt) =>
-          new Date(appt.date.$date).toLocaleString("en-US", { month: "long" })
+          new Date(appt.date).toLocaleString("en-US", { month: "long" })
         )
       ),
     ];
@@ -93,6 +95,32 @@ const MyAppointments = () => {
       );
     });
   }, [appointments, filterStatus, filterMonth, filterYear]);
+
+  const totalPages = Math.ceil(
+    filteredAppointments.length / appointmentsPerPage
+  );
+  const indexOfLastAppointment = currentPage * appointmentsPerPage;
+  const indexOfFirstPatient = indexOfLastAppointment - appointmentsPerPage;
+  const currentAppointment = filteredAppointments.slice(
+    indexOfFirstPatient,
+    indexOfLastAppointment
+  );
+
+  // Function to format the time from 24-hour to 12-hour AM/PM format
+  const formatTime = (time) => {
+    const [startTime, endTime] = time.split(" - ");
+
+    const convertTo12Hour = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":");
+      let hour = parseInt(hours, 10);
+      const ampm = hour >= 12 ? "PM" : "AM";
+      hour = hour % 12;
+      hour = hour ? hour : 12; // the hour '0' should be '12'
+      return `${hour}:${minutes} ${ampm}`;
+    };
+
+    return `${convertTo12Hour(startTime)} - ${convertTo12Hour(endTime)}`;
+  };
 
   const renderViewButton = (label, icon, className, onClick) => (
     <motion.button
@@ -192,7 +220,7 @@ const MyAppointments = () => {
                 <strong>Date:</strong> { new Date(appointment.date.$date).toLocaleDateString()}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Time:</strong> {appointment.time}
+                <strong>Time:</strong> {formatTime(appointment.time)}
               </p>
               {/* <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {renderViewButton("Details", <Info size={16}/>,"bg-green-300", () =>
@@ -233,7 +261,7 @@ const MyAppointments = () => {
             </thead>
             <tbody>
               <AnimatePresence>
-                {filteredAppointments.map((appointment) => (
+                {currentAppointment.map((appointment) => (
                   <motion.tr
                     key={appointment._id}
                     className="border text-center"
@@ -245,7 +273,7 @@ const MyAppointments = () => {
                     <td className="p-3 border">{appointment.doctor}</td>
                     <td className="p-3 border">{appointment.patientForm.patientname}</td>
                     <td className="p-3 border">{new Date(appointment.date).toLocaleDateString()}</td>
-                    <td className="p-3 border">{appointment.time}</td>
+                    <td className="p-3 border">{formatTime(appointment.time)}</td>
                     <td className="p-3 border">
                       {getStatusBadge(appointment.status)}
                     </td>
@@ -274,6 +302,32 @@ const MyAppointments = () => {
           </table>
         </div>
       )}
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-8">
+        <div className="flex items-center justify-center space-x-3 border border-gray-300 rounded-lg px-6 py-3 shadow-lg bg-white w-full max-w-md">
+          <button
+            className="px-4 py-2 rounded-full text-sm md:text-xl font-semibold bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            ◀ Prev
+          </button>
+          <span className="px-4 py-2 md:text-xl  rounded-full bg-indigo-500 text-white text-sm font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 hover:bg-gray-300 md:text-xl  disabled:opacity-50"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next ▶
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 };
