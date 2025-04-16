@@ -18,13 +18,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetIsLogin, resetRole } from "../../slices/loginSlice";
 import Reports from "./Reports";
 import BookedAppointment from "./BookedAppointment";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { resetUser } from "../../slices/userAuthSlice";
 import { resetDoctor } from "../../slices/doctorSlice";
 import Feedback from "./Feedback";
+import {useToast} from '../../components/Notification/ToastProvider';
 
 
 const DoctorProfile = () => {
+  const toast = useToast();
   const activeUser = useSelector((state) => state.user.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,7 +55,8 @@ const DoctorProfile = () => {
         }
       );
       if (result.data.ok) {
-        toast.success("Logout Successfully...!", { position: "top-right" });
+        // toast.success("Logout Successfully...!", { position: "top-right" });
+        toast("success","Logout Successfully...!");
         // localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());
@@ -67,10 +70,10 @@ const DoctorProfile = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row  min-h-screen">
+    <div className="flex flex-col md:flex-row  h-screen">
       {/* Sidebar Toggle Button for Mobile */}
       <button
-        className={`md:hidden p-4 absolute ${isSidebarOpen ? "left-[230px] text-blue-500" : "left-0  top-16 "} z-50  rounded`}
+        className={`md:hidden p-4 fixed top-1 ${isSidebarOpen ? "left-[230px] text-blue-500" : "left-0  "} z-50  rounded`}
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         <FontAwesomeIcon icon={faBars} className="text-2xl" />
@@ -78,7 +81,7 @@ const DoctorProfile = () => {
 
       {/* Sidebar */}
       <div
-        className={`absolute min-h-screen md:relative  w-64 bg-gray-600 text-white p-4 z-40 transform ${
+        className={`fixed top-0 left-0 w-64 min-h-full md:relative bg-gray-600 text-white p-4 z-40 transform ${
           isSidebarOpen ? "translate-x-0 " : "-translate-x-full"
         } md:translate-x-0  transition-transform duration-300 ease-in-out md:flex md:flex-col `}
       >
@@ -148,7 +151,7 @@ const DoctorProfile = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4  mt-16 md:mt-0">
+      <div className="flex-1 p-4 overflow-y-auto mt-16 md:mt-0">
         <Routes>
           <Route path="/"   element={<EditProfile doctor={activeUser.doctor}  onPhotoUpdate={handlePhotoUpdate}  />} />
           <Route path="bookings" element={<BookedAppointment doctor={activeUser.doctor}/>} />
