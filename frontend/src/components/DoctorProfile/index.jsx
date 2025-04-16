@@ -18,13 +18,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetIsLogin, resetRole } from "../../slices/loginSlice";
 import Reports from "./Reports";
 import BookedAppointment from "./BookedAppointment";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { resetUser } from "../../slices/userAuthSlice";
 import { resetDoctor } from "../../slices/doctorSlice";
 import Feedback from "./Feedback";
+import {useToast} from '../../components/Notification/ToastProvider';
 
 
 const DoctorProfile = () => {
+  const toast = useToast();
   const activeUser = useSelector((state) => state.user.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,7 +55,8 @@ const DoctorProfile = () => {
         }
       );
       if (result.data.ok) {
-        toast.success("Logout Successfully...!", { position: "top-right" });
+        // toast.success("Logout Successfully...!", { position: "top-right" });
+        toast("success","Logout Successfully...!");
         // localStorage.removeItem("token");
         dispatch(resetIsLogin());
         dispatch(resetUser());
