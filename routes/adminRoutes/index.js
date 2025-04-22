@@ -14,17 +14,19 @@ const{
     deleteSpecialization,
 }=require('../../controllers/adminController');
 
-router.get('/allcontacts', gettingContact);
-router.delete('/allcontacts/:id', delettingContact);
-router.get('/getAllAppointment',getAllAppointments);
-router.get('/doctors', getAllDoctors);
-router.get('/getAllPatient',getAllPatient);
-router.delete('/blockUser/:id',blockUser);
-router.get('/unblockUser/:id',unblockUser);
-router.post('/addDoctor',addDoctor);
-router.post('/addSpecialization',addSpecialization);
-router.get('/getSpecialization',getSpecialization);
-router.delete('/deleteSpecialization/:id',deleteSpecialization);
+const {isAdmin} = require('../../middlewares/adminMiddleware');
+
+router.get('/allcontacts', isAdmin,gettingContact);
+router.delete('/allcontacts/:id', isAdmin, delettingContact);
+router.get('/getAllAppointment', isAdmin,getAllAppointments);
+router.get('/doctors', isAdmin, getAllDoctors);
+router.get('/getAllPatient', isAdmin,getAllPatient);
+router.delete('/blockUser/:id', isAdmin,blockUser);
+router.get('/unblockUser/:id', isAdmin,unblockUser);
+router.post('/addDoctor', isAdmin,addDoctor);
+router.post('/addSpecialization', isAdmin,addSpecialization);
+router.get('/getSpecialization', isAdmin,getSpecialization);
+router.delete('/deleteSpecialization/:id', isAdmin,deleteSpecialization);
 
 
 

@@ -9,13 +9,14 @@ const {
       createAppointment,
     
     } = require('../../controllers/appointmentController');
+const {isUser}= require('../../middlewares/userMiddleware');
+const {isDoctor}=require('../../middlewares/doctorMiddleware');
 
-
-router.post('/appointments', createAppointment);
+router.post('/appointments',isUser, createAppointment);
 router.delete('/deleteAppointment/:appointmentId',deleteAppointment);
-router.get('/getAppointmentByPatientId/:id',getAllAppointmentsByPatientId);
-router.get('/getDeletedAppointmentByPatientId/:id',getDeletedAppointmentsByPatientId);
-router.get('/getAppointmentByDoctorId/:id',getAllAppointmentsByDoctorId);
-router.post('/giveFeedback',giveFeedback);
+router.get('/getAppointmentByPatientId/:id',isUser,getAllAppointmentsByPatientId);
+router.get('/getDeletedAppointmentByPatientId/:id',isUser,getDeletedAppointmentsByPatientId);
+router.get('/getAppointmentByDoctorId/:id',isDoctor,getAllAppointmentsByDoctorId);
+router.post('/giveFeedback',isUser,giveFeedback);
 
 module.exports = router;

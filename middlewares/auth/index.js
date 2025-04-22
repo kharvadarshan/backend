@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
-const tokenSignature = require('../utils/global')
+const tokenSignature = require('../../utils/global')
 const authenticateToken = (req, res, next) => {
   // Get token from the Authorization header
-  console.log(req.header('Authorization'));
-  const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
-  console.log(token);
+  // const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
+  // console.log(token);
+  const authHeader = req.header('Authorization');
+  const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
   if (!token) {
     return res.status(403).json({ message: 'No token, authorization denied' });
   }

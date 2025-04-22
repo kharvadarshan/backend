@@ -48,20 +48,16 @@ function LoginPage() {
         toast("success","Login Successfully...!");
         if (result.data.user.role === "doctor") {
           dispatch(setDoctor(result.data.user.doctor));
-          navigate("/doctorprofile");
-        }else if(result.data.user.role==="admin"){
 
-          navigate('/admin');
-
-        } else {
-          setMessage(result.data.message);
-          navigate("/");
         }
+         
+      
       } 
       if(!result.data.ok){
         setMessage(result.data.message);
         navigate("/login"); 
       }
+      navigate(result.data.redirect);
     } catch (err) {
       if(err.response){
       setMessage(err.response.data.message);
