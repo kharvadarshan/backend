@@ -37,7 +37,7 @@ export default function DoctorSlotScheduler() {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlots/${
           activeUser._id
-        }`
+        }`,{withCredentials:true}
       );
 
       if (response.data.ok) {
@@ -75,7 +75,7 @@ export default function DoctorSlotScheduler() {
         try {
           const response = await axios.post(
             `${import.meta.env.VITE_API_URL}/doctorprofile/addSlot`,
-            { doctorId: activeUser._id, slot: slots }
+            { doctorId: activeUser._id, slot: slots },{withCredentials:true}
           );
 
           if (response.data.ok) {
@@ -121,7 +121,7 @@ export default function DoctorSlotScheduler() {
               doctorId: activeUser._id,
               dates: allDates,
               slot: { start: startTime, end: endTime },
-            }
+            },{withCredentials:true}
           );
 
           if (response.data.ok) {
@@ -205,6 +205,7 @@ export default function DoctorSlotScheduler() {
           const response = await axios.get(
             `${import.meta.env.VITE_API_URL}/doctorprofile/deleteTimeSlot`,
             {
+              withCredentials:true,
               params: {
                 id: id,
                 doctorId: activeUser._id,

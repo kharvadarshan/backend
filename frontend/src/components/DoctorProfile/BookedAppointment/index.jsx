@@ -80,7 +80,7 @@ const BookedAppointment = ({ doctor }) => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL
-        }/appointments/getAppointmentByDoctorId/${doctor._id}`
+        }/appointments/getAppointmentByDoctorId/${doctor._id}`,{withCredentials:true}
       );
       if (response.data.ok) {
         setUpcoming(response.data.upcomingAppointments);
@@ -111,7 +111,7 @@ const BookedAppointment = ({ doctor }) => {
           const response = await axios.get(
             `${
               import.meta.env.VITE_API_URL
-            }/doctorprofile/acceptAppointment/${id}`
+            }/doctorprofile/acceptAppointment/${id}`,{withCredentials:true}
           );
 
           if (response.data.ok) {
@@ -145,7 +145,7 @@ const BookedAppointment = ({ doctor }) => {
           const response = await axios.get(
             `${
               import.meta.env.VITE_API_URL
-            }/doctorprofile/rejectAppointment/${id}`
+            }/doctorprofile/rejectAppointment/${id}`,{withCredentials:true}
           );
 
           if (!response.data.ok) {
@@ -177,7 +177,7 @@ const BookedAppointment = ({ doctor }) => {
       if (result.isConfirmed) {
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/doctorprofile/markCompleted/${id}`
+            `${import.meta.env.VITE_API_URL}/doctorprofile/markCompleted/${id}`,{withCredentials:true}
           );
 
           if (response.data.ok) {
@@ -329,7 +329,7 @@ const BookedAppointment = ({ doctor }) => {
     if (confirm.isConfirmed) {
       try {
         const res = await axios.delete(
-          `http://localhost:5001/appointments/deleteAppointment/${appointmentId}`
+          `http://localhost:5001/appointments/deleteAppointment/${appointmentId}`,{withCredentials:true}
         );
         if (res.data.ok) {
           Swal.fire("Deleted!", res.data.message, "success");

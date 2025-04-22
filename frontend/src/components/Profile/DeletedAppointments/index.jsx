@@ -19,7 +19,7 @@ const MyAppointments = () => {
   const getDeletedAppointmentByPatientId = async()=>{
     try
     {
-         const response = await axios.get(`${import.meta.env.VITE_API_URL}/appointments/getDeletedAppointmentByPatientId/${activeUser.id}`);
+         const response = await axios.get(`${import.meta.env.VITE_API_URL}/appointments/getDeletedAppointmentByPatientId/${activeUser.id}`,{withCredentials:true});
 
          if(response.data.ok)
          {

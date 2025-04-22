@@ -18,7 +18,7 @@ const Feedback = ({ doctor }) => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL
-        }/appointments/getAppointmentByDoctorId/${doctor._id}`
+        }/appointments/getAppointmentByDoctorId/${doctor._id}`,{withCredentials:true}
       );
 
       if (response.data.ok) {
