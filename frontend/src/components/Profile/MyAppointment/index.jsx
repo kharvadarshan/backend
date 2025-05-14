@@ -552,7 +552,7 @@ const MyAppointments = () => {
                           onClick={() => {
                             payNow(appointment);
                           }}
-                          className="flex items-center justify-content-center p-3 text-white bg-blue-500 rounded-lg w-full"
+                          className="flex items-center justify-center p-3 text-white bg-blue-500 rounded-lg w-full"
                         >
                           Pay Now
                         </button>
