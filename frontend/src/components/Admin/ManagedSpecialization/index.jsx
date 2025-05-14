@@ -11,7 +11,9 @@ const SpecializationForm = () => {
   const getSpecialization = async()=>{
     try
     {
-         const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getSpecialization`);
+         const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getSpecialization`,{
+          withCredentials: true, // This sends cookies
+        });
 
          if(response.data.ok)
          {
@@ -47,7 +49,10 @@ const SpecializationForm = () => {
           const response = await axios.post(
             `${
               import.meta.env.VITE_API_URL
-            }/admin/addSpecialization`,{name:specialization}
+            }/admin/addSpecialization`,{name:specialization},{
+              withCredentials: true, // This sends cookies
+             
+            }
           );
 
           if (response.data.ok) {
@@ -87,7 +92,9 @@ const SpecializationForm = () => {
           const response = await axios.delete(
             `${
               import.meta.env.VITE_API_URL
-            }/admin/deleteSpecialization/${spec}`,
+            }/admin/deleteSpecialization/${spec}`,{
+              withCredentials: true,
+            }
           );
 
           if (response.data.ok) {

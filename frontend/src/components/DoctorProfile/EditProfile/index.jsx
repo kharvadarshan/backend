@@ -9,7 +9,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById`,
-        { email: doctor.contact }
+        { email: doctor.contact },{withCredentials:true}
       );
       if (response.data.ok) {
         setFormData(response.data.result[0]);
@@ -47,7 +47,8 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
       const response = await axios.post(
         "http://localhost:5001/doctorprofile/editProfile",
         formData,
-        {
+        { 
+          withCredentials:true,
           headers: {
             "Content-Type": "multipart/form-data",
           },

@@ -29,7 +29,7 @@ const EditProfile = ({isSidebarOpen}) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/profile/edit`,
-        { id: activeUser.id }
+        { id: activeUser.id },{withCredentials:true}
       );
 
       if (response.data.ok) {
@@ -54,6 +54,7 @@ const EditProfile = ({isSidebarOpen}) => {
         `${import.meta.env.VITE_API_URL}/profile/editProfile`,
         user,
         {
+          withCredentials:true,
           headers: {
             "Content-Type": "multipart/form-data",
           },

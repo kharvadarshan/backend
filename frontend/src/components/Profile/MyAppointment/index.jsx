@@ -26,7 +26,7 @@ const MyAppointments = () => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL
-        }/appointments/getAppointmentByPatientId/${activeUser.id}`
+        }/appointments/getAppointmentByPatientId/${activeUser.id}`,{withCredentials:true}
       );
 
       if (response.data.ok) {
@@ -51,7 +51,7 @@ const MyAppointments = () => {
           const response = await axios.delete(
             `${
               import.meta.env.VITE_API_URL
-            }/appointments/deleteAppointment/${appointmentId}`
+            }/appointments/deleteAppointment/${appointmentId}`,{withCredentials:true}
           );
 
           if (response.data.ok) {

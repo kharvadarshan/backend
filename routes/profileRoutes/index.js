@@ -15,9 +15,10 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }
 });
 
+const {isUser}=require('../../middlewares/userMiddleware');
 
-router.post('/edit',getUserDetailsById);
-router.post('/editProfile',upload.single('image'),editProfile);
-router.get('/viewReport/:appointmentId',viewReport);
+router.post('/edit',isUser,getUserDetailsById);
+router.post('/editProfile',upload.single('image'),isUser,editProfile);
+router.get('/viewReport/:appointmentId',isUser,viewReport);
 
 module.exports = router;

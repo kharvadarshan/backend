@@ -1,6 +1,6 @@
 const express = require('express');
 const { registerUser,validateLogin,logout,sendOTP, verifyOTP } = require('../../controllers/userAuthController/index.js');
-const {auth} = require('../../middlewares/auth.js');
+const auth = require('../../middlewares/auth');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
 

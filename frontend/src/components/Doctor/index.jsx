@@ -21,7 +21,7 @@ const DoctorList = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/doctors`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/doctors`,{withCredentials:true});
       setDoctors(response.data);
     } catch (error) {
       console.error("Error fetching doctors:", error);

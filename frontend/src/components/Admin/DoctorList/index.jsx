@@ -21,7 +21,12 @@ const DoctorList = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/doctors`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/doctors`,{
+        withCredentials: true, // This sends cookies
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      } );
       setDoctors(response.data);
     } catch (error) {
       console.error("Error fetching doctors:", error);
@@ -35,7 +40,12 @@ const DoctorList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/doctors/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/doctors/${id}`,{
+        withCredentials: true, // This sends cookies
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
       fetchDoctors();
     } catch (err) {
       console.error("Delete error:", err);

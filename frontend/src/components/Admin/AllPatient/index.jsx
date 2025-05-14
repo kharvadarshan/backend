@@ -29,7 +29,9 @@ const Patients = () => {
               if (result.isConfirmed) {
                 try {
                   const response = await axios.delete(
-                    `${import.meta.env.VITE_API_URL}/admin/blockUser/${id}`
+                    `${import.meta.env.VITE_API_URL}/admin/blockUser/${id}`,{
+                      withCredentials: true,
+                    }
                   );
         
                   if (response.data.ok) {
@@ -63,7 +65,9 @@ const Patients = () => {
                   try {
                   
                     const response = await axios.get(
-                      `${import.meta.env.VITE_API_URL}/admin/unblockUser/${id}`
+                      `${import.meta.env.VITE_API_URL}/admin/unblockUser/${id}`,{
+                        withCredentials: true, // This sends cookies
+                      }
                     );
           
                     if (response.data.ok) {
@@ -86,7 +90,9 @@ const Patients = () => {
   const getAllPatients = async()=>{
      try
      {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllPatient`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllPatient`,{
+        withCredentials: true, 
+      });
 
       if(response.data.ok)
       {
@@ -249,7 +255,7 @@ const Patients = () => {
       {/* Mobile Cards */}
       <div className="grid md:grid-cols-2 gap-4 mt-6 lg:hidden">
         {currentPatients.length ? (
-          currentPatients.map((p) => <PatientCard key={p.id} patient={p} />)
+          currentPatients.map((p) => <PatientCard key={p._id} patient={p} />)
         ) : (
           <p className="text-center text-gray-600 col-span-full">No patients found.</p>
         )}

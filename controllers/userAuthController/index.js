@@ -185,8 +185,15 @@ exports.validateLogin = async (req,res)=>{
                role: userCredential.role,
                doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
               };
+
+              let redirect='/';
+              if (userCredential.role === 'doctor') {
+               redirect = '/doctorprofile';
+             } else if (userCredential.role === 'admin') {
+               redirect = '/admin';
+             }
        
-    return  res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user});   
+    return  res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user,redirect});   
      
    }catch(error)
    {

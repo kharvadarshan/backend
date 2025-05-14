@@ -63,7 +63,7 @@ const AddDoctor = () => {
         try {
           const response = await axios.post(
             `${import.meta.env.VITE_API_URL}/admin/addDoctor`,
-            formData
+            formData,{withCredentials:true}
           );
 
           if (response.data.ok) {

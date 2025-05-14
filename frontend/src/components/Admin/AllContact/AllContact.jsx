@@ -16,7 +16,7 @@ const ContactList = () => {
   const fetchContacts = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/admin/allcontacts`
+        `${import.meta.env.VITE_API_URL}/admin/allcontacts`,{withCredentials:true}
       );
       const sortedContacts = response.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -33,7 +33,7 @@ const ContactList = () => {
 
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/allcontacts/${id}`
+        `${import.meta.env.VITE_API_URL}/api/allcontacts/${id}`,{withCredentials:true}
       );
       alert(response.data.message);
       fetchContacts();
