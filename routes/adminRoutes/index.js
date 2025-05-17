@@ -15,7 +15,7 @@ const{
 }=require('../../controllers/adminController');
 
 const {isAdmin} = require('../../middlewares/adminMiddleware');
-
+const {isAdminOrUser}=require('../../middlewares/adminOrUserMiddleware');
 router.get('/allcontacts', isAdmin,gettingContact);
 router.delete('/allcontacts/:id', isAdmin, delettingContact);
 router.get('/getAllAppointment', isAdmin,getAllAppointments);
@@ -25,7 +25,7 @@ router.delete('/blockUser/:id', isAdmin,blockUser);
 router.get('/unblockUser/:id', isAdmin,unblockUser);
 router.post('/addDoctor', isAdmin,addDoctor);
 router.post('/addSpecialization', isAdmin,addSpecialization);
-router.get('/getSpecialization', isAdmin,getSpecialization);
+router.get('/getSpecialization', isAdminOrUser,getSpecialization);
 router.delete('/deleteSpecialization/:id', isAdmin,deleteSpecialization);
 
 

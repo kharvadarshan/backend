@@ -42,6 +42,7 @@ function LoginPage() {
         dispatch(setIsLogin());
         dispatch(setRole(result.data.user.role));
         dispatch(setUser(result.data.user));
+        console.log(result.data.user);
         toast("success","Login Successfully...!");
         if (result.data.user.role === "doctor") {
           dispatch(setDoctor(result.data.user.doctor));

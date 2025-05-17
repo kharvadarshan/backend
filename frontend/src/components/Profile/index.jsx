@@ -25,7 +25,8 @@ const Profile = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const user = useSelector((state) => state.user.user);
-  console.log(user);
+ 
+ 
 
   const logout = async (e) => {
     e.preventDefault();
@@ -79,8 +80,7 @@ const Profile = () => {
         } lg:translate-x-0 transition-transform duration-300 ease-in-out z-40`}
       >
         <img
-          // src={`http://localhost:5001${user.image}`}
-          src="../../../public/user.svg"
+           src={user?.image}
           className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-gray-300 mb-4"
           alt="User Avatar"
         />

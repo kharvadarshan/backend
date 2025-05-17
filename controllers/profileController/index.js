@@ -4,16 +4,16 @@ const AppointmentModel = require('../../model/appointment');
 exports.editProfile = async(req,res)=>{
 
     try{
-        const user = req.body;
-        console.log(req.body);
-
+        const {id,name,email} = req.body;
+        const updateData = {name,email};
         if(req.file)
         {
-            user.image = `/uploads/${req.file.filename}`;
+            updateData.image =`${process.env.API_URL}/uploads/${req.file.filename}`;
         }
-        const result = await User.updateOne({_id:user._id},{$set:user});
+        const result = await User.updateOne({_id:id},{$set:updateData});
+        console.log(result.modifiedCount);
         if(result.modifiedCount>0){
-            res.status(201).json({ok:true,message:"Profile updated successfully."});
+            res.status(201).json({ok:true,message:"Profile updated successfully.",image:updateData.image});
           }else{
                 res.status(200).json({ok:false,message:"No changes were made."})
           }

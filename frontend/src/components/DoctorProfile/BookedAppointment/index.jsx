@@ -234,7 +234,7 @@ const BookedAppointment = ({ doctor }) => {
               import.meta.env.VITE_API_URL
             }/doctorprofile/uploadReport/${appointmentId}`,
             formData,
-            { withCredentials: true }
+            // { withCredentials: true }
           );
           if (!response.data.ok) {
             Swal.showValidationMessage(

@@ -184,7 +184,7 @@ exports.addSpecialization =async(req,res)=>{
 exports.getSpecialization= async(req,res)=>{
   try
   {
-    const spec = await Specialization.find({isDeleted:false});
+    const spec = await Specialization.find({isDeleted:false},{ name: 1, _id: 0 } );
     if(spec.length === 0)
       return res.status(404).json({ok:false,message:"Specialization not found."});
 
