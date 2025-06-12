@@ -140,7 +140,7 @@ exports.logout = (req,res)=>{
 exports.validateLogin = async (req,res)=>{
    const {email,password}=req.body;
    try{
-      const userCredential = await User.findOne( {email});
+      const userCredential = await User.findOne( {email}).lean();
 
       if(!userCredential)
       {
@@ -163,6 +163,7 @@ exports.validateLogin = async (req,res)=>{
                id:userCredential._id,
                email:userCredential.email,
                role:userCredential.role,
+               image:userCredential.image || null,
             };
 
                const token = JWT.sign(
@@ -183,6 +184,7 @@ exports.validateLogin = async (req,res)=>{
                email: userCredential.email,
                name:userCredential.userName,
                role: userCredential.role,
+               image:userCredential.image || null,
                doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
               };
 

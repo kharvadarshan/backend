@@ -4,9 +4,11 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 const SpecializationForm = () => {
+  
   const [specialization, setSpecialization] = useState("");
   const [specializations, setSpecializations] = useState([]); // Mocked existing specializations
   const [message, setMessage] = useState("");
+
 
   const getSpecialization = async()=>{
     try
@@ -17,7 +19,6 @@ const SpecializationForm = () => {
 
          if(response.data.ok)
          {
-
           setSpecializations(response.data.specialization);
          }
     }catch(error)

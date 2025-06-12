@@ -1,58 +1,78 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-// import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { useToast } from "../../Notification/ToastProvider";
+import {setUser} from '../../../slices/userAuthSlice.jsx'
+
+
 const EditProfile = ({isSidebarOpen}) => {
-  const [user, setUser] = useState("");
+  // const [user, setUser] = useState("");
   const activeUser = useSelector((state) => state.user.user);
-  const [photoPreview, setPhotoPreview] = useState(""); // State for photo preview
-  const toast = useToast();
+  const [photoPreview, setPhotoPreview] = useState(activeUser?.image); // State for photo preview
+  
+  const [photoFile, setPhotoFile] = useState(null);
+
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      user.image = file;
-      setPhotoPreview(URL.createObjectURL(file)); // Create a preview URL
+      setPhotoFile(file);
+      const blobURL = URL.createObjectURL(file);
+      setPhotoPreview(blobURL);
+      setPhotoPreview(URL.createObjectURL(file)); 
+      return ()=> URL.revokeObjectURL(blobURL);
     }
   };
-
+  
+  
+  
+  const dispatch = useDispatch();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    dispatch(setUser({ ...activeUser, [name]: value }));
   };
 
+  // useEffect(() => {
+  //   if (activeUser?.id) fetchUser();
+  // }, [activeUser?.id]);
+
+  // const fetchUser = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${import.meta.env.VITE_API_URL}/profile/edit`,
+  //       { id: activeUser.id },{withCredentials:true}
+  //     );
+
+  //     if (response.data.ok) {
+  //       setUser(response.data.result[0]);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   useEffect(() => {
-    if (activeUser?.id) fetchUser();
-  }, [activeUser?.id]);
-
-  const fetchUser = async () => {
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/profile/edit`,
-        { id: activeUser.id },{withCredentials:true}
-      );
-
-      if (response.data.ok) {
-        setUser(response.data.result[0]);
-      }
-    } catch (error) {
-      console.error(error);
+    if (activeUser?.image) {
+      setPhotoPreview(activeUser.image);
     }
-  };
+  }, [activeUser]);
 
-  useEffect(() => {
-    if (user?.image) {
-      setPhotoPreview(`${import.meta.env.VITE_API_URL}${user.image}`);
-    }
-  }, [user]);
-
-  console.log(user);
+  
   const handleSubmit = async (e) => {
+   
     e.preventDefault();
+    const formData = new FormData();
+      formData.append('id', activeUser.id);
+      formData.append('email', activeUser.email);
+      formData.append('name', activeUser.name);
+      if (photoFile) {
+        formData.append('image', photoFile); // Append the file
+      }
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/profile/editProfile`,
-        user,
+        formData,
         {
           withCredentials:true,
           headers: {
@@ -61,10 +81,11 @@ const EditProfile = ({isSidebarOpen}) => {
         }
       );
       if (response.data.ok) {
-        // toast.success("Profile updated Successfully...!", {
-        //   position: "top-right",
-        // });
-        toast("success","Profile Updated Successfully...!");
+        toast.success("Profile updated Successfully...!", {
+          position: "top-right",
+        });
+        dispatch(setUser({ ...activeUser, image: response.data.image }));
+        //toast("success","Profile Updated Successfully...!");
       }
     } catch (error) {
       console.log(error);
@@ -128,7 +149,7 @@ const EditProfile = ({isSidebarOpen}) => {
             </div>
             <div className="text-center md:text-left">
               <h2 className="text-2xl text-center font-bold text-gray-800">
-                {user.userName}
+                {activeUser.name}
               </h2>
               <p className="text-gray-600">{}</p>
             </div>
@@ -144,7 +165,7 @@ const EditProfile = ({isSidebarOpen}) => {
             <input
               type="text"
               name="userName"
-              value={user.userName}
+              value={activeUser.name}
               onChange={handleInputChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -156,7 +177,7 @@ const EditProfile = ({isSidebarOpen}) => {
             <input
               type="tel"
               name="email"
-              value={user.email}
+              value={activeUser.email}
               onChange={handleInputChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

@@ -12,7 +12,7 @@ const {
 const {isUser}= require('../../middlewares/userMiddleware');
 const {isDoctor}=require('../../middlewares/doctorMiddleware');
 
-router.post('/appointments',isUser, createAppointment);
+router.post('/appointments', createAppointment);
 router.delete('/deleteAppointment/:appointmentId',deleteAppointment);
 router.get('/getAppointmentByPatientId/:id',isUser,getAllAppointmentsByPatientId);
 router.get('/getDeletedAppointmentByPatientId/:id',isUser,getDeletedAppointmentsByPatientId);

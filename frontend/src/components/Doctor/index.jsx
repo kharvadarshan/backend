@@ -10,9 +10,12 @@ const DoctorList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const doctorsPerPage = 9; // Number of doctors per page
   const navigate = useNavigate();
+  const [specialization,setSpecialization]=useState([]);
+
 
   useEffect(() => {
     fetchDoctors();
+    getSpecialization();
   }, []);
 
 
@@ -27,13 +30,37 @@ const DoctorList = () => {
       console.error("Error fetching doctors:", error);
     }
   };
+
+
   
 
+  const getSpecialization = async()=>{
+      try
+      {
+           const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getSpecialization`,{
+            withCredentials: true, // This sends cookies
+          });
+  
+           if(response.data.ok)
+           {
+              const nameOnly = response.data.specialization.map((item)=>item.name);
+              console.log(nameOnly);
+              setSpecialization(["All",...nameOnly]);
+           }
+      }catch(error)
+      {
+       console.log(error);
+      }
+    }
+  
+  
+    console.log(specialization);
 
-  const specializations = [
-    "All",
-    ...new Set(doctors.map((doctor) => doctor.specialization)),
-  ];
+
+  // const specializations = [
+  //   "All",
+  //   ...new Set(doctors.map((doctor) => doctor.specialization)),
+  // ];
 
   const filteredDoctors = doctors.filter(
     (doctor) =>
@@ -77,20 +104,20 @@ const DoctorList = () => {
             <h5 className="text-xl font-bold text-center mb-4 text-indigo-700">
               Specialization
             </h5>
-            {specializations.map((specialization) => (
+            { specialization?.map((item) => (
               <button
-                key={specialization}
+                key={item}
                 className={`w-full text-left px-4 py-3 rounded-md my-2 transition-all font-medium ${
-                  selectedSpecialization === specialization
+                  selectedSpecialization === item
                     ? "bg-indigo-500 text-white shadow-md"
                     : "bg-gray-100 text-gray-800 hover:bg-indigo-100"
                 }`}
                 onClick={() => {
-                  setSelectedSpecialization(specialization);
+                  setSelectedSpecialization(item);
                   setCurrentPage(1);
                 }}
               >
-                {specialization}
+                {item}
               </button>
             ))}
           </div>
