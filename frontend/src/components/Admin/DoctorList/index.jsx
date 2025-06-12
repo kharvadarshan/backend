@@ -188,7 +188,7 @@ const DoctorList = () => {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
-                      className="text-blue-500 underline"
+                      className="text-blue-500"
                       onClick={() => {
                         setSelectedDoctor(doctor);
                         setIsModalOpen(true);
@@ -262,9 +262,9 @@ const DoctorList = () => {
 
       {/* Custom Modal */}
       {isModalOpen && selectedDoctor && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed  inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+            <h2 className="text-2xl text-center font-bold mb-4 text-gray-800">
               Doctor Details
             </h2>
             <div className="space-y-2">

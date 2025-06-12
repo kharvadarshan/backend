@@ -184,7 +184,7 @@ const ContactList = () => {
             exit={{ scale: 0.8 }}
             transition={{ duration: 0.3 }}
           >
-            <h2 className="text-2xl font-semibold mb-4">Message</h2>
+            <h2 className="text-2xl text-center font-semibold mb-4">Message</h2>
             <p className="text-gray-700">
               {selectedContact.message || "No message provided."}
             </p>

@@ -112,7 +112,7 @@ const formatTime = (time) => {
         ></div>
 
         <motion.div
-          className="fixed bg-white shadow-2xl p-6 rounded-2xl w-[90%] md:w-[500px] z-50"
+          className="fixed  bg-white shadow-2xl p-6 rounded-2xl w-[90%] md:w-[500px] z-50"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 20 }}
           exit={{ opacity: 0, y: -50 }}
@@ -120,7 +120,7 @@ const formatTime = (time) => {
           style={{
             top: "10vh",
             transform: "translate(-50%, 0%)",
-            left: "50%",
+            left: "40%",
             maxHeight: "80vh",
             overflowY: "auto",
           }}
