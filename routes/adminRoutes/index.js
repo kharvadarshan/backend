@@ -29,5 +29,4 @@ router.get('/getSpecialization', isAdminOrUser,getSpecialization);
 router.delete('/deleteSpecialization/:id', isAdmin,deleteSpecialization);
 
 
-
 module.exports=router;

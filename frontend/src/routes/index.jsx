@@ -21,7 +21,6 @@ import DoctorProfile from "../components/DoctorProfile";
 import { useSelector } from "react-redux";
 import About from "../components/About";
 import FeedbackForm from "../components/FeedBackForm/FeedBack";
-import Chatbot from "../components/Chatbot/Chatbot";
 import { useEffect } from "react";
 import PaymentSuccess from "../components/Checkout/PaymentSuccess";
 import PaymentFailed from "../components/Checkout/PaymentFailed";
@@ -84,8 +83,7 @@ const AllRoute = () => {
                     path="/feedbackform"
                     element={<FeedbackForm />}
                   ></Route>
-                  <Route path="/chatbot" element={<Chatbot />}></Route>
-
+                
                   <Route path="/checkout" element={<PaymentPage />} />
                   <Route path="/paymentsuccess" element={<PaymentSuccess />} />
                   <Route path="/payment-success" element={<PaymentSuccess />} />

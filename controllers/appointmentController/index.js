@@ -12,6 +12,7 @@ exports.createAppointment = async (req, res) => {
     if (!doctor || !date || !time || !slot|| !patientId || !patientForm ) {
       return res.status(400).json({ error: "All fields are required" });
     }
+  
     
     // const [month,day,year]= date.split('/');
     // const parsedDate = new Date(`${year}-${month}-${day}`)

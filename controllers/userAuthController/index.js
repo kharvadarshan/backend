@@ -123,6 +123,7 @@ exports.registerUser = async (req,res)=>{
 
 
 exports.logout = (req,res)=>{
+   
       res.clearCookie('token');
       req.session?.destroy?.((err) => {
          if (err) {
@@ -137,7 +138,7 @@ exports.logout = (req,res)=>{
 
 
 
-exports.validateLogin = async (req,res)=>{
+exports. validateLogin = async (req,res)=>{
    const {email,password}=req.body;
    try{
       const userCredential = await User.findOne( {email}).lean();
