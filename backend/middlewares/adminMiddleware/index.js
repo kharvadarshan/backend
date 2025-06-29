@@ -9,23 +9,24 @@ exports.isAdmin = async (req, res, next) => {
       return next();
     }
 
-    // If no session, check token
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Authentication required" });
-    }
+    // // If no session, check token
+    // const token = req.cookies.token;
+    // if (!token) {
+    //   return res.status(401).json({ message: "Authentication required" });
+    // }
 
-    const decoded = JWT.verify(token, tokenSignature);
+    // const decoded = JWT.verify(token, tokenSignature);
     
-    // Verify user exists and is admin
-    const user = await User.findById(decoded.id);
-    if (!user || user.role !== 'admin') {
-      return res.status(403).json({ message: "Access restricted to admins only" });
-    }
+    // // Verify user exists and is admin
+    // const user = await User.findById(decoded.id);
+    // if (!user || user.role !== 'admin') {
+    //   return res.status(403).json({ message: "Access restricted to admins only" });
+    // }
 
-    // Attach user to request
-    req.user = user;
-    next();
+    // // Attach user to request
+    // req.user = user;
+    // next();
+    return res.status(403).json({ message: "Access restricted to admins only" });
   } catch (error) {
     console.error('Admin middleware error:', error);
     if (error.name === 'JsonWebTokenError') {

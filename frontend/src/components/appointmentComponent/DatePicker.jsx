@@ -1,8 +1,12 @@
+
+
 import DatePicker from "react-datepicker";
 import axios from "axios";
+import "react-datepicker/dist/react-datepicker.css"; 
 import { useState } from "react";
 import { useEffect } from "react";
 const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) => {
+  
   // const staticTimeSlots = [
   //   { id: "1", start: "09:00 AM", end: "09:30 AM", status: "Available" },
   //   { id: "2", start: "10:00 PM", end: "10:30 PM", status: "Available" },
@@ -94,7 +98,7 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
           <h3 className="text-lg font-semibold text-gray-700 mb-3">Pick a Date</h3>
           <div className="bg-white p-4  rounded-lg shadow-md border border-blue-500 ">
             <DatePicker
-             selected={appointmentData.date || new Date()}
+             selected={appointmentData.date ? new Date(appointmentData.date) : new Date()}
               onChange={(e)=>{
                 handleDateChange(e);
               }}
@@ -169,7 +173,7 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
   );
 };
 
-export default CustomDatePicker;
+export default CustomDatePicker; 
 
 
 // import axios from "axios";
@@ -425,3 +429,4 @@ export default CustomDatePicker;
 // };
 
 // export default DatePicker;
+

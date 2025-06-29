@@ -31,7 +31,7 @@ const DoctorProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [photo,setPhoto]=useState(`${import.meta.env.VITE_API_URL}${activeUser.doctor?.image}`);
+  const [photo,setPhoto]=useState(`${import.meta.env.VITE_API_URL}${activeUser?.doctor?.image}`);
   
   useEffect(()=>{
     if(activeUser?.doctor?.image)
@@ -41,8 +41,13 @@ const DoctorProfile = () => {
   },[photo]);
 
   const handlePhotoUpdate = (newPhotoUrl) => {
-    setPhoto(newPhotoUrl);
+    const cleanUrl = newPhotoUrl.replace(`${import.meta.env.VITE_API_URL}`, '');
+    setPhoto(`${import.meta.env.VITE_API_URL}${cleanUrl}`);
   };
+  
+  // const handlePhotoUpdate = (newPhotoUrl) => {
+  //   setPhoto(`${import.meta.env.VITE_API_URL}${newPhotoUrl}`);
+  // };
 
   const logout = async (e) => {
     e.preventDefault();

@@ -346,7 +346,9 @@ const MyAppointments = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${
           appointment.doctorId
-        }`
+        }`,{
+          withCredentials:true
+        }
       );
       if (response.data.ok) {
         navigate("/checkout", {

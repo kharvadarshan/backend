@@ -39,7 +39,9 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
     const fetchDoctor = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${appointmentData.doctorId}`
+          `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${appointmentData.doctorId}`,{
+            withCredentials:true
+          }
         );
         if(response.data.ok)
         {
@@ -62,7 +64,10 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/appointments/appointments`,
-        appointment
+        appointment,
+        {
+          withCredentials:true
+        }
       );
 
       if (response.data.ok) {

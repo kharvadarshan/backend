@@ -3,7 +3,21 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const EditProfile = ({ doctor, onPhotoUpdate }) => {
-  const [formData, setFormData] = useState("");
+ 
+  const [formData, setFormData] = useState({
+    _id: "",
+    name: "",
+    contact: "",
+    specialty: "",
+    specialization: "",
+    experience: "",
+    degree: "",
+    fees: 0,
+    address: "",
+    about: "",
+    field: "",
+    image: null
+  });
 
   const fetchDoctor = async () => {
     try {
@@ -19,7 +33,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
     }
   };
 
-  const [photoPreview, setPhotoPreview] = useState("");
+  const [photoPreview, setPhotoPreview] = useState(null);
 
   useEffect(() => {
     fetchDoctor();
@@ -27,7 +41,13 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
 
   useEffect(() => {
     if (formData?.image) {
-      setPhotoPreview(`http://localhost:5001${formData.image}`);
+      if (typeof formData.image === 'string') {
+        setPhotoPreview(`http://localhost:5001${formData.image}`);
+      } else if (formData.image instanceof File) {
+        setPhotoPreview(URL.createObjectURL(formData.image));
+      }
+    } else {
+      setPhotoPreview(null);
     }
   }, [formData]);
 
@@ -36,8 +56,13 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      formData.image = file;
-      setPhotoPreview(URL.createObjectURL(file)); // Create a preview URL
+      setFormData(prev=>({
+        ...prev,
+        image:file
+      }));
+      setPhotoPreview(URL.createObjectURL(file));
+      onPhotoUpdate(URL.createObjectURL(file)); 
+     // Create a preview URL
     }
   };
 
@@ -139,7 +164,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="name"
-              value={formData.name}
+              value={formData?.name || ""}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
@@ -155,7 +180,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="email"
               name="contact"
-              value={formData.contact}
+              value={formData?.contact || ""}
               onChange={(e) =>
                 setFormData({ ...formData, contact: e.target.value })
               }
@@ -171,7 +196,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="specialty"
-              value={formData.specialty}
+              value={formData?.specialty || ""}
               onChange={(e) =>
                 setFormData({ ...formData, specialty: e.target.value })
               }
@@ -187,7 +212,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="specialization"
-              value={formData.specialization}
+              value={formData?.specialization || ""}
               onChange={(e) =>
                 setFormData({ ...formData, specialization: e.target.value })
               }
@@ -203,7 +228,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="experience"
-              value={formData.experience}
+              value={formData?.experience || ""}
               onChange={(e) =>
                 setFormData({ ...formData, experience: e.target.value })
               }
@@ -219,7 +244,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="degree"
-              value={formData.degree}
+              value={formData?.degree || ""}
               onChange={(e) =>
                 setFormData({ ...formData, degree: e.target.value })
               }
@@ -235,7 +260,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="number"
               name="fees"
-              value={formData.fees}
+              value={formData?.fees || ""}
               onChange={(e) =>
                 setFormData({ ...formData, fees: Number(e.target.value) })
               }
@@ -251,7 +276,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="address"
-              value={formData.address}
+              value={formData?.address || ""}
               onChange={(e) =>
                 setFormData({ ...formData, address: e.target.value })
               }
@@ -267,7 +292,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="about"
-              value={formData.about}
+              value={formData?.about || ""}
               onChange={(e) =>
                 setFormData({ ...formData, about: e.target.value })
               }
@@ -283,7 +308,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="field"
-              value={formData.field}
+              value={formData?.field || ""}
               onChange={(e) =>
                 setFormData({ ...formData, field: e.target.value })
               }

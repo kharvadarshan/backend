@@ -317,19 +317,20 @@ exports.markCompleted = async(req,res)=>{
 exports.editProfile = async(req,res)=>{
     try{
           const formData= req.body;
+          console.log(req.body);
           if(req.file)
           {
             formData.image = `/uploads/${req.file.filename}`;
           }
           const result = await Doctor.updateOne({_id:formData._id},{$set:formData});
           if(result.modifiedCount>0){
-            res.status(201).json({ok:true,message:"Profile updated successfully."});
+            return res.status(201).json({ok:true,message:"Profile updated successfully."});
           }else{
-                res.status(200).json({ok:false,message:"No changes were made."})
+              return  res.status(200).json({ok:false,message:"No changes were made."})
           }
     }catch(error)
     {
-        res.status(500).json({ message: 'Error while updating doctor profile.',error });  
+        return res.status(500).json({ message: 'Error while updating doctor profile.',error });  
     }
 }
 

@@ -1,11 +1,9 @@
-const JWT = require('jsonwebtoken');
-const { tokenSignature } = require('../../utils/global');
-const User = require('../../model/user');
 
-exports.isDoctor = async (req, res, next) => {
+
+exports.isDoctorOrUser = async (req, res, next) => {
   try {
     // Check session first
-    if (req.session?.user?.role === 'doctor') {
+    if (req.session?.user?.role === 'doctor' || req?.session?.user?.role === 'user') {
       return next();
     }
 
@@ -38,11 +36,3 @@ exports.isDoctor = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-// exports.isDoctor = (req,res,next)=>{
-//     if(req.user?.role != 'doctor'){
-//         return res.status(403).json({message:"Access restricted to doctors only."});
-//     }
-//     next();
-// }
-

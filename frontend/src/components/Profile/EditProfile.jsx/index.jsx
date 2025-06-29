@@ -164,7 +164,7 @@ const EditProfile = ({isSidebarOpen}) => {
             </label>
             <input
               type="text"
-              name="userName"
+              name="name"
               value={activeUser.name}
               onChange={handleInputChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
