@@ -1,6 +1,7 @@
 import DatePicker from "react-datepicker";
 import axios from "axios";
 import { useState } from "react";
+import "react-datepicker/dist/react-datepicker.css";
 import { useEffect } from "react";
 const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) => {
   // const staticTimeSlots = [
