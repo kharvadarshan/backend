@@ -80,7 +80,8 @@ const BookedAppointment = ({ doctor }) => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL
-        }/appointments/getAppointmentByDoctorId/${doctor._id}`,{withCredentials:true}
+        }/appointments/getAppointmentByDoctorId/${doctor._id}`,
+        { withCredentials: true }
       );
       if (response.data.ok) {
         setUpcoming(response.data.upcomingAppointments);
@@ -111,7 +112,8 @@ const BookedAppointment = ({ doctor }) => {
           const response = await axios.get(
             `${
               import.meta.env.VITE_API_URL
-            }/doctorprofile/acceptAppointment/${id}`,{withCredentials:true}
+            }/doctorprofile/acceptAppointment/${id}`,
+            { withCredentials: true }
           );
 
           if (response.data.ok) {
@@ -145,7 +147,8 @@ const BookedAppointment = ({ doctor }) => {
           const response = await axios.get(
             `${
               import.meta.env.VITE_API_URL
-            }/doctorprofile/rejectAppointment/${id}`,{withCredentials:true}
+            }/doctorprofile/rejectAppointment/${id}`,
+            { withCredentials: true }
           );
 
           if (!response.data.ok) {
@@ -177,7 +180,8 @@ const BookedAppointment = ({ doctor }) => {
       if (result.isConfirmed) {
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/doctorprofile/markCompleted/${id}`,{withCredentials:true}
+            `${import.meta.env.VITE_API_URL}/doctorprofile/markCompleted/${id}`,
+            { withCredentials: true }
           );
 
           if (response.data.ok) {
@@ -233,7 +237,7 @@ const BookedAppointment = ({ doctor }) => {
             `${
               import.meta.env.VITE_API_URL
             }/doctorprofile/uploadReport/${appointmentId}`,
-            formData,
+            formData
             // { withCredentials: true }
           );
           if (!response.data.ok) {
@@ -279,9 +283,7 @@ const BookedAppointment = ({ doctor }) => {
             (report) => `
             <div style="margin: 10px 0;">
               <a href="${report.url}" target="_blank" style="color: #1e90ff;">
-                ${report.fileName} (Uploaded: ${new Date(
-              report.uploadedAt
-            ).toLocaleDateString()})
+                ${report.fileName} 
               </a>
             </div>
           `
@@ -297,7 +299,7 @@ const BookedAppointment = ({ doctor }) => {
         // });
 
         Swal.fire({
-          title: "Reports",
+          title: "Show Reports",
           html,
           icon: "info",
           confirmButtonText: "Close",
@@ -329,7 +331,8 @@ const BookedAppointment = ({ doctor }) => {
     if (confirm.isConfirmed) {
       try {
         const res = await axios.delete(
-          `http://localhost:5001/appointments/deleteAppointment/${appointmentId}`,{withCredentials:true}
+          `http://localhost:5001/appointments/deleteAppointment/${appointmentId}`,
+          { withCredentials: true }
         );
         if (res.data.ok) {
           Swal.fire("Deleted!", res.data.message, "success");

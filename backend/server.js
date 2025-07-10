@@ -7,7 +7,7 @@ const userAuth = require('./routes/userAuth');
 const profile = require('./routes/profileRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const app = express();
-
+const paymentRoutes = require('./routes/paymentRoutes');
 const cookieParser=require('cookie-parser');
 const MongoStore = require('connect-mongo');
 const cors=require('cors');
@@ -52,7 +52,7 @@ app.use('/user',userAuth);
 app.use('/doctorprofile',doctorProfileRoutes);
 app.use('/appointments',appointmentRoutes)
 app.use('/profile',profile);
-
+app.use('/pay', paymentRoutes);
 app.use('/admin',adminRoutes);
 
 app.listen(PORT,()=> {

@@ -23,11 +23,11 @@ const PaymentPage = () => {
     try {
       const {
         data: { key },
-      } = await axios.get("http://localhost:5001/pay/getkey");
+      } = await axios.get(`${import.meta.env.VITE_API_URL}/pay/getkey`);
 
       const {
         data: { order },
-      } = await axios.post("http://localhost:5001/pay/checkout", {
+      } = await axios.post(`${import.meta.env.VITE_API_URL}/pay/checkout`, {
         amount,
       });
 
@@ -51,7 +51,7 @@ const PaymentPage = () => {
         //callback_url: "http://localhost:5001/pay/paymentverification",
         handler: async function(response) {
           try {
-            await axios.post("http://localhost:5001/pay/paymentverification", {
+            await axios.post(`${import.meta.env.VITE_API_URL}/pay/paymentverification`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
@@ -116,7 +116,7 @@ const PaymentPage = () => {
         </button>
       </div>
     </div>
-  );
+  );d
 };
 
 export default PaymentPage;
