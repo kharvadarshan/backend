@@ -117,16 +117,33 @@ exports.registerUser = async (req,res)=>{
 
 
 exports.logout = (req,res)=>{
-   
-      res.clearCookie('token');
+    try{
+      res.clearCookie('token',{
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/'
+    });
       req.session?.destroy?.((err) => {
          if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error logging out' });
          }
-         res.clearCookie('connect.sid'); // Clear session cookie
+         res.clearCookie('connect.sid', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        path: '/'
+      }); // Clear session cookie
          res.status(200).json({ message: 'Logged out successfully', ok: true });
       });
+   }catch(error)
+   {
+      return res.status(500).json({
+      ok: false,
+      message: 'Internal server error during logout'
+    });
+   }
    
 }
 
