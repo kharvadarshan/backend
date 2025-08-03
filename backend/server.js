@@ -119,7 +119,9 @@ app.use('/appointments',appointmentRoutes)
 app.use('/profile',profile);
 app.use('/admin',adminRoutes);
 app.use("/pay", paymentRoute);
-
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Welcome to BookMyDoctor Backend' });
+});
 
 server.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
