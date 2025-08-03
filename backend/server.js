@@ -27,7 +27,7 @@ const server = http.createServer(app);
 
 const io =  socketIo(server, {
   cors: {
-    origin: [ "http://localhost:5173","http://localhost:5174"],
+    origin: [ "http://localhost:5173","http://localhost:5174",],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -52,16 +52,11 @@ io.on("connection", (socket) => {
 
 // ---------------------------------------------------
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://bookmydoctor-frontend-g4pe.onrender.com');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+
 
 env.config();
 const PORT=process.env.PORT;
-app.use(cors({origin:["http://localhost:5173","http://localhost:5174"], credentials: true,}));
+app.use(cors({origin:["http://localhost:5173","http://localhost:5174","https://bookmydoctor-frontend-g4pe.onrender.com"], credentials: true,}));
 app.use(express.json()); // For parsing JSON
 app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded form data
 
