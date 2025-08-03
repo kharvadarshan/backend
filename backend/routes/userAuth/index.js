@@ -23,7 +23,7 @@ router.post('/login',validateLogin);
 router.post('/signup',registerUser);
 router.post('/sendOTP',otpRateLimiter,sendOTP);
 router.post('/verifyOTP',verifyOTP);
-router.post('/logout',logout);
+router.get('/logout',logout);
 
 // router.post('/ask',async (req, res) => {
 //     const { message } = req.body;
