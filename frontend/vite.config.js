@@ -12,9 +12,13 @@ export default defineConfig({
     },
     build: {
     // Ensure proper module resolution during build
+    rollupOptions: {
+      external: ['react-datepicker']
+    },
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    
   },
   }
 })
