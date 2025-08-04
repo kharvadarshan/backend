@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Doctor = require('./model/doctor'); // Adjust the path to your Doctor model
-
+const dotenv = require('dotenv');
+dotenv.config();
 // JSON data to be inserted
 const doctorsData = [
   {
@@ -34,9 +35,10 @@ const doctorsData = [
   // Add the rest of the doctors here...
 ];
 
+
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://127.0.0.1:27017/onlineAppointmentBooking')
+  .connect(process.env.MONGODB_URL)
   .then(() => {
     console.log('Connected to MongoDB');
     // Insert data into the database
