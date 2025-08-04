@@ -26,7 +26,7 @@ const NavBar = () => {
 
   const logout = async () => {
     try {
-      const result = await axios.post(
+      const result = await axios.get(
         `${import.meta.env.VITE_API_URL}/user/logout`,
         null,
         {
