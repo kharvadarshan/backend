@@ -118,6 +118,8 @@ exports.registerUser = async (req,res)=>{
 
 exports.logout = (req,res)=>{
     try{
+
+      console.log("logout clicked");
       res.clearCookie('token',{
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
