@@ -120,23 +120,18 @@ exports.logout = (req,res)=>{
     try{
 
       console.log("logout clicked");
-      res.clearCookie('token',{
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/'
-    });
+      
       req.session?.destroy?.((err) => {
          if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error logging out' });
          }
-         res.clearCookie('connect.sid', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        path: '/'
-      }); // Clear session cookie
+        res.clearCookie('token',{
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/'
+    }); // Clear session cookie
          res.status(200).json({ message: 'Logged out successfully', ok: true });
       });
    }catch(error)
