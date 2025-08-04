@@ -92,7 +92,7 @@ mongoose.connect(process.env.MONGODB_URL)
             sameSite:'strict',
             maxAge: 24 * 60 * 60 * 1000
           },
-          store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/session_db' }),
+          store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL }),
       })
     )
   
