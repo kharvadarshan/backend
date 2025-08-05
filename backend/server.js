@@ -49,7 +49,8 @@ mongoose.connect(process.env.MONGODB_URL)
           saveUninitialized: false,
           cookie:{
             httpOnly:true,
-            secure:process.env.NODE_ENV === 'production'
+            secure:process.env.NODE_ENV === 'production',
+             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
           },
           store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL }),
       })
