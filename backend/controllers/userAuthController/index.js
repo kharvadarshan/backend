@@ -126,8 +126,7 @@ exports.logout = (req,res)=>{
             console.error(err);
             return res.status(500).json({ message: 'Error logging out' });
          }
-        res.clearCookie('connect.sid',{
-      domain:'.onrender.com',
+        res.clearCookie('sessionId',{
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',

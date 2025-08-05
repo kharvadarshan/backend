@@ -47,11 +47,12 @@ mongoose.connect(process.env.MONGODB_URL)
           secret: 'dash', // Replace with a secure key
           resave: false,
           saveUninitialized: false,
+          name:'sessionId',
           cookie:{
             httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-             domain:'.onrender.com'
+             maxAge: 24 * 60 * 60 * 1000, 
           },
           store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL }),
       })
