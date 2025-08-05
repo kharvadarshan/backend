@@ -191,7 +191,6 @@ exports.getSpecialization= async(req,res)=>{
     return res.status(201).json({ok:true,specialization:spec});
   }catch(error)
   {
-    
     return res.status(500).json({ok:false,error:error.message});
   }
 };

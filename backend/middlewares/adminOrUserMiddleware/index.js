@@ -2,21 +2,13 @@
 
 exports.isAdminOrUser=async(req,res,next)=>{
    try{
-    if(req.session?.user?.role === 'admin' || req.session?.user?.role === 'user')
+
+    if(req.session?.user?.role !== 'admin' && req.session?.user?.role !== 'user')
     {
-        return next();
+         return res.status(401).json({ message: 'Not authenticated' }); 
     }
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Authentication required" });
-    }
-    const decoded = JWT.verify(token, tokenSignature);
-    const user = await User.findById(decoded.id);
-        if (!user || user.role !== 'admin') {
-          return res.status(403).json({ message: "Access restricted to admins only" });
-        }
-         req.user = user;
-         next();
+       next();
+     
    }catch(error)
    {
         console.error('Admin middleware error:', error);

@@ -10,18 +10,18 @@ const env = require('dotenv')
 env.config();
 
 
-const redisClient = redis.createClient({
-   url: process.env.REDIS_URL
-});
+// const redisClient = redis.createClient({
+//    url: process.env.REDIS_URL
+// });
 
-redisClient.on("error", (err) => {
-   console.error("Redis connection error:", err);
-});
+// redisClient.on("error", (err) => {
+//    console.error("Redis connection error:", err);
+// });
 
-redisClient.connect().then(() => {
-   console.log("Connected to Redis!");
-   redisClient.set("aad", "ada");
-});
+// redisClient.connect().then(() => {
+//    console.log("Connected to Redis!");
+//    redisClient.set("aad", "ada");
+// });
 
 
 
@@ -166,27 +166,7 @@ exports. validateLogin = async (req,res)=>{
             if(!isMatch)
             {
                return res.status(401).json({ok:false,message:'Invalid Credentials.'});
-            }
-          
-            const payload = {
-               id:userCredential._id,
-               email:userCredential.email,
-               role:userCredential.role,
-               image:userCredential.image || null,
-            };
-
-               const token = JWT.sign(
-                  payload,
-                  tokenSignature,
-                  { expiresIn: '1d' }
-              );
-
-              res.cookie('token',token,{
-               httpOnly:true,
-               secure:process.env.NODE_ENV === 'production',
-               sameSite:'strict',
-               maxAge: 24*60*60*1000,
-              });
+            } 
              
               req.session.user = {
                id: userCredential._id,
@@ -203,8 +183,20 @@ exports. validateLogin = async (req,res)=>{
              } else if (userCredential.role === 'admin') {
                redirect = '/admin';
              }
+
+             
+            await new Promise((resolve, reject) => {
+                  req.session.save(err => {
+                  if (err) return reject(err);
+                  console.log("Session Saved:", req.sessionID);
+                  resolve();
+                } );
+            });
+
+
+            console.log(req.session.user);
        
-    return  res.status(201).json({message:'Login successfully.',ok:true,token:token,user:req.session.user,redirect});   
+     res.status(201).json({message:'Login successfully.',ok:true,user:req.session.user,redirect});   
      
    }catch(error)
    {

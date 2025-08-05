@@ -17,42 +17,6 @@ const path=require('path');
 const session=require('express-session');
 const env = require('dotenv')
 
-// ---------------------------------------------------
-
-const http = require("http");
-const socketIo = require("socket.io");
-
-
-const server = http.createServer(app);
-
-const io =  socketIo(server, {
-  cors: {
-    origin: [ "http://localhost:5173","http://localhost:5174",],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-
-io.on("connection", (socket) => {
-
-  console.log("User connected:", socket.id);
-
-  socket.on("sendLocation", (location) => {
-    io.emit("updateLocation", location);
-  });
-
-  socket.on("disconnect", () => {
-     console.log("User disconnected:", socket.id);
-  });
-});
-
-
-
-
-
-// ---------------------------------------------------
-
-
 
 env.config();
 const PORT=process.env.PORT;
@@ -66,20 +30,17 @@ app.use(
 }));
 app.use(express.json()); // For parsing JSON
 app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded form data
-
-
-
 app.use(cookieParser());
 
+
+
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
-
-
-
 
 
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Failed to connect to MongoDB', err));
+
 
     app.use(
       session({
@@ -88,37 +49,13 @@ mongoose.connect(process.env.MONGODB_URL)
           saveUninitialized: false,
           cookie:{
             httpOnly:true,
-            secure:process.env.NODE_ENV === 'production',
-            sameSite:'strict',
-            maxAge: 24 * 60 * 60 * 1000
+            secure:process.env.NODE_ENV === 'production'
           },
           store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL }),
       })
     )
   
-    app.get("/geocode", async (req, res) => {
-      try {
-        const { q, format, limit, addressdetails } = req.query;
-        console.log(req.query);
-        
-        const response = await axios.get("https://nominatim.openstreetmap.org/search", {
-          params: {
-            q,
-            format: format || "json",
-            limit: limit || 1,
-            addressdetails: addressdetails || 1,
-          },
-          headers: {
-            "User-Agent": "BookMyDoctor/1.0 (bookmydoctor31@gmail.com)",
-          },
-        });
-        console.log(response);
-        res.json(response.data);
-      } catch (error) {
-        console.error("Proxy error:", error);
-        res.status(500).json({ error: "Failed to fetch geocoding data" });
-      }
-    });
+   
 
 app.use('/api',doctorRoutes);
 app.use('/user',userAuth);
@@ -131,6 +68,6 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to BookMyDoctor Backend' });
 });
 
-server.listen(PORT,()=>{
+app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
 });
