@@ -12,6 +12,7 @@ exports.isUser = async (req, res, next) => {
 
     // If no session, check token
     const token = req.cookies.token;
+    console.log(token);
     if (!token) {
       return res.status(401).json({ message: "Authentication required" });
     }
