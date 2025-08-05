@@ -51,6 +51,7 @@ mongoose.connect(process.env.MONGODB_URL)
             httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+             domain:'.onrender.com'
           },
           store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL }),
       })
