@@ -46,7 +46,7 @@ app.use(
              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
              maxAge: 24 * 60 * 60 * 1000, 
           },
-          store:new MongoStore({ mongoUrl: process.env.MONGODB_URL,
+          store:new MongoStore({ uri: process.env.MONGODB_URL,
                collection: 'sessions',
            }),
           
