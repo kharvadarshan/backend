@@ -59,6 +59,8 @@ mongoose.connect(process.env.MONGODB_URL)
       })
     )
   
+
+    app.options('*', cors(corsOptions));
    
 
 app.use('/api',doctorRoutes);
