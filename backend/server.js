@@ -10,11 +10,12 @@ const app = express();
 const paymentRoute = require("./routes/paymentRoutes");
 const axios=require('axios');
 const cookieParser=require('cookie-parser');
+
 const cors=require('cors');
 const multer=require('multer');
 const path=require('path');
 const session=require('express-session');
-const MongoStore = require('connect-mongo');
+const MongoStore = require('connect-mongodb-session')(session);
 const env = require('dotenv')
 const bodyParser = require('body-parser');
 
@@ -39,12 +40,14 @@ app.use(
           saveUninitialized: false,
           name:'connect.sid',
           cookie:{
+            domain:process.env.COOKIE_DOMAIN,
             httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
              maxAge: 24 * 60 * 60 * 1000, 
           },
-          store:MongoStore.create({ mongoUrl: process.env.MONGODB_URL
+          store:new MongoStore({ mongoUrl: process.env.MONGODB_URL,
+               collection: 'sessions',
            }),
           
       })

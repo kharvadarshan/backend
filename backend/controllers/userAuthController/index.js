@@ -130,7 +130,7 @@ exports.logout =async (req,res)=>{
       });
          
         res.clearCookie('connect.sid',{
-         
+          domain:process.env.COOKIE_DOMAIN,
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
