@@ -47,7 +47,7 @@ mongoose.connect(process.env.MONGODB_URL)
           secret: 'dash', // Replace with a secure key
           resave: false,
           saveUninitialized: false,
-          name:'sessionId',
+          name:'connect.sid',
           cookie:{
             httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
