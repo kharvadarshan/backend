@@ -10,18 +10,18 @@ const env = require('dotenv')
 env.config();
 
 
-// const redisClient = redis.createClient({
-//    url: process.env.REDIS_URL
-// });
+const redisClient = redis.createClient({
+   url: process.env.REDIS_URL
+});
 
-// redisClient.on("error", (err) => {
-//    console.error("Redis connection error:", err);
-// });
+redisClient.on("error", (err) => {
+   console.error("Redis connection error:", err);
+});
 
-// redisClient.connect().then(() => {
-//    console.log("Connected to Redis!");
-//    redisClient.set("aad", "ada");
-// });
+redisClient.connect().then(() => {
+   console.log("Connected to Redis!");
+   redisClient.set("aad", "ada");
+});
 
 
 
@@ -126,7 +126,7 @@ exports.logout = (req,res)=>{
             console.error(err);
             return res.status(500).json({ message: 'Error logging out' });
          }
-        res.clearCookie('sessionId',{
+        res.clearCookie('connect.sid',{
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
