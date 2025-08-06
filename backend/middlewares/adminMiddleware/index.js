@@ -4,7 +4,8 @@ const User = require('../../model/user');
 
 exports.isAdmin = async (req, res, next) => {
   try {
-
+    
+    console.log(req.session);
     // Check session first
     if (req.session?.user?.role !== 'admin') {
         return res.status(401).json({ message: 'Not authenticated' });
