@@ -49,6 +49,7 @@ mongoose.connect(process.env.MONGODB_URL)
           saveUninitialized: false,
           name:'connect.sid',
           cookie:{
+             domain: '.onrender.com',
             httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',

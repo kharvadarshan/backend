@@ -116,24 +116,29 @@ exports.registerUser = async (req,res)=>{
 }
 
 
-exports.logout = (req,res)=>{
+exports.logout =async (req,res)=>{
     try{
-
-      console.log("logout clicked");
       
-      req.session?.destroy?.((err) => {
-         if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Error logging out' });
-         }
-        res.clearCookie('connect.sid',{
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/'
-    }); // Clear session cookie
-         res.status(200).json({ message: 'Logged out successfully', ok: true });
+         await new Promise((resolve, reject) => {
+      req.session.destroy(err => {
+        if (err) {
+          console.error('Session destruction error:', err);
+          return reject(err);
+        }
+        resolve();
       });
+      });
+         
+        res.clearCookie('connect.sid',{
+          domain:'.onrender.com' ,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          path: '/'
+           }); // Clear session cookie
+
+         res.status(200).json({ message: 'Logged out successfully', ok: true });
+      
    }catch(error)
    {
       return res.status(500).json({
@@ -168,7 +173,7 @@ exports. validateLogin = async (req,res)=>{
                return res.status(401).json({ok:false,message:'Invalid Credentials.'});
             } 
              
-              req.session.user = {
+              sessionUser= {
                id: userCredential._id,
                email: userCredential.email,
                name:userCredential.userName,
@@ -176,6 +181,8 @@ exports. validateLogin = async (req,res)=>{
                image:userCredential.image || null,
                doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
               };
+
+              req.session.user  = sessionUser;
 
               let redirect='/';
               if (userCredential.role === 'doctor') {
