@@ -10,12 +10,11 @@ const app = express();
 const paymentRoute = require("./routes/paymentRoutes");
 const axios=require('axios');
 const cookieParser=require('cookie-parser');
-
 const cors=require('cors');
 const multer=require('multer');
 const path=require('path');
 const session=require('express-session');
-const MongoStore = require('connect-mongodb-session')(session);
+const MongoStore = require('connect-mongo');
 const env = require('dotenv')
 const bodyParser = require('body-parser');
 
@@ -45,8 +44,7 @@ app.use(
              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
              maxAge: 24 * 60 * 60 * 1000, 
           },
-          store:new MongoStore({ mongoUrl: process.env.MONGODB_URL,
-               collection: 'sessions',
+          store:MongoStore.create({ mongoUrl: process.env.MONGODB_URL
            }),
           
       })
