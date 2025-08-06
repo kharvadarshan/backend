@@ -1,0 +1,253 @@
+[33mcommit 38b331f3de0d7111afd92c2865336d2fbd901a99[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Wed Aug 6 09:42:27 2025 +0530
+
+    options added
+
+[33mcommit 4347120004d19317cf1dfe4af55800557df00507[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Wed Aug 6 09:14:40 2025 +0530
+
+    domain added
+
+[33mcommit d73fea2bd4aa5f83e947f653e3a49779b7c17e81[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Wed Aug 6 08:48:30 2025 +0530
+
+    redis added
+
+[33mcommit 9d76a2af1c7c854347cf664a21b039ddbbe99e64[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Wed Aug 6 08:26:50 2025 +0530
+
+    session name given
+
+[33mcommit b07164fe9fd837c82e46780b1ac5b13fc68d30ba[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Wed Aug 6 00:22:33 2025 +0530
+
+    domain added in logout
+
+[33mcommit 7d63b8218128d41b9f2bac46aa8b4616a7055998[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Wed Aug 6 00:06:28 2025 +0530
+
+    domain added in logout
+
+[33mcommit c230da03c36825de4374c7deb2560d43b83a147c[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Wed Aug 6 00:03:06 2025 +0530
+
+    domain added
+
+[33mcommit 8f5a9d84ceb2e26c35d0bc33628ed8ad6bc339ea[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Tue Aug 5 23:48:31 2025 +0530
+
+    server change
+
+[33mcommit c72125b2049c34cbf8fffcfdc5cca63cf81d9abf[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Tue Aug 5 23:40:10 2025 +0530
+
+    backend middleware solved
+
+[33mcommit 506f48a7c2715a5e33b26ed94b47cf5c89f9d48a[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Tue Aug 5 22:16:12 2025 +0530
+
+    backend error
+
+[33mcommit d7dfe1485e7ada5068177d8eb7654d37713d9048[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 12:25:31 2025 +0530
+
+    chnage in logout url
+
+[33mcommit 6b18938cf72353dbb767fe4cfcca5b34c6646744[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 12:12:14 2025 +0530
+
+    chnage in mongostore uri
+
+[33mcommit 2037d757443bfc5cd5e996e37477823c16536f03[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 12:05:05 2025 +0530
+
+    cors change in setcookie
+
+[33mcommit 4d0c5831983249af5fdd07997386d634a1d90c0a[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 11:54:03 2025 +0530
+
+    logout error
+
+[33mcommit 4f964161574c3328ca6d25d7098fb5f9b525d0a9[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 11:43:08 2025 +0530
+
+    cors change
+
+[33mcommit 0218e97e57fb86a24f3b7eb1f33af25cc1031357[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 11:38:05 2025 +0530
+
+    logout error
+
+[33mcommit d0c56c8cb71470ed8568912101cea16d08bc1165[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 11:28:29 2025 +0530
+
+    afdaf
+
+[33mcommit 56f1d911508094374e308d7304362b7f03e1a5bb[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 10:52:29 2025 +0530
+
+    change in mongo db url
+
+[33mcommit 68a65f4573568c37160eba875074c3b615dc5e00[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 10:36:12 2025 +0530
+
+    chnage in api url of logout
+
+[33mcommit f0d3f22979df602c296cd800af01aa1c8535b54e[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 00:33:36 2025 +0530
+
+    logout error
+
+[33mcommit e0694c439c045e34d41bc0a14605547c906e7276[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Mon Aug 4 00:30:15 2025 +0530
+
+    chnage in logout endpoint
+
+[33mcommit af5250c46ce0b9b96363065b9645354c699d1841[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sun Aug 3 23:45:07 2025 +0530
+
+    chnage in mongo uri
+
+[33mcommit 2cac7711fad58148e74ad3338cdaf08b58862fe1[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sun Aug 3 23:21:45 2025 +0530
+
+    chnage in url from which req is comming
+
+[33mcommit ebc33517d196567454b6f3ea2b39ef6b8582cc0e[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sun Aug 3 23:17:50 2025 +0530
+
+    chnage in packages
+
+[33mcommit 6b833c422bcb3b4300cd1dae1ed8e316f68d04a4[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sun Aug 3 23:08:32 2025 +0530
+
+    some package.json chnage
+
+[33mcommit e03535f157ff7a8e4de12e10dc3d9b08a354ae6c[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sun Aug 3 22:47:24 2025 +0530
+
+    frontend builded
+
+[33mcommit 2671255c8cad12b752cfc9ce39ab0dbbcbb5dc9d[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sun Aug 3 22:37:04 2025 +0530
+
+    added get route
+
+[33mcommit 7a795a045ed8ff42b19993bc0b3bb7c9e7687793[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sun Aug 3 22:33:07 2025 +0530
+
+    redis url change
+
+[33mcommit b11226b84870d543b5d832904cb4b8d2a7157209[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sun Aug 3 21:56:33 2025 +0530
+
+    delete unnecessary files
+
+[33mcommit c2766fab6f09c71803444873ce2f4d3c1aadab7d[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sat Jun 28 22:54:54 2025 +0530
+
+    folder format change
+
+[33mcommit 39c62f9ead9baf256560b8775c592dbb2c17e2e9[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sat Jun 28 20:15:53 2025 +0530
+
+    redis
+
+[33mcommit 1d6c70a32227b0d421c8290f5b6556831b98b625[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Sat May 17 13:58:44 2025 +0530
+
+    edit profile  photo updation
+
+[33mcommit 05e2b9bcfe8eb99d9383ec167504bee6c6ded6ed[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Thu May 15 23:43:04 2025 +0530
+
+    redis changes
+
+[33mcommit 073fa99a0c2379139470510fa6b7ea3e42da9c18[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Wed May 14 22:05:53 2025 +0530
+
+    added .gitignore
+
+[33mcommit db82bb9a78f167b0d6d58a6e87cde8df0d9a2c20[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Tue Apr 22 15:20:21 2025 +0530
+
+    all middleware  complete
+
+[33mcommit 026e4f301fc2ef5b76ac67ac1e78bbd374944f2d[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Tue Apr 22 12:29:50 2025 +0530
+
+    added middleware for user,doctor and admin
+
+[33mcommit e7275b290bd165cf999ded4ab9b75bf125cc0bed[m
+Merge: ab469f8 5e8ea52
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Thu Apr 17 04:12:50 2025 +0530
+
+    Merge branch 'hospital' of https://github.com/kharvadarshan/backend
+
+[33mcommit 5e8ea5221370eda31c575780b4d71e8174616ac0[m
+Author: use <sathvaraneel52@gmail.com>
+Date:   Thu Apr 17 04:09:44 2025 +0530
+
+    complete
+
+[33mcommit f4d4981b85b66d8c6bed63b970c9b3813fdb051c[m
+Author: use <sathvaraneel52@gmail.com>
+Date:   Thu Apr 17 04:06:37 2025 +0530
+
+    edit profile changes
+
+[33mcommit ab469f8ae0386c696eb4fb94efd5ad0480a5c237[m
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Thu Apr 17 04:00:34 2025 +0530
+
+    soft delete for specialization
+
+[33mcommit 686f032d944d64312e338fe52fd50e22ae0b7b5d[m
+Author: use <sathvaraneel52@gmail.com>
+Date:   Thu Apr 17 03:47:15 2025 +0530
+
+    doctor profile ui
+
+[33mcommit 8f826a9c2c2fb78e3741e5f0f264e54c8c541fd8[m
+Merge: 8b2d2d9 9d79e9a
+Author: kharvadarshan <150101961+kharvadarshan@users.noreply.github.com>
+Date:   Thu Apr 17 03:39:24 2025 +0530
+
+    Merge branch 'hospital'
