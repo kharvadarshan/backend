@@ -18,6 +18,14 @@ const doctorSchema = new mongoose.Schema({
   email: { type: String, required: true, allowNull: false },
   phoneno: { type:String,required:true,allowNull:false},
   image: { type: String, required: false },
+  password:{
+    type: String, required: true, allowNull: false
+  },
+  role:{
+    type: String,
+    enum: ['doctor'],
+    default: 'doctor'
+  },
   rating:{
     type:Number,
     min:1,

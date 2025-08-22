@@ -4,6 +4,19 @@ const AppointmentModel=require("../../model/appointment");
 const Doctor=require('../../model/doctor');
 const User = require('../../model/user');
 const Specialization = require("../../model/specialization");
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv')
+
+dotenv.config();
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 exports.gettingContact = async (req, res) => {
   try {
@@ -135,11 +148,60 @@ exports.unblockUser=async(req,res)=>{
 exports.addDoctor = async(req,res)=>{
   try
   {  
-    const formData = req.body;
-     const newDoctor = new Doctor(formData);
-      const savedDoctor = await newDoctor.save();
+    const { formData }=req.body;
+    const generatedPassword = crypto.randomBytes(8).toString('hex');
+    
+    const hashedPassword = await bcrypt.hash(generatedPassword, 12);
+    const doctorData = {
+      ...formData,
+      password: hashedPassword
+    };
+
+    const newDoctor = new Doctor(doctorData);
+    const savedDoctor = await newDoctor.save();
+   
+   
   if(savedDoctor){
-     return res.status(201).json({ok:true,doctor:savedDoctor});
+    try {
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: formData.email,
+        subject: 'Your Doctor Portal Login Credentials',
+        html: `
+          <h2>Welcome to Our Medical Portal!</h2>
+          <p>Dear Dr. ${formData.name},</p>
+          <p>Your account has been successfully created.</p>
+          <p><strong>Login Credentials:</strong></p>
+          <p><strong>Email:</strong> ${formData.email}</p>
+          <p><strong>Password:</strong> ${generatedPassword}</p>
+          <p><strong>Login URL:</strong> ${process.env.FRONTEND_URL}/login</p>
+          <br/>
+          <p>Please change your password after first login.</p>
+          <p>Best regards,<br/>Medical Team</p>
+        `
+      };
+
+      await transporter.sendMail(mailOptions);
+      
+      return res.status(201).json({
+        ok: true,
+        doctor: savedDoctor,
+        message: 'Doctor added successfully. Credentials sent via email.'
+      });
+
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      // Still return success but warn about email failure
+      return res.status(201).json({
+        ok: true,
+        doctor: savedDoctor,
+        warning: 'Doctor added but email sending failed',
+        credentials: {
+          email: formData.email,
+          password: generatedPassword
+        }
+      });
+    }
   }else
   {
      return res.status(400).json({ok:false});

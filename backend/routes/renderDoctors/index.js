@@ -15,13 +15,13 @@ router.put('/doctors/:id', doctorController.updateDoctor);
 router.delete('/doctors/:id', doctorController.deleteDoctor);
 
 
-// router.post('/appointments',appointmentController.bookAppointment);
-// router.get('/timeslots',getTimeSlots);
+router.post('/appointments',appointmentController.bookAppointment);
+router.get('/timeslots',getTimeSlots);
 router.post('/contact', isAdmin,contactController.createContact);
 
 
-// router.post('/getAppointmentByDoctorId',appointmentController.getAllAppointmentsByDoctorId);
-// router.post('/getAppointmentByPatientId',appointmentController.getAllAppointmentsByPatientId);
+router.post('/getAppointmentByDoctorId',appointmentController.getAllAppointmentsByDoctorId);
+router.post('/getAppointmentByPatientId',appointmentController.getAllAppointmentsByPatientId);
 
 
 module.exports = router;

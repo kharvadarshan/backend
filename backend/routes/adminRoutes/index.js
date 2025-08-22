@@ -25,7 +25,7 @@ router.delete('/blockUser/:id', isAdmin,blockUser);
 router.get('/unblockUser/:id', isAdmin,unblockUser);
 router.post('/addDoctor', isAdmin,addDoctor);
 router.post('/addSpecialization', isAdmin,addSpecialization);
-router.get('/getSpecialization', isAdminOrUser,getSpecialization);
+router.get('/getSpecialization',getSpecialization);
 router.delete('/deleteSpecialization/:id', isAdmin,deleteSpecialization);
 
 
