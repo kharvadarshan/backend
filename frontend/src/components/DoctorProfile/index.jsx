@@ -29,15 +29,16 @@ import {useToast} from '../../components/Notification/ToastProvider';
 const DoctorProfile = () => {
   const toast = useToast();
   const activeUser = useSelector((state) => state.user.user);
+  //console.log(activeUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [photo,setPhoto]=useState(`${import.meta.env.VITE_API_URL}${activeUser.doctor?.image}`);
   
   useEffect(()=>{
-    if(activeUser?.doctor?.image)
+    if(activeUser?.image)
     {
-      setPhoto(`${import.meta.env.VITE_API_URL}${activeUser?.doctor?.image}`);
+      setPhoto(`${import.meta.env.VITE_API_URL}${activeUser?.image}`);
     }
   },[photo]);
 
@@ -88,7 +89,7 @@ const DoctorProfile = () => {
             className="w-24 h-24 bg-gray-300 rounded-full mb-4"
             alt="Profile"
           />
-          <h1 className="text-xl font-bold">{activeUser.doctor?.name}</h1>
+          <h1 className="text-xl font-bold">{activeUser.name}</h1>
           <hr className="my-4 border-gray-700 w-full" />
         </div>
         <nav className="flex flex-col space-y-3">
@@ -150,11 +151,11 @@ const DoctorProfile = () => {
       {/* Main Content */}
       <div className="flex-1 p-4 overflow-y-auto mt-16 md:mt-0">
         <Routes>
-          <Route path="/"   element={<EditProfile doctor={activeUser.doctor}  onPhotoUpdate={handlePhotoUpdate}  />} />
-          <Route path="bookings" element={<BookedAppointment doctor={activeUser.doctor}/>} />
-          <Route path="manageschedule" element={<ManageSchedule />} />
+          <Route path="/"   element={<EditProfile doctor={activeUser}  onPhotoUpdate={handlePhotoUpdate}  />} />
+          <Route path="bookings" element={<BookedAppointment doctor={activeUser}/>} />
+          <Route path="manageschedule" element={<ManageSchedule doctor={activeUser} />} />
           <Route path="reports" element={<Reports />} />
-          <Route path="feedback" element={<Feedback doctor={activeUser.doctor}/>}></Route>
+          <Route path="feedback" element={<Feedback doctor={activeUser}/>}></Route>
         </Routes>
         <Outlet />
       </div>

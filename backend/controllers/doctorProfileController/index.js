@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 exports.addTimeSlot = async (req,res)=>{
     try{
       const {doctorId,slot}= req.body;
-     
+     console.log(req.body);
 
        const isoDate = `${slot.date}T00:00:00.000Z`;
        const transformedSlots =  {
@@ -137,7 +137,7 @@ exports.getAvailableTimeSlots = async(req,res)=>{
 exports.getDoctorById = async(req,res)=>{
     try{
           const {email }=req.body;
-          const result = await Doctor.find({contact:email});
+          const result = await Doctor.find({email:email});
           res.status(201).json({ok:true,result:result});
     }catch(error)
     {
@@ -317,6 +317,7 @@ exports.markCompleted = async(req,res)=>{
 exports.editProfile = async(req,res)=>{
     try{
           const formData= req.body;
+            console.log(formData);
           if(req.file)
           {
             formData.image = `/uploads/${req.file.filename}`;

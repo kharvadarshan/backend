@@ -148,7 +148,8 @@ exports.unblockUser=async(req,res)=>{
 exports.addDoctor = async(req,res)=>{
   try
   {  
-    const { formData }=req.body;
+    console.log(req.body);
+    const formData=req.body;
     const generatedPassword = crypto.randomBytes(8).toString('hex');
     
     const hashedPassword = await bcrypt.hash(generatedPassword, 12);
@@ -174,7 +175,7 @@ exports.addDoctor = async(req,res)=>{
           <p><strong>Login Credentials:</strong></p>
           <p><strong>Email:</strong> ${formData.email}</p>
           <p><strong>Password:</strong> ${generatedPassword}</p>
-          <p><strong>Login URL:</strong> ${process.env.FRONTEND_URL}/login</p>
+          <p><strong>Login URL:</strong> ${process.env.API_URL}/login</p>
           <br/>
           <p>Please change your password after first login.</p>
           <p>Best regards,<br/>Medical Team</p>

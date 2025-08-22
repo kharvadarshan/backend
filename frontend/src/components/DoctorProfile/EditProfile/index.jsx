@@ -3,15 +3,18 @@ import axiosClient from "../../../utils/axiosClient";
 import { toast } from "react-toastify";
 
 const EditProfile = ({ doctor, onPhotoUpdate }) => {
-  const [formData, setFormData] = useState("");
+
+  console.log(doctor.email);
+  const [formData, setFormData] = useState({});
 
   const fetchDoctor = async () => {
     try {
       const response = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById`,
-        { email: doctor.contact }
+        { email: doctor.email }
       );
       if (response.data.ok) {
+        console.log(response.data.result[0]);
         setFormData(response.data.result[0]);
       }
     } catch (error) {
@@ -44,14 +47,10 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+       console.log(formData);
       const response = await axiosClient.post(
-        "http://localhost:5001/doctorprofile/editProfile",
-        formData,
-        { 
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        `${import.meta.env.VITE_API_URL}/doctorprofile/editProfile`,
+        formData
       );
       if (response.data.ok) {
         toast.success("Profile updated Successfully...!", {
@@ -154,7 +153,7 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="email"
               name="contact"
-              value={formData.contact}
+              value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, contact: e.target.value })
               }
@@ -170,9 +169,9 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
             <input
               type="text"
               name="specialty"
-              value={formData.specialty}
+              value={formData.speciality}
               onChange={(e) =>
-                setFormData({ ...formData, specialty: e.target.value })
+                setFormData({ ...formData, speciality: e.target.value })
               }
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             />

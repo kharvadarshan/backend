@@ -5,7 +5,9 @@ import { useSelector } from "react-redux";
 import axiosClient from "../../../utils/axiosClient";
 import Swal from "sweetalert2";
 
-export default function DoctorSlotScheduler() {
+export default function DoctorSlotScheduler({doctor}) {
+
+  console.log(doctor);
   // const [selectedDate, setSelectedDate] = useState("");
   //const [startDate, setStartDate] = useState("");
   // const [endDate, setEndDate] = useState("");
@@ -36,7 +38,7 @@ export default function DoctorSlotScheduler() {
     try {
       const response = await axiosClient.get(
         `${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlots/${
-          activeUser._id
+          doctor.id
         }`
       );
 
@@ -52,7 +54,7 @@ export default function DoctorSlotScheduler() {
 
   const isValidTime = (start, end) => start < end;
 
-  const activeUser = useSelector((state) => state.user.user.doctor);
+  
 
   const addTimeSlot = async () => {
     setError("");
@@ -75,7 +77,7 @@ export default function DoctorSlotScheduler() {
         try {
           const response = await axiosClient.post(
             `${import.meta.env.VITE_API_URL}/doctorprofile/addSlot`,
-            { doctorId: activeUser._id, slot: slots }
+            { doctorId: doctor.id, slot: slots }
           );
 
           if (response.data.ok) {
@@ -118,7 +120,7 @@ export default function DoctorSlotScheduler() {
           const response = await axiosClient.post(
             `${import.meta.env.VITE_API_URL}/doctorprofile/addManySlot`,
             {
-              doctorId: activeUser._id,
+              doctorId: doctor.id,
               dates: allDates,
               slot: { start: startTime, end: endTime },
             }
@@ -207,7 +209,7 @@ export default function DoctorSlotScheduler() {
             {
               params: {
                 id: id,
-                doctorId: activeUser._id,
+                doctorId: doctor.id,
               },
             }
           );

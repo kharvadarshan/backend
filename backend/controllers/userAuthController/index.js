@@ -152,57 +152,92 @@ exports.logout =async (req,res)=>{
 
 
 exports. validateLogin = async (req,res)=>{
-   const {email,password}=req.body;
+   const {email,password,role}=req.body;
    try{
-      const userCredential = await User.findOne( {email}).lean();
 
-      if(!userCredential)
-      {
-         return res.status(400).json({ok:false, message: 'User Not Found.' });
-      }
+      if(role=='doctor'){
+        const  userCredential = await Doctor.findOne({email}).lean()
+        if(!userCredential)
+         {
+            return res.status(400).json({ok:false, message: 'User Not Found.' });
+         }
+         const isMatch = await bcrypt.compare(password,userCredential.password);
+                
+         if(!isMatch)
+         {
+            return res.status(401).json({ok:false,message:'Invalid Credentials.'});
+         } 
+         const user = {
+            id: userCredential._id,
+            email: userCredential.email,
+            name:userCredential.name,
+            role:'doctor',
+            image:userCredential.image || null
+           };
 
-      if(userCredential.isBloked)
-      {
-         return res.status(403).json({ok:false, message: 'User is Blocked.' });
-      }
-      
-            const isMatch = await bcrypt.compare(password,userCredential.password);
-          
-            if(!isMatch)
+           let redirect='/doctorprofile'
+
+           const token = JWT.sign(
+            { id: userCredential._id, email: userCredential.email, role: 'doctor' },
+            tokenSignature,
+            { expiresIn: '7d' }
+          );
+   
+   return res.status(201).json({
+     message:'Login successfully.',
+     ok:true,
+     user,
+     redirect,
+     token
+   });   
+
+      }else{
+         const userCredential = await User.findOne( {email}).lean();
+         if(!userCredential)
             {
-               return res.status(401).json({ok:false,message:'Invalid Credentials.'});
-            } 
-             
-             const user = {
-              id: userCredential._id,
-              email: userCredential.email,
-              name:userCredential.userName,
-              role: userCredential.role,
-              image:userCredential.image || null,
-              doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
-             };
-
-             let redirect='/';
-             if (userCredential.role === 'doctor') {
-              redirect = '/doctorprofile';
-            } else if (userCredential.role === 'admin') {
-              redirect = '/admin';
+               return res.status(400).json({ok:false, message: 'User Not Found.' });
             }
-
-            const token = JWT.sign(
-              { id: userCredential._id, email: userCredential.email, role: userCredential.role },
-              tokenSignature,
-              { expiresIn: '7d' }
-            );
-     
-     return res.status(201).json({
-       message:'Login successfully.',
-       ok:true,
-       user,
-       redirect,
-       token
-     });   
-     
+      
+            if(userCredential.isBloked)
+            {
+               return res.status(403).json({ok:false, message: 'User is Blocked.' });
+            }
+            
+                  const isMatch = await bcrypt.compare(password,userCredential.password);
+                
+                  if(!isMatch)
+                  {
+                     return res.status(401).json({ok:false,message:'Invalid Credentials.'});
+                  } 
+                   
+                   const user = {
+                    id: userCredential._id,
+                    email: userCredential.email,
+                    name:userCredential.userName,
+                    role: userCredential.role,
+                    image:userCredential.image || null,
+                    doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
+                   };
+      
+                   let redirect='/';
+                  if (userCredential.role === 'admin') {
+                    redirect = '/admin';
+                  }
+      
+                  const token = JWT.sign(
+                    { id: userCredential._id, email: userCredential.email, role: userCredential.role },
+                    tokenSignature,
+                    { expiresIn: '7d' }
+                  );
+           
+           return res.status(201).json({
+             message:'Login successfully.',
+             ok:true,
+             user,
+             redirect,
+             token
+           });   
+      }   
    }catch(error)
    {
       return  res.status(500).json({ok:false, message:'Internal server error.',error:error.message});
