@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import { PlusCircle, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 
 const SpecializationForm = () => {
   
@@ -13,9 +13,7 @@ const SpecializationForm = () => {
   const getSpecialization = async()=>{
     try
     {
-         const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getSpecialization`,{
-          withCredentials: true, // This sends cookies
-        });
+         const response = await axiosClient.get(`${import.meta.env.VITE_API_URL}/admin/getSpecialization`);
 
          if(response.data.ok)
          {
@@ -47,13 +45,10 @@ const SpecializationForm = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.post(
+          const response = await axiosClient.post(
             `${
               import.meta.env.VITE_API_URL
-            }/admin/addSpecialization`,{name:specialization},{
-              withCredentials: true, // This sends cookies
-             
-            }
+            }/admin/addSpecialization`,{name:specialization}
           );
 
           if (response.data.ok) {
@@ -90,12 +85,10 @@ const SpecializationForm = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(
+          const response = await axiosClient.delete(
             `${
               import.meta.env.VITE_API_URL
-            }/admin/deleteSpecialization/${spec}`,{
-              withCredentials: true,
-            }
+            }/admin/deleteSpecialization/${spec}`
           );
 
           if (response.data.ok) {

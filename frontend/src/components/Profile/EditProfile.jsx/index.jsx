@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -43,7 +43,7 @@ const EditProfile = ({isSidebarOpen}) => {
   //       `${import.meta.env.VITE_API_URL}/profile/edit`,
   //       { id: activeUser.id },{withCredentials:true}
   //     );
-
+  //
   //     if (response.data.ok) {
   //       setUser(response.data.result[0]);
   //     }
@@ -70,11 +70,10 @@ const EditProfile = ({isSidebarOpen}) => {
         formData.append('image', photoFile); // Append the file
       }
     try {
-      const response = await axios.post(
+      const response = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/profile/editProfile`,
         formData,
         {
-          withCredentials:true,
           headers: {
             "Content-Type": "multipart/form-data",
           },

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -26,7 +26,7 @@ const SignUp = () => {
     //    setMessage('Passwords do not match');
     //  }else{
     try {
-      const response = await axios.post(
+      const response = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/user/sendOTP`,
         { email: formData.email }
       );
@@ -43,13 +43,13 @@ const SignUp = () => {
   const verifyOTPAndRegister = async (e) => {
     e.preventDefault();
     try {
-      const verifyResponse = await axios.post(
+      const verifyResponse = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/user/verifyOTP`,
         { email: formData.email, otp: otp }
       );
       if (verifyResponse.data.ok) {
         try {
-          const response = await axios.post(
+          const response = await axiosClient.post(
             `${import.meta.env.VITE_API_URL}/user/signup`,
             formData
           );

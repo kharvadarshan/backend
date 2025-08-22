@@ -3,6 +3,7 @@ import "./index.css";
 import { useState, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
@@ -26,19 +27,13 @@ const NavBar = () => {
 
   const logout = async () => {
     try {
-      const result = await axios.get(
-        `${import.meta.env.VITE_API_URL}/user/logout`,
-        null,
-        {
-          withCredentials: true,
-        }
+      const result = await axiosClient.get(
+        `${import.meta.env.VITE_API_URL}/user/logout`
       );
       if (result.data.ok) {
-        // toast.success("Logout Successfully...!", {
-        //   position: "top-right",
-        // });
         toast("success", "Logout Successfully...!");
-        // localStorage.removeItem("token");
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetRole());

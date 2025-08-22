@@ -10,7 +10,7 @@ import {
   faRightFromBracket,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { useDispatch, useSelector } from "react-redux";
 import { resetIsLogin, resetRole } from "../../slices/loginSlice.jsx";
 import { resetUser } from "../../slices/userAuthSlice.jsx";
@@ -31,12 +31,8 @@ const Profile = () => {
   const logout = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.get(
-        `${import.meta.env.VITE_API_URL}/user/logout`,
-        null,
-        {
-          withCredentials: true,
-        }
+      const result = await axiosClient.get(
+        `${import.meta.env.VITE_API_URL}/user/logout`
       );
       if (result.data.ok) {
         // toast.success("Logout Successfully...!", { position: "top-right" });

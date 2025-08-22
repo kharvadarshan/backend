@@ -10,18 +10,18 @@ const env = require('dotenv')
 env.config();
 
 
-const redisClient = redis.createClient({
-   url: process.env.REDIS_URL
-});
+// const redisClient = redis.createClient({
+//    url: process.env.REDIS_URL
+// });
 
-redisClient.on("error", (err) => {
-   console.error("Redis connection error:", err);
-});
+// redisClient.on("error", (err) => {
+//    console.error("Redis connection error:", err);
+// });
 
-redisClient.connect().then(() => {
-   console.log("Connected to Redis!");
-   redisClient.set("aad", "ada");
-});
+// redisClient.connect().then(() => {
+//    console.log("Connected to Redis!");
+//    redisClient.set("aad", "ada");
+// });
 
 
 
@@ -173,37 +173,35 @@ exports. validateLogin = async (req,res)=>{
                return res.status(401).json({ok:false,message:'Invalid Credentials.'});
             } 
              
-              sessionUser= {
-               id: userCredential._id,
-               email: userCredential.email,
-               name:userCredential.userName,
-               role: userCredential.role,
-               image:userCredential.image || null,
-               doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
-              };
+             const user = {
+              id: userCredential._id,
+              email: userCredential.email,
+              name:userCredential.userName,
+              role: userCredential.role,
+              image:userCredential.image || null,
+              doctor: userCredential.role === 'doctor' ? await Doctor.findOne({contact:email}): null
+             };
 
-              req.session.user  = sessionUser;
+             let redirect='/';
+             if (userCredential.role === 'doctor') {
+              redirect = '/doctorprofile';
+            } else if (userCredential.role === 'admin') {
+              redirect = '/admin';
+            }
 
-              let redirect='/';
-              if (userCredential.role === 'doctor') {
-               redirect = '/doctorprofile';
-             } else if (userCredential.role === 'admin') {
-               redirect = '/admin';
-             }
-
-             
-            await new Promise((resolve, reject) => {
-                  req.session.save(err => {
-                  if (err) return reject(err);
-                  console.log("Session Saved:", req.sessionID);
-                  resolve();
-                } );
-            });
-
-
-            console.log(req.session.user);
-       
-     res.status(201).json({message:'Login successfully.',ok:true,user:req.session.user,redirect});   
+            const token = JWT.sign(
+              { id: userCredential._id, email: userCredential.email, role: userCredential.role },
+              tokenSignature,
+              { expiresIn: '7d' }
+            );
+     
+     return res.status(201).json({
+       message:'Login successfully.',
+       ok:true,
+       user,
+       redirect,
+       token
+     });   
      
    }catch(error)
    {

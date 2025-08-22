@@ -6,7 +6,7 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { ChevronDown, Trash2 } from "lucide-react";
 
 const BookedAppointment = ({ doctor }) => {
@@ -77,10 +77,10 @@ const BookedAppointment = ({ doctor }) => {
 
   const fetchAppointment = async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosClient.get(
         `${
           import.meta.env.VITE_API_URL
-        }/appointments/getAppointmentByDoctorId/${doctor._id}`,{withCredentials:true}
+        }/appointments/getAppointmentByDoctorId/${doctor._id}`
       );
       if (response.data.ok) {
         setUpcoming(response.data.upcomingAppointments);
@@ -108,10 +108,10 @@ const BookedAppointment = ({ doctor }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.get(
+          const response = await axiosClient.get(
             `${
               import.meta.env.VITE_API_URL
-            }/doctorprofile/acceptAppointment/${id}`,{withCredentials:true}
+            }/doctorprofile/acceptAppointment/${id}`
           );
 
           if (response.data.ok) {
@@ -142,10 +142,10 @@ const BookedAppointment = ({ doctor }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.get(
+          const response = await axiosClient.get(
             `${
               import.meta.env.VITE_API_URL
-            }/doctorprofile/rejectAppointment/${id}`,{withCredentials:true}
+            }/doctorprofile/rejectAppointment/${id}`
           );
 
           if (!response.data.ok) {
@@ -176,8 +176,8 @@ const BookedAppointment = ({ doctor }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/doctorprofile/markCompleted/${id}`,{withCredentials:true}
+          const response = await axiosClient.get(
+            `${import.meta.env.VITE_API_URL}/doctorprofile/markCompleted/${id}`
           );
 
           if (response.data.ok) {
@@ -229,12 +229,9 @@ const BookedAppointment = ({ doctor }) => {
         files.forEach((file) => formData.append("reports", file));
 
         try {
-          const response = await axios.post(
-            `${
-              import.meta.env.VITE_API_URL
-            }/doctorprofile/uploadReport/${appointmentId}`,
+          const response = await axiosClient.post(
+            `/doctorprofile/uploadReport/${appointmentId}`,
             formData,
-            // { withCredentials: true }
           );
           if (!response.data.ok) {
             Swal.showValidationMessage(
@@ -260,11 +257,10 @@ const BookedAppointment = ({ doctor }) => {
 
   const handleViewReport = async (appointmentId) => {
     try {
-      const response = await axios.get(
+      const response = await axiosClient.get(
         `${
           import.meta.env.VITE_API_URL
-        }/doctorprofile/viewReport/${appointmentId}`,
-        { withCredentials: true }
+        }/doctorprofile/viewReport/${appointmentId}`
       );
 
       if (response.data.ok) {
@@ -287,14 +283,6 @@ const BookedAppointment = ({ doctor }) => {
           `
           )
           .join("");
-        // reports.forEach((report) => {
-        //   const link = document.createElement('a');
-        //   link.href = report.url;
-        //   link.download = report.fileName; // Suggest filename for download
-        //   document.body.appendChild(link);
-        //   link.click();
-        //   document.body.removeChild(link);
-        // });
 
         Swal.fire({
           title: "Reports",
@@ -328,8 +316,8 @@ const BookedAppointment = ({ doctor }) => {
 
     if (confirm.isConfirmed) {
       try {
-        const res = await axios.delete(
-          `http://localhost:5001/appointments/deleteAppointment/${appointmentId}`,{withCredentials:true}
+        const res = await axiosClient.delete(
+          `/appointments/deleteAppointment/${appointmentId}`
         );
         if (res.data.ok) {
           Swal.fire("Deleted!", res.data.message, "success");

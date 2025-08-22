@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { toast } from "react-toastify";
 
 const EditProfile = ({ doctor, onPhotoUpdate }) => {
@@ -7,9 +7,9 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
 
   const fetchDoctor = async () => {
     try {
-      const response = await axios.post(
+      const response = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById`,
-        { email: doctor.contact },{withCredentials:true}
+        { email: doctor.contact }
       );
       if (response.data.ok) {
         setFormData(response.data.result[0]);
@@ -44,11 +44,10 @@ const EditProfile = ({ doctor, onPhotoUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      const response = await axiosClient.post(
         "http://localhost:5001/doctorprofile/editProfile",
         formData,
         { 
-          withCredentials:true,
           headers: {
             "Content-Type": "multipart/form-data",
           },

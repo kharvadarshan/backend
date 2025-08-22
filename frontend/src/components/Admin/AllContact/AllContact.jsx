@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 // import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const ContactList = () => {
@@ -15,8 +15,8 @@ const ContactList = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/admin/allcontacts`,{withCredentials:true}
+      const response = await axiosClient.get(
+        `${import.meta.env.VITE_API_URL}/admin/allcontacts`
       );
       const sortedContacts = response.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -32,8 +32,8 @@ const ContactList = () => {
       return;
 
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/allcontacts/${id}`,{withCredentials:true}
+      const response = await axiosClient.delete(
+        `${import.meta.env.VITE_API_URL}/api/allcontacts/${id}`
       );
       alert(response.data.message);
       fetchContacts();

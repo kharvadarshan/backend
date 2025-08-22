@@ -3,6 +3,7 @@ import { useState } from "react";
 // import { FaFacebook } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import "./style.scss";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -31,13 +32,14 @@ function LoginPage() {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post(
-        `${import.meta.env.VITE_API_URL}/user/login`,
-        formData,
-        { withCredentials: true }
+      const result = await axiosClient.post(
+        `/user/login`,
+        formData
       );
 
       if (result.data.ok) {
+        localStorage.setItem('token', result.data.token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.token}`;
         setMessage(result.data.message);
         dispatch(setIsLogin());
         dispatch(setRole(result.data.user.role));
@@ -49,7 +51,6 @@ function LoginPage() {
 
         }
          
-      
       } 
       if(!result.data.ok){
         setMessage(result.data.message);

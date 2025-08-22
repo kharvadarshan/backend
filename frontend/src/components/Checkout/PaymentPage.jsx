@@ -1,5 +1,5 @@
 import  { useState } from "react";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { Loader2, CreditCard } from "lucide-react";
 import { useSelector } from "react-redux";
 import {useLocation } from "react-router-dom";
@@ -23,11 +23,11 @@ const PaymentPage = () => {
     try {
       const {
         data: { key },
-      } = await axios.get("http://localhost:5001/pay/getkey");
+      } = await axiosClient.get(`${import.meta.env.VITE_API_URL}/pay/getkey`);
 
       const {
         data: { order },
-      } = await axios.post("http://localhost:5001/pay/checkout", {
+      } = await axiosClient.post(`${import.meta.env.VITE_API_URL}/pay/checkout`, {
         amount,
       });
 
@@ -51,7 +51,7 @@ const PaymentPage = () => {
         //callback_url: "http://localhost:5001/pay/paymentverification",
         handler: async function(response) {
           try {
-            await axios.post("http://localhost:5001/pay/paymentverification", {
+            await axiosClient.post(`${import.meta.env.VITE_API_URL}/pay/paymentverification`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,

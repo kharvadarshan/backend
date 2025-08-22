@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { Star } from "lucide-react";
 
 const Feedback = ({ doctor }) => {
@@ -15,10 +15,10 @@ const Feedback = ({ doctor }) => {
 
   const fetchFeedback = async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosClient.get(
         `${
           import.meta.env.VITE_API_URL
-        }/appointments/getAppointmentByDoctorId/${doctor._id}`,{withCredentials:true}
+        }/appointments/getAppointmentByDoctorId/${doctor._id}`
       );
 
       if (response.data.ok) {
@@ -109,81 +109,3 @@ const Feedback = ({ doctor }) => {
 };
 
 export default Feedback;
-
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import { Star } from "lucide-react";
-
-// const Feedback = ({ doctor }) => {
-//   const [feedback, setFeedback] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     if (doctor?._id) {
-//       fetchFeedback();
-//     }
-//   }, [doctor?._id]);
-
-//   const fetchFeedback = async () => {
-//     try {
-//       setLoading(true);
-//       const response = await axios.get(
-//         `${import.meta.env.VITE_API_URL}/appointments/getAppointmentByDoctorId/${doctor._id}`
-//       );
-
-//       if (response.data.ok) {
-//         setFeedback(response.data.result);
-//       } else {
-//         setError("No feedback found.");
-//       }
-//     } catch (error) {
-//       console.error("Error fetching feedback:", error);
-//       setError("Failed to load feedback.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const renderRating = (rating) => (
-//     <div className="flex items-center gap-1">
-//       {[...Array(5)].map((_, index) => (
-//         <Star
-//           key={index}
-//           size={16}
-//           className={index < rating ? "text-yellow-500" : "text-gray-300"}
-//           fill={index < rating ? "currentColor" : "none"}
-//         />
-//       ))}
-//     </div>
-//   );
-
-//   return (
-//     <div className="p-4 max-w-4xl mx-auto">
-//       <h2 className="text-2xl font-bold mb-4">Patient Feedback</h2>
-//       {loading ? (
-//         <p className="text-gray-500">Loading feedback...</p>
-//       ) : error ? (
-//         <p className="text-red-500">{error}</p>
-//       ) : feedback.length === 0 ? (
-//         <p className="text-gray-500">No feedback available.</p>
-//       ) : (
-//         <div className="space-y-4">
-//           {feedback.map((item) => (
-//             <div
-//               key={item._id}
-//               className="flex flex-col p-4 bg-white rounded-lg shadow-md border"
-//             >
-//               <p className="font-semibold">{item?.patientForm?.patientname || "Anonymous"}</p>
-//               <p className="text-gray-600">{item?.patientForm?.email || "No email provided"}</p>
-//               <div className="my-2">{renderRating(item?.feedbackForm?.rating || 0)}</div>
-//               <p className="text-gray-700">{item?.feedbackForm?.feedback || "No comment provided"}</p>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Feedback;

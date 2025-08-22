@@ -17,7 +17,7 @@ const upload = multer({
 
 const {isUser}=require('../../middlewares/userMiddleware');
 
-router.post('/edit',isUser,getUserDetailsById);
+router.post('/edit',getUserDetailsById);
 router.post('/editProfile',upload.single('image'),isUser,editProfile);
 router.get('/viewReport/:appointmentId',isUser,viewReport);
 

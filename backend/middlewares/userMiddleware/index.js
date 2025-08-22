@@ -5,6 +5,8 @@ const User = require('../../model/user');
 
 exports.isUser = async (req, res, next) => {
   try {
+
+    console.log(req.session.user);
     // Check session first
     if (req.session?.user?.role === 'user') {
       return next();

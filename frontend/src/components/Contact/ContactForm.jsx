@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import {useToast} from '../Notification/ToastProvider'
 const ContactForm = () => {
     const toast = useToast();
@@ -16,17 +16,14 @@ const ContactForm = () => {
     e.target.message.value = "";
 
     try {
-      const response = await axios.post(
+      const response = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/api/contact`,
         formData
       );
 
       if (response.status === 201) {
-        // 201 for successful creation
-        // alert("Message sent successfully!");
         toast("success","Message Sent Successfully...!");
       } else {
-        // alert("Failed to send message.");
         toast("success","Failed to send message...!");
       }
     } catch (error) {

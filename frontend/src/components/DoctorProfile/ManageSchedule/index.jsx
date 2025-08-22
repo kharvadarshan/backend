@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { format, eachDayOfInterval, parseISO } from "date-fns";
 import { Trash2, Plus, Calendar, Clock } from "lucide-react";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import Swal from "sweetalert2";
 
 export default function DoctorSlotScheduler() {
@@ -34,10 +34,10 @@ export default function DoctorSlotScheduler() {
 
   const getAvailableTimeSlots = async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosClient.get(
         `${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlots/${
           activeUser._id
-        }`,{withCredentials:true}
+        }`
       );
 
       if (response.data.ok) {
@@ -73,9 +73,9 @@ export default function DoctorSlotScheduler() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.post(
+          const response = await axiosClient.post(
             `${import.meta.env.VITE_API_URL}/doctorprofile/addSlot`,
-            { doctorId: activeUser._id, slot: slots },{withCredentials:true}
+            { doctorId: activeUser._id, slot: slots }
           );
 
           if (response.data.ok) {
@@ -115,13 +115,13 @@ export default function DoctorSlotScheduler() {
             end: parseISO(endDate),
           }).map((day) => format(day, "yyyy-MM-dd"));
 
-          const response = await axios.post(
+          const response = await axiosClient.post(
             `${import.meta.env.VITE_API_URL}/doctorprofile/addManySlot`,
             {
               doctorId: activeUser._id,
               dates: allDates,
               slot: { start: startTime, end: endTime },
-            },{withCredentials:true}
+            }
           );
 
           if (response.data.ok) {
@@ -202,10 +202,9 @@ export default function DoctorSlotScheduler() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.get(
+          const response = await axiosClient.get(
             `${import.meta.env.VITE_API_URL}/doctorprofile/deleteTimeSlot`,
             {
-              withCredentials:true,
               params: {
                 id: id,
                 doctorId: activeUser._id,

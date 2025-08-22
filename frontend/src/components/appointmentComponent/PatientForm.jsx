@@ -1,6 +1,6 @@
 import {} from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import {} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 // import { toast } from "react-toastify";
@@ -38,7 +38,7 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
   useEffect(() => {
     const fetchDoctor = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosClient.get(
           `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${appointmentData.doctorId}`
         );
         if(response.data.ok)
@@ -60,7 +60,7 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
   const handleSubmit = async (appointment) => {
 
     try {
-      const response = await axios.post(
+      const response = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/appointments/appointments`,
         appointment
       );

@@ -40,14 +40,12 @@ app.use(
           saveUninitialized: false,
           name:'connect.sid',
           cookie:{
-            domain:process.env.COOKIE_DOMAIN,
             httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
              maxAge: 24 * 60 * 60 * 1000, 
           },
           store:new MongoStore({ uri: process.env.MONGODB_URL,
-               collection: 'sessions',
            }),
           
       })

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Trash2, Ban, Unlock } from "lucide-react";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import Swal from "sweetalert2";
 
 
@@ -28,10 +28,8 @@ const Patients = () => {
             }).then(async (result) => {
               if (result.isConfirmed) {
                 try {
-                  const response = await axios.delete(
-                    `${import.meta.env.VITE_API_URL}/admin/blockUser/${id}`,{
-                      withCredentials: true,
-                    }
+                  const response = await axiosClient.delete(
+                    `${import.meta.env.VITE_API_URL}/admin/blockUser/${id}`
                   );
         
                   if (response.data.ok) {
@@ -64,10 +62,8 @@ const Patients = () => {
                 if (result.isConfirmed) {
                   try {
                   
-                    const response = await axios.get(
-                      `${import.meta.env.VITE_API_URL}/admin/unblockUser/${id}`,{
-                        withCredentials: true, // This sends cookies
-                      }
+                    const response = await axiosClient.get(
+                      `${import.meta.env.VITE_API_URL}/admin/unblockUser/${id}`
                     );
           
                     if (response.data.ok) {
@@ -90,9 +86,7 @@ const Patients = () => {
   const getAllPatients = async()=>{
      try
      {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllPatient`,{
-        withCredentials: true, 
-      });
+      const response = await axiosClient.get(`${import.meta.env.VITE_API_URL}/admin/getAllPatient`);
 
       if(response.data.ok)
       {

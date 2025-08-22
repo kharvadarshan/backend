@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { motion } from "framer-motion";
 
 const DoctorDetails = () => {
@@ -20,7 +20,7 @@ const DoctorDetails = () => {
       }
 
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/doctors/${id}`);
+        const response = await axiosClient.get(`${import.meta.env.VITE_API_URL}/api/doctors/${id}`);
         setDoctor(response.data);
       } catch (error) {
         console.error("Error fetching doctor details:", error);

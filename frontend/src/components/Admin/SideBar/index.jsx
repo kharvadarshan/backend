@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { useToast } from "../../Notification/ToastProvider";
 import { useDispatch } from "react-redux";
 import { resetIsLogin, resetRole } from "../../../slices/loginSlice";
@@ -38,10 +38,8 @@ const Sidebar = () => {
 
   const logout = async () => {
     try {
-      const result = await axios.get(
-        `${import.meta.env.VITE_API_URL}/user/logout`,
-        null,
-        { withCredentials: true }
+      const result = await axiosClient.get(
+        `${import.meta.env.VITE_API_URL}/user/logout`
       );
       if (result.data.ok) {
         toast("success", "Logout Successfully...!");

@@ -1,5 +1,5 @@
 import DatePicker from "react-datepicker";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { useState } from "react";
 import { useEffect } from "react";
 const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) => {
@@ -36,7 +36,7 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
 
     try
     {
-          const response = await axios.post(`${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlot`,{
+          const response = await axiosClient.post(`${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlot`,{
                 doctorId:appointmentData?.doctorId,
                 date:formattedDate,
           });

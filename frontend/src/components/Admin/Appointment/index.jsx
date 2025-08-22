@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { ChevronDown } from "lucide-react";
 
 const Appointment = () => {
@@ -19,10 +19,8 @@ const Appointment = () => {
 
   const getAllAppointments = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/admin/getAllAppointment`, {
-          withCredentials: true, 
-        }
+      const response = await axiosClient.get(
+        `${import.meta.env.VITE_API_URL}/admin/getAllAppointment`
       );
       if (response.data.Ok) {
         setAppointments(response.data.result);

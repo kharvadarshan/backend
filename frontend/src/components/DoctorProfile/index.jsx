@@ -13,6 +13,7 @@ import { useState,useEffect } from "react";
 import EditProfile from "./EditProfile";
 import ManageSchedule from "./ManageSchedule";
 import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resetIsLogin, resetRole } from "../../slices/loginSlice";
@@ -47,17 +48,13 @@ const DoctorProfile = () => {
   const logout = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.get(
-        `${import.meta.env.VITE_API_URL}/user/logout`,
-        null,
-        {
-          withCredentials: true,
-        }
+      const result = await axiosClient.get(
+        `${import.meta.env.VITE_API_URL}/user/logout`
       );
       if (result.data.ok) {
-        // toast.success("Logout Successfully...!", { position: "top-right" });
         toast("success","Logout Successfully...!");
-        // localStorage.removeItem("token");
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
         dispatch(resetIsLogin());
         dispatch(resetUser());
         dispatch(resetDoctor());

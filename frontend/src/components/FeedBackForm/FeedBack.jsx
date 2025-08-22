@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 // import { toast } from "react-toastify";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { useToast } from "../Notification/ToastProvider";
 
 const FeedbackForm = ({appointmentId,onSubmitSuccess}) => {
@@ -19,7 +19,7 @@ const FeedbackForm = ({appointmentId,onSubmitSuccess}) => {
     e.preventDefault();
     console.log(feedbackForm);
     try {
-     const response = await axios.post(`${import.meta.env.VITE_API_URL}/appointments/giveFeedback`,feedbackForm,{withCredentials:true});
+     const response = await axiosClient.post(`${import.meta.env.VITE_API_URL}/appointments/giveFeedback`,feedbackForm);
      
       if(response.data.ok)
         {

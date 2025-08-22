@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { motion } from "framer-motion";
 import { Trash2, Ban, Unlock, ChevronDown } from "lucide-react";
 
@@ -21,12 +21,7 @@ const DoctorList = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/doctors`,{
-        withCredentials: true, // This sends cookies
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      } );
+      const response = await axiosClient.get(`${import.meta.env.VITE_API_URL}/admin/doctors`);
       setDoctors(response.data);
     } catch (error) {
       console.error("Error fetching doctors:", error);
@@ -40,12 +35,7 @@ const DoctorList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/doctors/${id}`,{
-        withCredentials: true, // This sends cookies
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      await axiosClient.delete(`${import.meta.env.VITE_API_URL}/api/doctors/${id}`);
       fetchDoctors();
     } catch (err) {
       console.error("Delete error:", err);
@@ -306,72 +296,3 @@ const DoctorList = () => {
 };
 
 export default DoctorList;
-
-// import { useEffect, useState } from "react";
-// import axios from 'axios';
-
-// const DoctorList=()=>{
-//     const [doctors,setDoctors] = useState();
-//     useEffect(()=>{
-//         fetchDoctors();
-//     },[]);
-//     const fetchDoctors = async () => {
-//         try {
-//           const response = await axios.get("http://localhost:5001/api/doctors");
-//           setDoctors(response.data);
-//         } catch (error) {
-//           console.error("Error fetching doctors:", error);
-//         }
-//       };
-//     return(
-//         <>
-//            <div className="container mx-auto p-4">
-//     <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Doctor List</h1>
-//     <div className="overflow-x-auto">
-//       <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-//         <thead className="bg-gray-800 text-white">
-//           <tr>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">ID</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Name</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Specialty</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Specialization</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Experience</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Degree</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Fees</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Address</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">About</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Field</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Contact</th>
-//             <th className="py-3 px-4 text-left text-sm font-semibold">Image</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//         {
-
-//          doctors &&   doctors.map((doctor,key)=>(
-//           <tr className="border-b hover:bg-gray-50" key={key}>
-//             <td className="py-3 px-4 text-gray-700">{doctor.id}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.name}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.speciality}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.specialization}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.experience}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.degree}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.fees}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.address}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.about}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.field}</td>
-//             <td className="py-3 px-4 text-gray-700">{doctor.contact}</td>
-//             <td className="py-3 px-4">
-//               <img src="../../../public/assets/doctor.png" alt="Dr. Ravi Verma" className="w-16 h-16 object-cover rounded-full"/>
-//             </td>
-//           </tr>
-//         ))
-//         }
-//         </tbody>
-//       </table>
-//     </div>
-//   </div>
-//         </>
-//     )
-// }
-// export default DoctorList

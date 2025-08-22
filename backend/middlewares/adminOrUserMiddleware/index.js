@@ -2,12 +2,25 @@
 
 exports.isAdminOrUser=async(req,res,next)=>{
    try{
+     const authHeader = req.header('Authorization');
+     const token = authHeader && authHeader.startsWith('Bearer ')
+       ? authHeader.split(' ')[1]
+       : null;
 
-    if(req.session?.user?.role !== 'admin' && req.session?.user?.role !== 'user')
-    {
-         return res.status(401).json({ message: 'Not authenticated' }); 
-    }
-       next();
+     if (!token) {
+       return res.status(401).json({ message: 'Not authenticated' }); 
+     }
+
+     const jwt = require('jsonwebtoken');
+     const { tokenSignature } = require('../../utils/global');
+     const decoded = jwt.verify(token, tokenSignature);
+     req.user = decoded;
+
+     if(decoded?.role !== 'admin' && decoded?.role !== 'user')
+     {
+          return res.status(403).json({ message: 'Forbidden' }); 
+     }
+        next();
      
    }catch(error)
    {

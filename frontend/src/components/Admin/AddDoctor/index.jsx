@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import Swal from "sweetalert2";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 const AddDoctor = () => {
   const fieldData = [
     { id: "name", label: "Full Name" },
@@ -61,9 +61,9 @@ const AddDoctor = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.post(
+          const response = await axiosClient.post(
             `${import.meta.env.VITE_API_URL}/admin/addDoctor`,
-            formData,{withCredentials:true}
+            formData
           );
 
           if (response.data.ok) {

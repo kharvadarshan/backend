@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {  ChevronDown } from "lucide-react";
 import { } from "react-toastify";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { useSelector } from "react-redux";
 
 const MyAppointments = () => {
@@ -19,7 +19,7 @@ const MyAppointments = () => {
   const getDeletedAppointmentByPatientId = async()=>{
     try
     {
-         const response = await axios.get(`${import.meta.env.VITE_API_URL}/appointments/getDeletedAppointmentByPatientId/${activeUser.id}`,{withCredentials:true});
+         const response = await axiosClient.get(`/appointments/getDeletedAppointmentByPatientId/${activeUser.id}`);
 
          if(response.data.ok)
          {

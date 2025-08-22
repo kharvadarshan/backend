@@ -27,7 +27,7 @@ exports.editProfile = async(req,res)=>{
 
 exports.getUserDetailsById = async(req,res)=>{
     try{
-
+        
         const {id}=req.body;
         const result = await User.find({_id:id});
         res.status(201).json({ok:true,result:result});

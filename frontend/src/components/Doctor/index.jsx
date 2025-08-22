@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient";
 import { useNavigate } from "react-router-dom";
 import {Star} from "lucide-react";
 
@@ -20,11 +20,12 @@ const DoctorList = () => {
 
 
   
+  
 
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/doctors`,{withCredentials:true});
+      const response = await axiosClient.get(`${import.meta.env.VITE_API_URL}/api/doctors`);
       setDoctors(response.data);
     } catch (error) {
       console.error("Error fetching doctors:", error);
@@ -37,9 +38,7 @@ const DoctorList = () => {
   const getSpecialization = async()=>{
       try
       {
-           const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getSpecialization`,{
-            withCredentials: true, // This sends cookies
-          });
+           const response = await axiosClient.get(`${import.meta.env.VITE_API_URL}/admin/getSpecialization`);
   
            if(response.data.ok)
            {

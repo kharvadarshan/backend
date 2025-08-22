@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, ChevronDown, Info, FileText, Star, X } from "lucide-react";
-import axios from "axios";
+import axiosClient from "../../../utils/axiosClient";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import FeedBackForm from "../../FeedBackForm/FeedBack";
@@ -23,10 +23,10 @@ const MyAppointments = () => {
   // get all apointment of patient
   const getAppointmentByPatientId = async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosClient.get(
         `${
           import.meta.env.VITE_API_URL
-        }/appointments/getAppointmentByPatientId/${activeUser.id}`,{withCredentials:true}
+        }/appointments/getAppointmentByPatientId/${activeUser.id}`
       );
 
       if (response.data.ok) {
@@ -48,10 +48,10 @@ const MyAppointments = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(
+          const response = await axiosClient.delete(
             `${
               import.meta.env.VITE_API_URL
-            }/appointments/deleteAppointment/${appointmentId}`,{withCredentials:true}
+            }/appointments/deleteAppointment/${appointmentId}`
           );
 
           if (response.data.ok) {
@@ -77,9 +77,8 @@ const MyAppointments = () => {
 
   const handleViewReport = async (appointmentId) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/profile/viewReport/${appointmentId}`,
-        { withCredentials: true }
+      const response = await axiosClient.get(
+        `${import.meta.env.VITE_API_URL}/profile/viewReport/${appointmentId}`
       );
 
       if (response.data.ok) {
@@ -104,14 +103,6 @@ const MyAppointments = () => {
                `
           )
           .join("");
-        // reports.forEach((report) => {
-        //   const link = document.createElement('a');
-        //   link.href = report.url;
-        //   link.download = report.fileName; // Suggest filename for download
-        //   document.body.appendChild(link);
-        //   link.click();
-        //   document.body.removeChild(link);
-        // });
 
         Swal.fire({
           title: "Reports",
@@ -343,7 +334,7 @@ const MyAppointments = () => {
 
   const payNow = async (appointment) => {
     try {
-      const response = await axios.get(
+      const response = await axiosClient.get(
         `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${
           appointment.doctorId
         }`

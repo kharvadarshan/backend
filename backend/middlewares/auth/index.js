@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const tokenSignature = require('../../utils/global')
+const { tokenSignature } = require('../../utils/global')
 const authenticateToken = (req, res, next) => {
   // Get token from the Authorization header
   // const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
@@ -13,7 +13,7 @@ const authenticateToken = (req, res, next) => {
 
   try {
     // Verify token
-    const decoded = jwt.verify(token,global.tokenSignature );
+    const decoded = jwt.verify(token, tokenSignature );
 
     // Attach the user to the request object
     req.user = decoded;
