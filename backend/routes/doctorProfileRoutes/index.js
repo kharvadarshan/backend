@@ -34,6 +34,7 @@ const  {
  }  = require('../../controllers/doctorProfileController');
 
 const {isDoctor }= require('../../middlewares/doctorMiddleware');
+const {isUser} = require('../../middlewares/userMiddleware');
 
 router.post('/addSlot',isDoctor,addTimeSlot);
 router.post('/addManySlot',isDoctor,addManyTimeSlot);

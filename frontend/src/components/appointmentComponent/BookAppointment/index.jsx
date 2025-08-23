@@ -186,13 +186,16 @@ import { useNavigate , useLocation  } from "react-router-dom";
 // import axios from "axios";
 import { useSelector } from "react-redux";
 import PatientForm from "../../appointmentComponent/PatientForm";
-import CustomDatePicker from "../../appointmentComponent/DatePicker";
+import CustomDatePicker from "../../appointmentComponent/DatePick";
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
   const activeUser = useSelector((state)=>state.user.user);
+  console.log(activeUser);
   const { state } = useLocation();
   const selectedDoctor = state?.doctor;
+
+  console.log(selectedDoctor);
  
   // const [isConfirmed, setIsConfirmed] = useState(false);
   const navigate = useNavigate();

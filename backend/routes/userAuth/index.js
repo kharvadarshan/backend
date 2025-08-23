@@ -4,12 +4,8 @@ const { registerUser,validateLogin,logout,sendOTP, verifyOTP } = require('../../
 const auth = require('../../middlewares/auth');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
-
-
-
-
-
-
+const { isUser } = require('../../middlewares/userMiddleware/index.js');
+const {getTimeSlots,getDoctorById,getDoctor} = require('../../controllers/doctorProfileController');
 router.use(express.urlencoded({ extended: true }));
 
 const otpRateLimiter = rateLimit({
@@ -24,6 +20,9 @@ router.post('/signup',registerUser);
 router.post('/sendOTP',otpRateLimiter,sendOTP);
 router.post('/verifyOTP',verifyOTP);
 router.get('/logout',logout);
+router.post('/getTimeSlot',isUser,getTimeSlots);
+router.post('/getDoctorById',isUser,getDoctorById);
+router.get('/getDoctorById/:id',isUser,getDoctor);
 
 // router.post('/ask',async (req, res) => {
 //     const { message } = req.body;

@@ -39,7 +39,7 @@ const PatientForm = ({ appointmentData, setAppointmentData }) => {
     const fetchDoctor = async () => {
       try {
         const response = await axiosClient.get(
-          `${import.meta.env.VITE_API_URL}/doctorprofile/getDoctorById/${appointmentData.doctorId}`
+          `${import.meta.env.VITE_API_URL}/user/getDoctorById/${appointmentData.doctorId}`
         );
         if(response.data.ok)
         {

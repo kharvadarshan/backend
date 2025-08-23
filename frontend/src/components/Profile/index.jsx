@@ -49,7 +49,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+    <div className="flex flex-col md:flex-row min-h-screen  bg-gray-100">
       {/* Mobile Sidebar Toggle */}
       {/* <button
         className={`md:hidden p-4 absolute ${isSidebarOpen ? "left-48" : "left-0"} top-16  z-50 text-gray-700 rounded`}
@@ -71,7 +71,7 @@ const Profile = () => {
 
       {/* Sidebar */}
       <div
-        className={`absolute min-h-[650px] lg:relative w-64 bg-cyan-300 shadow-md flex flex-col items-center text-center p-6 transform ${
+        className={`absolute min-h-screen lg:relative w-64 bg-cyan-300 shadow-md flex flex-col items-center text-center p-6 transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 transition-transform duration-300 ease-in-out z-40`}
       >

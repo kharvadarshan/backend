@@ -1,4 +1,5 @@
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import axiosClient from "../../utils/axiosClient";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -33,10 +34,10 @@ const CustomDatePicker = ({appointmentData,setAppointmentData,onNext,onPrev}) =>
     
     const jsDate = new Date(date);
     const formattedDate = jsDate.toISOString().split('T')[0];
-
+    console.log(appointmentData);
     try
     {
-          const response = await axiosClient.post(`${import.meta.env.VITE_API_URL}/doctorprofile/getTimeSlot`,{
+          const response = await axiosClient.post(`${import.meta.env.VITE_API_URL}/user/getTimeSlot`,{
                 doctorId:appointmentData?.doctorId,
                 date:formattedDate,
           });

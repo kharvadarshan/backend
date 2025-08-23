@@ -80,7 +80,7 @@ const BookedAppointment = ({ doctor }) => {
       const response = await axiosClient.get(
         `${
           import.meta.env.VITE_API_URL
-        }/appointments/getAppointmentByDoctorId/${doctor._id}`
+        }/appointments/getAppointmentByDoctorId/${doctor.id}`
       );
       if (response.data.ok) {
         setUpcoming(response.data.upcomingAppointments);
